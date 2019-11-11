@@ -1,0 +1,19 @@
+{
+  "name": "vanilla-color-picker",
+  "version": "1.0.0",
+  "description": "quick and dirty color picker",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "color-js": "1.0.5"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.6.2",
+    "parcel-bundler": "^1.6.1"
+  },
+  "keywords": []
+}
