@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Minimal color picker</title>
+	<meta charset="UTF-8" />
+	<style>
+		body {
+			background-color: #EEE;
+			padding: 3rem;
+		}
+		.block { display: block; }
+		input[type=color] {
+			padding: 0;
+		}
+	</style>
+</head>
+
+<body>
+
+	<form>
+		<fieldset>
+			<legend>A bunch of colors</legend>
+			<input type="color" value="#10A1C2" />
+			<input type="color" value="#FF0044" />
+		</fieldset>
+		<fieldset>
+			<legend>Colors with a label</legend>
+			<label>Color 1 <input type="color" value="#10A1C2" /></label>
+			<label>Color 2 <input type="color" value="#FF0044" /></label>
+			<label>Color 3 <input type="color" value="#F0F044" /></label>
+		</fieldset>
+		<fieldset>
+			<legend>Colors with block labels</legend>
+			<label class="block">Color 1 <input type="color" value="#10A1C2" /></label>
+			<label class="block">Color 2 <input type="color" value="#FF0044" /></label>
+			<label class="block">Color 3 <input type="color" value="#F0F044" /></label>
+		</fieldset>
+	</form>
+	<p style="height:33rem;"></p>
+
+	<script src="index.js"></script>
+</body>
+
+</html>
