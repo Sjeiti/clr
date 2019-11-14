@@ -4,11 +4,14 @@
 <head>
 	<title>Minimal color picker</title>
 	<meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body {
 			background-color: #EEE;
-			padding: 3rem;
+			padding: 0.5rem;
+			box-sizing: border-box;
 		}
+		*, *:before, *:after { box-sizing: inherit; }
 		.block { display: block; }
 		input[type=color] {
 			padding: 0;
@@ -31,10 +34,15 @@
 			<label>Color 3 <input type="color" value="#F0F044" /></label>
 		</fieldset>
 		<fieldset>
-			<legend>Colors with block labels</legend>
-			<label class="block">Color 1 <input type="color" value="#10A1C2" /></label>
-			<label class="block">Color 2 <input type="color" value="#FF0044" /></label>
-			<label class="block">Color 3 <input type="color" value="#F0F044" /></label>
+			<legend>Colors with block labels, names and ids</legend>
+			<label class="block">Color 1 <input type="color" name="one" value="#10A1C2" /></label>
+			<label class="block">Color 2 <input type="color" name="two" value="#FF0044" /></label>
+			<label class="block">Color 3 <input type="color" id="seven" value="#F0F044" /></label>
+		</fieldset>
+		<fieldset>
+			<legend>Colors with same names</legend>
+			<label class="block">Color 1 <input type="color" name="yes" value="#10A1C2" /></label>
+			<label class="block">Color 2 <input type="color" name="yes" value="#FF0044" /></label>
 		</fieldset>
 	</form>
 	<p style="height:33rem;"></p>

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "run-p build serve",
     "build": "run-s clean \"webpack -- --env.development --watch\"",
-    "build:prod": "run-s clean build:json build:search \"webpack -- --env.production\" build:sitemap build:rss",
+    "build:prod": "run-s clean \"webpack -- --env.production\"",
     "webpack": "npx webpack --config webpack.config.js",
     "clean": "del-cli dist -f",
     "serve": "node task/serve dist 5132",

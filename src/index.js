@@ -1,6 +1,7 @@
 import clr from 'color-js'
 import './styles.less'
 
+const name = 'picker'
 const {body, documentElement:html} = document
 
 body.appendChild(document.createElement('style'))
@@ -18,7 +19,7 @@ document.addEventListener('click', e=>{
     popup.style.left = rect.left+'px'
     popup.style.top = rect.bottom+'px'
   } else {
-    const clickedPicker = target.closest('.picker')
+    const clickedPicker = target.closest(`.${name}`)
     !clickedPicker?.contains(target)&&removeExcept()
   }
 })
@@ -37,7 +38,7 @@ function colorPicker(source){
     body.appendChild(openElm)
   } else {
     const popup = document.createElement('div')
-    popup.classList.add('picker')
+    popup.classList.add(name)
     popups.set(source, popup)
 
     const colorElm = append(popup, 'div')
@@ -56,13 +57,13 @@ function colorPicker(source){
 
     body.appendChild(popup)
 
-    const className = getClassName()
+    const className = getClassName(source)
     popup.classList.add(className)
 
     let color = clr(inputElm.value)
     let hueColor = color.setSaturation(1).setLightness(0.5)
 
-    const baseRule = `.picker.${className}`
+    const baseRule = `.${name}.${className}`
     const rulePicker = getRule(`${baseRule} {}`)
     const ruleColorcolor = getRule(`${baseRule}>div:first-child {}`)
     const ruleColor = getRule(`${baseRule}>div:first-child:after {}`)
@@ -75,9 +76,13 @@ function colorPicker(source){
 
     colorElm.addEventListener('mousedown', ()=>html.addEventListener('mousemove', onClickColor))
     html.addEventListener('mouseup', ()=>html.removeEventListener('mousemove', onClickColor))
+    colorElm.addEventListener('touchstart', ()=>html.addEventListener('touchmove', onClickColor))
+    html.addEventListener('touchend', ()=>html.removeEventListener('touchmove', onClickColor))
 
     hueElm.addEventListener('mousedown', ()=>html.addEventListener('mousemove', onClickHue))
     html.addEventListener('mouseup', ()=>html.removeEventListener('mousemove', onClickHue))
+    hueElm.addEventListener('touchstart', ()=>html.addEventListener('touchmove', onClickHue))
+    html.addEventListener('touchend', ()=>html.removeEventListener('touchmove', onClickHue))
 
     inputElm.addEventListener('input', onHexInput)
     ;inputRGB.forEach(elm=>elm.addEventListener('input', onRGBInput))
@@ -97,14 +102,16 @@ function colorPicker(source){
       return sheet.rules[0]
     }
 
-    function getClassName(){
-      return 'signal'+Math.round(Date.now()+Math.random()*1E3).toString(16)
+    function getClassName(source){
+      const unique = source.name||source.id||Math.round(Date.now()+Math.random()*1E3).toString(16)
+      return `${name}_${unique}`
     }
 
     function onClickColor(e){
       const rect = colorElm.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
+      const eo = e.touches?.[0]||e
+      const x = eo.clientX - rect.left
+      const y = eo.clientY - rect.top
       const xpart = partRange(x/rect.width)
       const ypart = partRange(1-y/rect.height)
       color = color.setSaturation(xpart).setValue(ypart)
@@ -112,11 +119,13 @@ function colorPicker(source){
       setBackground()
       setInputHex()
       setInputRGB()
+      setSource()
     }
 
     function onClickHue(e){
       const rect = hueElm.getBoundingClientRect()
-      const x = e.clientX - rect.left
+      const eo = e.touches?.[0]||e
+      const x = eo.clientX - rect.left
       const xpart = partRange(x/rect.width)
       const hue = xpart*360
       color = color.setHue(hue)
@@ -126,6 +135,7 @@ function colorPicker(source){
       setBackground()
       setInputHex()
       setInputRGB()
+      setSource()
     }
 
     function onHexInput(){
@@ -133,6 +143,7 @@ function colorPicker(source){
       hueColor = color.setSaturation(1).setLightness(0.5)
       setColors()
       setInputRGB()
+      setSource()
     }
 
     function onRGBInput(){
@@ -140,6 +151,7 @@ function colorPicker(source){
       hueColor = color.setSaturation(1).setLightness(0.5)
       setColors()
       setInputHex()
+      setSource()
     }
 
     function partRange(f) {
@@ -170,19 +182,20 @@ function colorPicker(source){
       ruleInputSelection.style.backgroundColor = isBright
         ?color.lightenByAmount(0.6).toString()
         :color.darkenByAmount(0.4).toString()
-      //ruleInputSelection.style.backgroundColor = color
-      //  .setHue((color.getHue()+180)%360)
-      //  .setLightness(1-color.getLightness())
     }
 
     function setInputHex(){
-      source.value = inputElm.value = color.toCSS()
+      inputElm.value = color.toCSS()
     }
 
     function setInputRGB(){
       inputRElm.value = Math.round(color.getRed()*255)
       inputGElm.value = Math.round(color.getGreen()*255)
       inputBElm.value = Math.round(color.getBlue()*255)
+    }
+
+    function setSource(){
+      source.value = color.toCSS()
     }
 
     function setColors(){
