@@ -41,6 +41,11 @@ function colorPicker(source){
     popup.classList.add(name)
     popups.set(source, popup)
 
+    popup.remove = ()=>{
+      dispatch('change')
+      Element.prototype.remove.apply(popup)
+    }
+
     const colorElm = append(popup, 'div')
     const hueElm = append(popup, 'div')
     const inputElm = append(popup, 'input')
@@ -196,6 +201,13 @@ function colorPicker(source){
 
     function setSource(){
       source.value = color.toCSS()
+      dispatch()
+    }
+
+    function dispatch(type='input'){
+      const event = document.createEvent('HTMLEvents')
+      event.initEvent(type, true, false)
+      source.dispatchEvent(event)
     }
 
     function setColors(){
