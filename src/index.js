@@ -1,7 +1,7 @@
 import clr from 'color-js'
 import './styles.less'
 
-const name = 'picker'
+const name = 'mcpicker'
 const {body, documentElement:html} = document
 
 body.appendChild(document.createElement('style'))
@@ -9,7 +9,14 @@ const sheet = document.styleSheets[document.styleSheets.length - 1]
 
 const popups = new Map()
 
-document.addEventListener('click', e=>{
+// Add the click event to document to check all the things
+document.addEventListener('click', handleDocumentClick)
+
+/**
+ * Handle document click to check if target is an `input[type=color]`
+ * @param {MouseEvent} e
+ */
+function handleDocumentClick(e){
   const {target} = e
   if (target.matches('input[type=color]')) {
     e.preventDefault()
@@ -22,12 +29,21 @@ document.addEventListener('click', e=>{
     const clickedPicker = target.closest(`.${name}`)
     !clickedPicker?.contains(target)&&removeExcept()
   }
-})
+}
 
+/**
+ * Remove elements from DOM except...
+ * @param {HTMLElement[]} except
+ */
 function removeExcept(except){
 	[...popups.values()].forEach(elm=>elm!==except&&elm.remove())
 }
 
+/**
+ * Initialise the color picker for an `input[type=color]`
+ * @param {HTMLInputElement} source
+ * @return {HTMLElement} the color picker element
+ */
 function colorPicker(source){
   const openElm = popups.get(source)
   const initialised = !!openElm
@@ -90,28 +106,48 @@ function colorPicker(source){
     html.addEventListener('touchend', ()=>html.removeEventListener('touchmove', onClickHue))
 
     inputElm.addEventListener('input', onHexInput)
-    ;inputRGB.forEach(elm=>elm.addEventListener('input', onRGBInput))
+    inputRGB.forEach(elm=>elm.addEventListener('input', onRGBInput))
 
     setColors()
     setInputHex()
     setInputRGB()
 
+    /**
+     * Append a new element to an existing element
+     * @param {HTMLElement} to
+     * @param {string} type
+     * @return {HTMLElement}
+     */
     function append(to, type){
       const elm = document.createElement(type)
       to.appendChild(elm)
       return elm
     }
 
+    /**
+     * Create a new stylesheet rule
+     * @param {string} rule
+     * @return {CSSRule}
+     */
     function getRule(rule){
       sheet.insertRule(rule, 0)
       return sheet.rules[0]
     }
 
+    /**
+     * Get a unique className
+     * @param {HTMLElement} source
+     * @return {string}
+     */
     function getClassName(source){
       const unique = source.name||source.id||Math.round(Date.now()+Math.random()*1E3).toString(16)
       return `${name}_${unique}`
     }
 
+    /**
+     * Click handler for the color gradient
+     * @param {MouseEvent} e
+     */
     function onClickColor(e){
       const rect = colorElm.getBoundingClientRect()
       const eo = e.touches?.[0]||e
@@ -127,6 +163,10 @@ function colorPicker(source){
       setSource()
     }
 
+    /**
+     * Click handler for the hue gradient
+     * @param {MouseEvent} e
+     */
     function onClickHue(e){
       const rect = hueElm.getBoundingClientRect()
       const eo = e.touches?.[0]||e
@@ -143,6 +183,9 @@ function colorPicker(source){
       setSource()
     }
 
+    /**
+     * Input handler for the hex text input
+     */
     function onHexInput(){
       color = clr(inputElm.value)
       hueColor = color.setSaturation(1).setLightness(0.5)
@@ -151,6 +194,9 @@ function colorPicker(source){
       setSource()
     }
 
+    /**
+     * Input handler for one of the rgb text inputs
+     */
     function onRGBInput(){
       color = clr().fromObject(inputRGB.map(m=>m.value))
       hueColor = color.setSaturation(1).setLightness(0.5)
@@ -159,15 +205,26 @@ function colorPicker(source){
       setSource()
     }
 
+    /**
+     * Clamp value between 0 and 1
+     * @param {number} f
+     * @return {number}
+     */
     function partRange(f) {
       return Math.min(Math.max(f,0),1)
     }
 
+    /**
+     * Set the color of the color gradient
+     */
     function setColorHue(){
       ruleColorcolor.style.background = `linear-gradient(to top, black, rgba(0,0,0,0)),
       linear-gradient(to left, ${hueColor.toString()}, white)`
     }
 
+    /**
+     * Set the position of the color gradient
+     */
     function setColorPos(){
       const xpart = color.getSaturation()
       const ypart = color.getValue()
@@ -175,11 +232,17 @@ function colorPicker(source){
       ruleColor.style.bottom = `${(ypart*100).toFixed(2)}%`
     }
 
+    /**
+     * Set the position of the hue gradient
+     */
     function setHuePos(){
       const xpart = color.getHue()/360
       ruleHue.style.left = `${(xpart*100).toFixed(2)}%`
     }
 
+    /**
+     * Set the back- and foreground color of the input elements
+     */
     function setBackground(){
       const isBright = color.getLuminance()>0.5
       rulePicker.style.backgroundColor = color.toString()
@@ -189,27 +252,43 @@ function colorPicker(source){
         :color.darkenByAmount(0.4).toString()
     }
 
+    /**
+     * Set the value of the hex input
+     */
     function setInputHex(){
       inputElm.value = color.toCSS()
     }
 
+    /**
+     * Set the value of the rgb inputs
+     */
     function setInputRGB(){
       inputRElm.value = Math.round(color.getRed()*255)
       inputGElm.value = Math.round(color.getGreen()*255)
       inputBElm.value = Math.round(color.getBlue()*255)
     }
 
+    /**
+     * Set the value of the source `input[type=color]`
+     */
     function setSource(){
       source.value = color.toCSS()
       dispatch()
     }
 
+    /**
+     * Dispatch the input event on the source `input[type=color]`
+     * @param type
+     */
     function dispatch(type='input'){
       const event = document.createEvent('HTMLEvents')
       event.initEvent(type, true, false)
       source.dispatchEvent(event)
     }
 
+    /**
+     * Set all the colors
+     */
     function setColors(){
       setHuePos()
       setColorHue()

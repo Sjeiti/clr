@@ -7,8 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Wendy+One|Roboto&display=swap" rel="stylesheet">
 	<style>
-		html, body { margin: 0; }
+		html, body { margin: 0; min-height: 100vh; }
 		body {
+			display: flex;
+			flex-direction: column;
 			background-color: #EEE;
 			box-sizing: border-box;
 			font-family: Roboto, sans-serif;
@@ -30,6 +32,7 @@
 			font-family: monospace;
 			font-size: 1rem;
 		}
+		main { flex: 1 1 auto; }
 		h1 {
 			font-size: 12vw;
 			line-height: 12vw;
@@ -92,6 +95,7 @@
 			margin-top: 2rem;
 			padding: 0.125rem 2rem;
 			font-size: 0.75rem;
+			overflow: hidden;
 		}
 		footer a {
 			color: inherit;
