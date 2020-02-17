@@ -5,49 +5,246 @@
 	<title>Minimal color picker</title>
 	<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Wendy+One|Roboto&display=swap" rel="stylesheet">
 	<style>
+		html, body { margin: 0; }
 		body {
 			background-color: #EEE;
-			padding: 0.5rem;
 			box-sizing: border-box;
+			font-family: Roboto, sans-serif;
+			line-height: 160%;
 		}
 		*, *:before, *:after { box-sizing: inherit; }
 		.block { display: block; }
 		input[type=color] {
 			padding: 0;
 		}
+		header, footer {
+			background-image: linear-gradient(30deg, #ffd89b, #19547b);
+			padding: 8vw 0;
+			text-align: center;
+			color: white;
+		}
+		header .subtitle {
+			margin: 0;
+			font-family: monospace;
+			font-size: 1rem;
+		}
+		h1 {
+			font-size: 12vw;
+			line-height: 12vw;
+			font-family: "Wendy One", sans-serif;
+			margin: 0;
+			text-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4),0 0.125rem 0.25rem rgba(0,0,0,0.2);
+		}
+		.content {
+			/*max-width: 48rem;*/
+			max-width: 34rem;
+			margin: 0 auto;
+			padding: 0.5rem;
+		}
+		p.first {
+			font-size: 1.125rem;
+		}
+		p {
+			/*max-width: 34rem;*/
+			margin: 1rem auto;
+		}
+		
+		code, pre {
+			background-color: #dde2df;
+		}
+		code {
+			margin: 0 0.25rem;
+			padding: 0 0.25rem;
+			box-shadow: 0 0 0 0.25rem #E7ECE9;
+			font-family: monospace;
+		}
+		pre {
+			padding: 0.25rem;
+			box-shadow: 0.0625rem 0.125rem 0.5rem rgba(0,0,0,0.1) inset;
+			border-radius: 0.125rem;
+		}
+		pre code {
+			box-shadow: none;
+			background-color: transparent;
+			font-size: 1.125rem;
+		}
+		
+		fieldset {
+			border: 0;
+			border-radius: 0.25rem;
+			box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.3);
+			margin: 0 0 2rem;
+		}
+		input[type=color] {
+			width: 2rem;
+			height: 1.5rem;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			vertical-align: bottom;
+			-webkit-appearance: none;
+		}
+		footer {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 2rem;
+			padding: 0.125rem 2rem;
+			font-size: 0.75rem;
+		}
+		footer a {
+			color: inherit;
+			text-decoration: none;
+		}
+		.love {
+			display: inline-block;
+			padding-left: 2px;
+			color: #f04;
+			-webkit-animation-duration: 861ms;
+			animation-duration: 861ms;
+			-webkit-animation-name: heartbeat;
+			animation-name: heartbeat;
+			-webkit-animation-iteration-count: infinite;
+			animation-iteration-count: infinite;
+		}
+		@-webkit-keyframes heartbeat {
+		 0% {
+			-webkit-transform:scale(1);
+			transform:scale(1)
+		 }
+		 to {
+			-webkit-transform:scale(1.4);
+			transform:scale(1.4)
+		 }
+		}
+		@keyframes heartbeat {
+		 0% {
+			-webkit-transform:scale(1);
+			transform:scale(1)
+		 }
+		 to {
+			-webkit-transform:scale(1.4);
+			transform:scale(1.4)
+		 }
+		}
 	</style>
 </head>
 
 <body>
-
-	<form>
-		<fieldset>
-			<legend>A bunch of colors</legend>
-			<input type="color" value="#10A1C2" />
-			<input type="color" value="#FF0044" />
-		</fieldset>
-		<fieldset>
-			<legend>Colors with a label</legend>
-			<label>Color 1 <input type="color" value="#10A1C2" /></label>
-			<label>Color 2 <input type="color" value="#FF0044" /></label>
-			<label>Color 3 <input type="color" value="#F0F044" /></label>
-		</fieldset>
-		<fieldset>
-			<legend>Colors with block labels, names and ids</legend>
-			<label class="block">Color 1 <input type="color" name="one" value="#10A1C2" /></label>
-			<label class="block">Color 2 <input type="color" name="two" value="#FF0044" /></label>
-			<label class="block">Color 3 <input type="color" id="seven" value="#F0F044" /></label>
-		</fieldset>
-		<fieldset>
-			<legend>Colors with same names</legend>
-			<label class="block">Color 1 <input type="color" name="yes" value="#10A1C2" /></label>
-			<label class="block">Color 2 <input type="color" name="yes" value="#FF0044" /></label>
-		</fieldset>
-	</form>
-	<p style="height:33rem;"></p>
+	<header>
+		<h1>MC Picker</h1>
+		<p class="subtitle">a minimal color picker</p>
+	</header>
+	<main>
+		<div class="content">
+			<section>
+				<p class="first">Just add the script and the colorpicker will work on any <code>input[type=color]</code>. Even if you add them to DOM afterwards.</p>
+				<p>The implementation is minimal, the code is minimal, even the colorpicker itself is a mere six elements in a wrapper.</p>
+			</section>
+			<section>
+				<h2>for example</h2>
+				<form>
+					<fieldset data-header-colors>
+						<legend>here are some color inputs</legend>
+					</fieldset>
+					<fieldset>
+						<legend>and here are some with labels</legend>
+						<label>Gradient 1 <input type="color" id="g1" value="#ffd89b" /></label>
+						<label>Gradient 2 <input type="color" id="g2" value="#19547b" /></label>
+					</fieldset>
+					<!--<fieldset>
+            <legend>Colors with a label</legend>
+            <label>Color 1 <input type="color" value="#10A1C2" /></label>
+            <label>Color 2 <input type="color" value="#FF0044" /></label>
+            <label>Color 3 <input type="color" value="#F0F044" /></label>
+          </fieldset>
+          <fieldset>
+            <legend>Colors with block labels, names and ids</legend>
+            <label class="block">Color 1 <input type="color" name="one" value="#10A1C2" /></label>
+            <label class="block">Color 2 <input type="color" name="two" value="#FF0044" /></label>
+            <label class="block">Color 3 <input type="color" id="seven" value="#F0F044" /></label>
+          </fieldset>-->
+				</form>
+			</section>
+			<section>
+				<h2>installation</h2>
+				<p>To install just do something like:</p>
+				<pre><code>npm i -S mc_picker</code></pre>
+				<p>Then just import it somewhere:</p>
+				<pre><code>import 'mc_picker'</code></pre>
+			</section>
+		</div>
+	</main>
+	<footer>
+		<a href="https://ronvalstar.nl/">made with <span class="love">♥</span></a>
+		<a href="https://github.com/Sjeiti/clr">fork on Github</a>
+		<a href="https://raw.githubusercontent.com/Sjeiti/clr/master/LICENSE">MIT license</a>
+	</footer>
 
 	<script src="index.js"></script>
+	<script>
+		const h1 = document.querySelector('h1')
+		h1.innerHTML = h1.textContent.split('').map((char, i) => char!==' '&&`<label for="char${i}">${char}</label>`||char).join('')
+		const spans = h1.querySelectorAll('label')
+		const headerColors = document.querySelector('[data-header-colors]')
+		const colorStart = randomColorHex()
+		const colorEnd = randomColorHex()
+		Array.from(spans).forEach((label,i,a)=>{
+			const input = document.createElement('input')
+			input.setAttribute('id', label.getAttribute('for'))
+			input.setAttribute('type', 'color')
+			input.setAttribute('value', mixColorsHex(colorStart, colorEnd, i/a.length))
+			// input.setAttribute('value', randomColorHex())
+			label.style.color = input.value
+			input.addEventListener('input', e=>label.style.color = e.target.value)
+			headerColors.appendChild(input)
+		})
+		
+		const g1 = document.getElementById('g1')
+		const g2 = document.getElementById('g2')
+		g1.value = colorStart
+		g2.value = colorEnd
+		const headerRule = getRule('header, footer')
+		const setHeaderGradient = ()=>headerRule.style.backgroundImage = `linear-gradient(30deg, ${g1.value}, ${g2.value})`
+		document.getElementById('g1').addEventListener('input',setHeaderGradient)
+		document.getElementById('g2').addEventListener('input',setHeaderGradient)
+		setHeaderGradient()
+		
+		function randomColorHex(){
+			return '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6)
+		}
+		function mixColorsHex(hex1,hex2,amount) {
+			const h1 = hex1.substr(1)
+			const h2 = hex2.substr(1)
+			const bmount = 1-amount
+			const hex1r = parseInt(h1.substr(0, 2), 16)
+			const hex1g = parseInt(h1.substr(2, 2), 16)
+			const hex1b = parseInt(h1.substr(4, 2), 16)
+			const hex2r = parseInt(h2.substr(0, 2), 16)
+			const hex2g = parseInt(h2.substr(2, 2), 16)
+			const hex2b = parseInt(h2.substr(4, 2), 16)
+			const hex3r = parseInt(amount*hex1r + bmount*hex2r, 10)
+			const hex3g = parseInt(amount*hex1g + bmount*hex2g, 10)
+			const hex3b = parseInt(amount*hex1b + bmount*hex2b, 10)
+			return '#' + intToHex(hex3r) + intToHex(hex3g) + intToHex(hex3b);
+		}
+		function intToHex(c) {
+			return ('0'+c.toString(16)).slice(-2)
+		}
+		function getRule(selectorText){
+			let foundRule
+			Array.from(document.styleSheets).forEach(sheet=>{
+				try {
+					Array.from(sheet.rules).forEach(rule => {
+						if (rule.selectorText===selectorText) foundRule = rule
+					})
+				}catch(err){}
+			})
+			return foundRule
+		}
+		
+	</script>
 </body>
 
 </html>
