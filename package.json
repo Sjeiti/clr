@@ -1,6 +1,6 @@
 {
   "name": "mc_picker",
-  "version": "1.0.7",
+  "version": "1.0.6",
   "description": "Mc Picker, a minimal color picker",
   "author": "Ron Valstar",
   "main": "dist.js",
