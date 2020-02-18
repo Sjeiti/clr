@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 module.exports = env => {
 
   const isProduction = !!env&&env.production
@@ -37,13 +37,16 @@ module.exports = env => {
       }]
     }
     ,plugins: [
-      new CopyWebpackPlugin([
-          { from: 'src/index.html', to: './'}
-      ], {})
-      ,new webpack.DefinePlugin({
+      new webpack.DefinePlugin({
         _VERSION: JSON.stringify(require('./package.json').version)
       })
-
+      ,new FileManagerPlugin({
+        onEnd: {
+          copy: [
+            { source: './dist/index.js', destination: './docs/index.js' }
+          ]
+        }
+      })
     ]
   }
 }

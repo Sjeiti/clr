@@ -9,6 +9,9 @@ const sheet = document.styleSheets[document.styleSheets.length - 1]
 
 const popups = new Map()
 
+const px = 'px'
+const auto = 'auto'
+
 // Add the click event to document to check all the things
 document.addEventListener('click', handleDocumentClick)
 
@@ -23,8 +26,28 @@ function handleDocumentClick(e){
     const popup = colorPicker(target)
     removeExcept(popup)
     const rect = target.getBoundingClientRect()
-    popup.style.left = rect.left+'px'
-    popup.style.top = rect.bottom+'px'
+
+    const {right,bottom,top} = rect
+    const {clientX,clientY} = e
+    const {documentElement:{scrollTop,clientWidth,clientHeight}} = document
+    const partW = clientX/clientWidth
+    const partH = clientY/clientHeight
+
+    if (partW<0.5) {
+      popup.style.left = rect.left+px
+      popup.style.right = auto
+    } else {
+      popup.style.left = auto
+      popup.style.right = (clientWidth - right)+px
+    }
+    if (partH<0.5) {
+      popup.style.top = (bottom + scrollTop)+px
+      popup.style.bottom = auto
+    } else {
+      popup.style.top = auto
+      popup.style.bottom = (clientHeight - top - scrollTop)+px
+    }
+
   } else {
     const clickedPicker = target.closest(`.${name}`)
     !clickedPicker?.contains(target)&&removeExcept()
