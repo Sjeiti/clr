@@ -57,7 +57,7 @@ if (!net.brehaut) {
     var css_float = '(?:\\+|-)?\\d*\\.\\d+';
     var css_number = '(?:' + css_integer + ')|(?:' + css_float + ')';
     css_integer = '(' + css_integer + ')';
-    // css_float = '(' + css_float + ')';
+    css_float = '(' + css_float + ')';
     css_number = '(' + css_number + ')';
     var css_percentage = css_number + '%';
     var css_whitespace = '\\s*?';
@@ -282,21 +282,21 @@ if (!net.brehaut) {
             return (this.red * 0.2126) + (this.green * 0.7152) + (this.blue * 0.0722);
         },
 
-        // /* does an alpha based blend of color onto this. alpha is the
-        //  * amount of 'color' to use. (0 to 1)
-        //  */
-        // blend: function(color, alpha) {
-        //     color = color.toRGB();
-        //     alpha = Math.min(Math.max(alpha, 0), 1);
-        //     var rgb = this.clone();
-        //
-        //     rgb.red = (rgb.red * (1 - alpha)) + (color.red * alpha);
-        //     rgb.green = (rgb.green * (1 - alpha)) + (color.green * alpha);
-        //     rgb.blue = (rgb.blue * (1 - alpha)) + (color.blue * alpha);
-        //     rgb.alpha = (rgb.alpha * (1 - alpha)) + (color.alpha * alpha);
-        //
-        //     return rgb;
-        // },
+        /* does an alpha based blend of color onto this. alpha is the
+         * amount of 'color' to use. (0 to 1)
+         */
+        blend: function(color, alpha) {
+            color = color.toRGB();
+            alpha = Math.min(Math.max(alpha, 0), 1);
+            var rgb = this.clone();
+
+            rgb.red = (rgb.red * (1 - alpha)) + (color.red * alpha);
+            rgb.green = (rgb.green * (1 - alpha)) + (color.green * alpha);
+            rgb.blue = (rgb.blue * (1 - alpha)) + (color.blue * alpha);
+            rgb.alpha = (rgb.alpha * (1 - alpha)) + (color.alpha * alpha);
+
+            return rgb;
+        },
 
         /* fromObject attempts to convert an object o to and RGB
          * instance. This accepts an object with red, green and blue
@@ -438,45 +438,45 @@ if (!net.brehaut) {
             ];
 
             return components.join('');
-        }/*,*/
+        },
 
-        // toHSV: function() {
-        //     var hsv = factories.HSV();
-        //     var min, max, delta;
-        //
-        //     min = Math.min(this.red, this.green, this.blue);
-        //     max = Math.max(this.red, this.green, this.blue);
-        //     hsv.value = max; // v
-        //
-        //     delta = max - min;
-        //
-        //     if (delta == 0) { // white, grey, black
-        //         hsv.hue = hsv.saturation = 0;
-        //     } else { // chroma
-        //         hsv.saturation = delta / max;
-        //
-        //         if (this.red == max) {
-        //             hsv.hue = (this.green - this.blue) / delta; // between yellow & magenta
-        //         } else if (this.green == max) {
-        //             hsv.hue = 2 + (this.blue - this.red) / delta; // between cyan & yellow
-        //         } else {
-        //             hsv.hue = 4 + (this.red - this.green) / delta; // between magenta & cyan
-        //         }
-        //
-        //         hsv.hue = ((hsv.hue * 60) + 360) % 360; // degrees
-        //     }
-        //
-        //     hsv.alpha = this.alpha;
-        //
-        //     return hsv;
-        // },
-        // toHSL: function() {
-        //     return this.toHSV().toHSL();
-        // },
-        //
-        // toRGB: function() {
-        //     return this.clone();
-        // }
+        toHSV: function() {
+            var hsv = factories.HSV();
+            var min, max, delta;
+
+            min = Math.min(this.red, this.green, this.blue);
+            max = Math.max(this.red, this.green, this.blue);
+            hsv.value = max; // v
+
+            delta = max - min;
+
+            if (delta == 0) { // white, grey, black
+                hsv.hue = hsv.saturation = 0;
+            } else { // chroma
+                hsv.saturation = delta / max;
+
+                if (this.red == max) {
+                    hsv.hue = (this.green - this.blue) / delta; // between yellow & magenta
+                } else if (this.green == max) {
+                    hsv.hue = 2 + (this.blue - this.red) / delta; // between cyan & yellow
+                } else {
+                    hsv.hue = 4 + (this.red - this.green) / delta; // between magenta & cyan
+                }
+
+                hsv.hue = ((hsv.hue * 60) + 360) % 360; // degrees
+            }
+
+            hsv.alpha = this.alpha;
+
+            return hsv;
+        },
+        toHSL: function() {
+            return this.toHSV().toHSL();
+        },
+
+        toRGB: function() {
+            return this.clone();
+        }
     });
 
     transparent = color.fromObject({
@@ -487,340 +487,340 @@ if (!net.brehaut) {
     });
 
 
-    // /* Like RGB above, this object describes what will become the HSV
-    //  * template object. This model handles hue, saturation and value.
-    //  * hue is the number of degrees around the color wheel, saturation
-    //  * describes how much color their is and value is the brightness.
-    //  */
-    // registerModel('HSV', {
-    //     hue: 0,
-    //     saturation: 0,
-    //     value: 1,
-    //     alpha: 1,
-    //
-    //     shiftHue: cloneOnApply(function(degrees) {
-    //         var hue = (this.hue + degrees) % 360;
-    //         if (hue < 0) {
-    //             hue = (360 + hue) % 360;
-    //         }
-    //
-    //         this.hue = hue;
-    //     }),
-    //
-    //     devalueByAmount: cloneOnApply(function(val) {
-    //         this.value = Math.min(1, Math.max(this.value - val, 0));
-    //     }),
-    //
-    //     devalueByRatio: cloneOnApply(function(val) {
-    //         this.value = Math.min(1, Math.max(this.value * (1 - val), 0));
-    //     }),
-    //
-    //     valueByAmount: cloneOnApply(function(val) {
-    //         this.value = Math.min(1, Math.max(this.value + val, 0));
-    //     }),
-    //
-    //     valueByRatio: cloneOnApply(function(val) {
-    //         this.value = Math.min(1, Math.max(this.value * (1 + val), 0));
-    //     }),
-    //
-    //     desaturateByAmount: cloneOnApply(function(val) {
-    //         this.saturation = Math.min(1, Math.max(this.saturation - val, 0));
-    //     }),
-    //
-    //     desaturateByRatio: cloneOnApply(function(val) {
-    //         this.saturation = Math.min(1, Math.max(this.saturation * (1 - val), 0));
-    //     }),
-    //
-    //     saturateByAmount: cloneOnApply(function(val) {
-    //         this.saturation = Math.min(1, Math.max(this.saturation + val, 0));
-    //     }),
-    //
-    //     saturateByRatio: cloneOnApply(function(val) {
-    //         this.saturation = Math.min(1, Math.max(this.saturation * (1 + val), 0));
-    //     }),
-    //
-    //     // schemeFromDegrees: function(degrees) {
-    //     //     var newColors = [];
-    //     //     for (var i = 0, j = degrees.length; i < j; i++) {
-    //     //         var col = this.clone();
-    //     //         col.hue = (this.hue + degrees[i]) % 360;
-    //     //         newColors.push(col);
-    //     //     }
-    //     //     return newColors;
-    //     // },
-    //     //
-    //     // complementaryScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 180]);
-    //     // },
-    //     //
-    //     // splitComplementaryScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 150, 320]);
-    //     // },
-    //     //
-    //     // splitComplementaryCWScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 150, 300]);
-    //     // },
-    //     //
-    //     // splitComplementaryCCWScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 60, 210]);
-    //     // },
-    //     //
-    //     // triadicScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 120, 240]);
-    //     // },
-    //     //
-    //     // clashScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 90, 270]);
-    //     // },
-    //     //
-    //     // tetradicScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 90, 180, 270]);
-    //     // },
-    //     //
-    //     // fourToneCWScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 60, 180, 240]);
-    //     // },
-    //     //
-    //     // fourToneCCWScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 120, 180, 300]);
-    //     // },
-    //     //
-    //     // fiveToneAScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 115, 155, 205, 245]);
-    //     // },
-    //     //
-    //     // fiveToneBScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 40, 90, 130, 245]);
-    //     // },
-    //     //
-    //     // fiveToneCScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 50, 90, 205, 320]);
-    //     // },
-    //     //
-    //     // fiveToneDScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 40, 155, 270, 310]);
-    //     // },
-    //     //
-    //     // fiveToneEScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 115, 230, 270, 320]);
-    //     // },
-    //     //
-    //     // sixToneCWScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 30, 120, 150, 240, 270]);
-    //     // },
-    //     //
-    //     // sixToneCCWScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 90, 120, 210, 240, 330]);
-    //     // },
-    //     //
-    //     // neutralScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 15, 30, 45, 60, 75]);
-    //     // },
-    //     //
-    //     // analogousScheme: function() {
-    //     //     return this.schemeFromDegrees([0, 30, 60, 90, 120, 150]);
-    //     // },
-    //
-    //     fromObject: function(o) {
-    //         if (o.hasOwnProperty('hue') &&
-    //             o.hasOwnProperty('saturation') &&
-    //             o.hasOwnProperty('value')) {
-    //             var hsv = factories.HSV();
-    //
-    //             hsv.hue = o.hue;
-    //             hsv.saturation = o.saturation;
-    //             hsv.value = o.value;
-    //             hsv.alpha = o.hasOwnProperty('alpha') ? o.alpha : 1;
-    //
-    //             return hsv;
-    //         }
-    //         // nothing matches, not an HSV object
-    //         return null;
-    //     },
-    //
-    //     _normalise: function() {
-    //         this.hue %= 360;
-    //         this.saturation = Math.min(Math.max(0, this.saturation), 1);
-    //         this.value = Math.min(Math.max(0, this.value));
-    //         this.alpha = Math.min(1, Math.max(0, this.alpha));
-    //     },
-    //
-    //     toRGB: function() {
-    //         this._normalise();
-    //
-    //         var rgb = factories.RGB();
-    //         var i;
-    //         var f, p, q, t;
-    //
-    //         if (this.saturation === 0) {
-    //             // achromatic (grey)
-    //             rgb.red = this.value;
-    //             rgb.green = this.value;
-    //             rgb.blue = this.value;
-    //             rgb.alpha = this.alpha;
-    //             return rgb;
-    //         }
-    //
-    //         var h = this.hue / 60; // sector 0 to 5
-    //         i = Math.floor(h);
-    //         f = h - i; // factorial part of h
-    //         p = this.value * (1 - this.saturation);
-    //         q = this.value * (1 - this.saturation * f);
-    //         t = this.value * (1 - this.saturation * (1 - f));
-    //
-    //         switch (i) {
-    //             case 0:
-    //                 rgb.red = this.value;
-    //                 rgb.green = t;
-    //                 rgb.blue = p;
-    //                 break;
-    //             case 1:
-    //                 rgb.red = q;
-    //                 rgb.green = this.value;
-    //                 rgb.blue = p;
-    //                 break;
-    //             case 2:
-    //                 rgb.red = p;
-    //                 rgb.green = this.value;
-    //                 rgb.blue = t;
-    //                 break;
-    //             case 3:
-    //                 rgb.red = p;
-    //                 rgb.green = q;
-    //                 rgb.blue = this.value;
-    //                 break;
-    //             case 4:
-    //                 rgb.red = t;
-    //                 rgb.green = p;
-    //                 rgb.blue = this.value;
-    //                 break;
-    //             default: // case 5:
-    //                 rgb.red = this.value;
-    //                 rgb.green = p;
-    //                 rgb.blue = q;
-    //                 break;
-    //         }
-    //
-    //         rgb.alpha = this.alpha;
-    //
-    //         return rgb;
-    //     }/*,*/
-    //     // toHSL: function() {
-    //     //     this._normalise();
-    //     //
-    //     //     var hsl = factories.HSL();
-    //     //
-    //     //     hsl.hue = this.hue;
-    //     //     var l = (2 - this.saturation) * this.value,
-    //     //         s = this.saturation * this.value;
-    //     //     if (l && 2 - l) {
-    //     //         s /= (l <= 1) ? l : 2 - l;
-    //     //     }
-    //     //     l /= 2;
-    //     //     hsl.saturation = s;
-    //     //     hsl.lightness = l;
-    //     //     hsl.alpha = this.alpha;
-    //     //
-    //     //     return hsl;
-    //     // },
-    //     //
-    //     // toHSV: function() {
-    //     //     return this.clone();
-    //     // }
-    // });
+    /* Like RGB above, this object describes what will become the HSV
+     * template object. This model handles hue, saturation and value.
+     * hue is the number of degrees around the color wheel, saturation
+     * describes how much color their is and value is the brightness.
+     */
+    registerModel('HSV', {
+        hue: 0,
+        saturation: 0,
+        value: 1,
+        alpha: 1,
 
-    // registerModel('HSL', {
-    //     hue: 0,
-    //     saturation: 0,
-    //     lightness: 0,
-    //     alpha: 1,
-    //
-    //     darkenByAmount: cloneOnApply(function(val) {
-    //         this.lightness = Math.min(1, Math.max(this.lightness - val, 0));
-    //     }),
-    //
-    //     darkenByRatio: cloneOnApply(function(val) {
-    //         this.lightness = Math.min(1, Math.max(this.lightness * (1 - val), 0));
-    //     }),
-    //
-    //     lightenByAmount: cloneOnApply(function(val) {
-    //         this.lightness = Math.min(1, Math.max(this.lightness + val, 0));
-    //     }),
-    //
-    //     lightenByRatio: cloneOnApply(function(val) {
-    //         this.lightness = Math.min(1, Math.max(this.lightness * (1 + val), 0));
-    //     }),
-    //
-    //     fromObject: function(o) {
-    //         if ("string" == typeof o) {
-    //             return this._fromCSS(o);
-    //         }
-    //         if (o.hasOwnProperty('hue') &&
-    //             o.hasOwnProperty('saturation') &&
-    //             o.hasOwnProperty('lightness')) {
-    //             return this._fromHSL(o);
-    //         }
-    //         // nothing matchs, not an RGB object
-    //     },
-    //
-    //     _fromCSS: function(css) {
-    //         var colorGroups = trim(css).match(hsl_hsla_regex);
-    //
-    //         // if there is an "a" after "hsl", there must be a fourth parameter and the other way round
-    //         if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
-    //             return null;
-    //         }
-    //
-    //         var hsl = factories.HSL();
-    //         hsl.hue = (colorGroups[2] % 360 + 360) % 360;
-    //         hsl.saturation = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
-    //         hsl.lightness = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
-    //         hsl.alpha = !!colorGroups[5] ? Math.max(0, Math.min(1, parseFloat(colorGroups[6]))) : 1;
-    //
-    //         return hsl;
-    //     },
-    //
-    //     _fromHSL: function(HSL) {
-    //         var newHSL = factories.HSL();
-    //
-    //         newHSL.hue = HSL.hue;
-    //         newHSL.saturation = HSL.saturation;
-    //         newHSL.lightness = HSL.lightness;
-    //
-    //         newHSL.alpha = HSL.hasOwnProperty('alpha') ? HSL.alpha : 1;
-    //
-    //         return newHSL;
-    //     },
-    //
-    //     _normalise: function() {
-    //         this.hue = (this.hue % 360 + 360) % 360;
-    //         this.saturation = Math.min(Math.max(0, this.saturation), 1);
-    //         this.lightness = Math.min(Math.max(0, this.lightness));
-    //         this.alpha = Math.min(1, Math.max(0, this.alpha));
-    //     },
-    //
-    //     toHSL: function() {
-    //         return this.clone();
-    //     },
-    //     toHSV: function() {
-    //         this._normalise();
-    //
-    //         var hsv = factories.HSV();
-    //
-    //         // http://ariya.blogspot.com/2008/07/converting-between-hsl-and-hsv.html
-    //         hsv.hue = this.hue; // H
-    //         var l = 2 * this.lightness,
-    //             s = this.saturation * ((l <= 1) ? l : 2 - l);
-    //         hsv.value = (l + s) / 2; // V
-    //         hsv.saturation = ((2 * s) / (l + s)) || 0; // S
-    //         hsv.alpha = this.alpha;
-    //
-    //         return hsv;
-    //     },
-    //     toRGB: function() {
-    //         return this.toHSV().toRGB();
-    //     }
-    // });
+        shiftHue: cloneOnApply(function(degrees) {
+            var hue = (this.hue + degrees) % 360;
+            if (hue < 0) {
+                hue = (360 + hue) % 360;
+            }
+
+            this.hue = hue;
+        }),
+
+        devalueByAmount: cloneOnApply(function(val) {
+            this.value = Math.min(1, Math.max(this.value - val, 0));
+        }),
+
+        devalueByRatio: cloneOnApply(function(val) {
+            this.value = Math.min(1, Math.max(this.value * (1 - val), 0));
+        }),
+
+        valueByAmount: cloneOnApply(function(val) {
+            this.value = Math.min(1, Math.max(this.value + val, 0));
+        }),
+
+        valueByRatio: cloneOnApply(function(val) {
+            this.value = Math.min(1, Math.max(this.value * (1 + val), 0));
+        }),
+
+        desaturateByAmount: cloneOnApply(function(val) {
+            this.saturation = Math.min(1, Math.max(this.saturation - val, 0));
+        }),
+
+        desaturateByRatio: cloneOnApply(function(val) {
+            this.saturation = Math.min(1, Math.max(this.saturation * (1 - val), 0));
+        }),
+
+        saturateByAmount: cloneOnApply(function(val) {
+            this.saturation = Math.min(1, Math.max(this.saturation + val, 0));
+        }),
+
+        saturateByRatio: cloneOnApply(function(val) {
+            this.saturation = Math.min(1, Math.max(this.saturation * (1 + val), 0));
+        }),
+
+        schemeFromDegrees: function(degrees) {
+            var newColors = [];
+            for (var i = 0, j = degrees.length; i < j; i++) {
+                var col = this.clone();
+                col.hue = (this.hue + degrees[i]) % 360;
+                newColors.push(col);
+            }
+            return newColors;
+        },
+
+        complementaryScheme: function() {
+            return this.schemeFromDegrees([0, 180]);
+        },
+
+        splitComplementaryScheme: function() {
+            return this.schemeFromDegrees([0, 150, 320]);
+        },
+
+        splitComplementaryCWScheme: function() {
+            return this.schemeFromDegrees([0, 150, 300]);
+        },
+
+        splitComplementaryCCWScheme: function() {
+            return this.schemeFromDegrees([0, 60, 210]);
+        },
+
+        triadicScheme: function() {
+            return this.schemeFromDegrees([0, 120, 240]);
+        },
+
+        clashScheme: function() {
+            return this.schemeFromDegrees([0, 90, 270]);
+        },
+
+        tetradicScheme: function() {
+            return this.schemeFromDegrees([0, 90, 180, 270]);
+        },
+
+        fourToneCWScheme: function() {
+            return this.schemeFromDegrees([0, 60, 180, 240]);
+        },
+
+        fourToneCCWScheme: function() {
+            return this.schemeFromDegrees([0, 120, 180, 300]);
+        },
+
+        fiveToneAScheme: function() {
+            return this.schemeFromDegrees([0, 115, 155, 205, 245]);
+        },
+
+        fiveToneBScheme: function() {
+            return this.schemeFromDegrees([0, 40, 90, 130, 245]);
+        },
+
+        fiveToneCScheme: function() {
+            return this.schemeFromDegrees([0, 50, 90, 205, 320]);
+        },
+
+        fiveToneDScheme: function() {
+            return this.schemeFromDegrees([0, 40, 155, 270, 310]);
+        },
+
+        fiveToneEScheme: function() {
+            return this.schemeFromDegrees([0, 115, 230, 270, 320]);
+        },
+
+        sixToneCWScheme: function() {
+            return this.schemeFromDegrees([0, 30, 120, 150, 240, 270]);
+        },
+
+        sixToneCCWScheme: function() {
+            return this.schemeFromDegrees([0, 90, 120, 210, 240, 330]);
+        },
+
+        neutralScheme: function() {
+            return this.schemeFromDegrees([0, 15, 30, 45, 60, 75]);
+        },
+
+        analogousScheme: function() {
+            return this.schemeFromDegrees([0, 30, 60, 90, 120, 150]);
+        },
+
+        fromObject: function(o) {
+            if (o.hasOwnProperty('hue') &&
+                o.hasOwnProperty('saturation') &&
+                o.hasOwnProperty('value')) {
+                var hsv = factories.HSV();
+
+                hsv.hue = o.hue;
+                hsv.saturation = o.saturation;
+                hsv.value = o.value;
+                hsv.alpha = o.hasOwnProperty('alpha') ? o.alpha : 1;
+
+                return hsv;
+            }
+            // nothing matches, not an HSV object
+            return null;
+        },
+
+        _normalise: function() {
+            this.hue %= 360;
+            this.saturation = Math.min(Math.max(0, this.saturation), 1);
+            this.value = Math.min(Math.max(0, this.value));
+            this.alpha = Math.min(1, Math.max(0, this.alpha));
+        },
+
+        toRGB: function() {
+            this._normalise();
+
+            var rgb = factories.RGB();
+            var i;
+            var f, p, q, t;
+
+            if (this.saturation === 0) {
+                // achromatic (grey)
+                rgb.red = this.value;
+                rgb.green = this.value;
+                rgb.blue = this.value;
+                rgb.alpha = this.alpha;
+                return rgb;
+            }
+
+            var h = this.hue / 60; // sector 0 to 5
+            i = Math.floor(h);
+            f = h - i; // factorial part of h
+            p = this.value * (1 - this.saturation);
+            q = this.value * (1 - this.saturation * f);
+            t = this.value * (1 - this.saturation * (1 - f));
+
+            switch (i) {
+                case 0:
+                    rgb.red = this.value;
+                    rgb.green = t;
+                    rgb.blue = p;
+                    break;
+                case 1:
+                    rgb.red = q;
+                    rgb.green = this.value;
+                    rgb.blue = p;
+                    break;
+                case 2:
+                    rgb.red = p;
+                    rgb.green = this.value;
+                    rgb.blue = t;
+                    break;
+                case 3:
+                    rgb.red = p;
+                    rgb.green = q;
+                    rgb.blue = this.value;
+                    break;
+                case 4:
+                    rgb.red = t;
+                    rgb.green = p;
+                    rgb.blue = this.value;
+                    break;
+                default: // case 5:
+                    rgb.red = this.value;
+                    rgb.green = p;
+                    rgb.blue = q;
+                    break;
+            }
+
+            rgb.alpha = this.alpha;
+
+            return rgb;
+        },
+        toHSL: function() {
+            this._normalise();
+
+            var hsl = factories.HSL();
+
+            hsl.hue = this.hue;
+            var l = (2 - this.saturation) * this.value,
+                s = this.saturation * this.value;
+            if (l && 2 - l) {
+                s /= (l <= 1) ? l : 2 - l;
+            }
+            l /= 2;
+            hsl.saturation = s;
+            hsl.lightness = l;
+            hsl.alpha = this.alpha;
+
+            return hsl;
+        },
+
+        toHSV: function() {
+            return this.clone();
+        }
+    });
+
+    registerModel('HSL', {
+        hue: 0,
+        saturation: 0,
+        lightness: 0,
+        alpha: 1,
+
+        darkenByAmount: cloneOnApply(function(val) {
+            this.lightness = Math.min(1, Math.max(this.lightness - val, 0));
+        }),
+
+        darkenByRatio: cloneOnApply(function(val) {
+            this.lightness = Math.min(1, Math.max(this.lightness * (1 - val), 0));
+        }),
+
+        lightenByAmount: cloneOnApply(function(val) {
+            this.lightness = Math.min(1, Math.max(this.lightness + val, 0));
+        }),
+
+        lightenByRatio: cloneOnApply(function(val) {
+            this.lightness = Math.min(1, Math.max(this.lightness * (1 + val), 0));
+        }),
+
+        fromObject: function(o) {
+            if ("string" == typeof o) {
+                return this._fromCSS(o);
+            }
+            if (o.hasOwnProperty('hue') &&
+                o.hasOwnProperty('saturation') &&
+                o.hasOwnProperty('lightness')) {
+                return this._fromHSL(o);
+            }
+            // nothing matchs, not an RGB object
+        },
+
+        _fromCSS: function(css) {
+            var colorGroups = trim(css).match(hsl_hsla_regex);
+
+            // if there is an "a" after "hsl", there must be a fourth parameter and the other way round
+            if (!colorGroups || (!!colorGroups[1] + !!colorGroups[5] === 1)) {
+                return null;
+            }
+
+            var hsl = factories.HSL();
+            hsl.hue = (colorGroups[2] % 360 + 360) % 360;
+            hsl.saturation = Math.max(0, Math.min(parseInt(colorGroups[3], 10) / 100, 1));
+            hsl.lightness = Math.max(0, Math.min(parseInt(colorGroups[4], 10) / 100, 1));
+            hsl.alpha = !!colorGroups[5] ? Math.max(0, Math.min(1, parseFloat(colorGroups[6]))) : 1;
+
+            return hsl;
+        },
+
+        _fromHSL: function(HSL) {
+            var newHSL = factories.HSL();
+
+            newHSL.hue = HSL.hue;
+            newHSL.saturation = HSL.saturation;
+            newHSL.lightness = HSL.lightness;
+
+            newHSL.alpha = HSL.hasOwnProperty('alpha') ? HSL.alpha : 1;
+
+            return newHSL;
+        },
+
+        _normalise: function() {
+            this.hue = (this.hue % 360 + 360) % 360;
+            this.saturation = Math.min(Math.max(0, this.saturation), 1);
+            this.lightness = Math.min(Math.max(0, this.lightness));
+            this.alpha = Math.min(1, Math.max(0, this.alpha));
+        },
+
+        toHSL: function() {
+            return this.clone();
+        },
+        toHSV: function() {
+            this._normalise();
+
+            var hsv = factories.HSV();
+
+            // http://ariya.blogspot.com/2008/07/converting-between-hsl-and-hsv.html
+            hsv.hue = this.hue; // H
+            var l = 2 * this.lightness,
+                s = this.saturation * ((l <= 1) ? l : 2 - l);
+            hsv.value = (l + s) / 2; // V
+            hsv.saturation = ((2 * s) / (l + s)) || 0; // S
+            hsv.alpha = this.alpha;
+
+            return hsv;
+        },
+        toRGB: function() {
+            return this.toHSV().toRGB();
+        }
+    });
 
     // Package specific exports
 
