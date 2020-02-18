@@ -1,4 +1,4 @@
-import clr from 'color-js'
+import clr from './color-js-abridged' // 'color-js'
 import './styles.less'
 
 const name = 'mcpicker'
