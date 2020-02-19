@@ -21,26 +21,26 @@ document.addEventListener('click', handleDocumentClick)
  */
 function handleDocumentClick(e){
   const {target} = e
-  if (target.matches('input[type=color]')) {
+  if (target.matches('input[type=color]')){
     e.preventDefault()
     const popup = colorPicker(target)
     removeExcept(popup)
     const rect = target.getBoundingClientRect()
 
-    const {right,bottom,top} = rect
-    const {clientX,clientY} = e
-    const {documentElement:{scrollTop,clientWidth,clientHeight}} = document
+    const {right, bottom, top} = rect
+    const {clientX, clientY} = e
+    const {documentElement:{scrollTop, clientWidth, clientHeight}} = document
     const partW = clientX/clientWidth
     const partH = clientY/clientHeight
 
-    if (partW<0.5) {
+    if (partW<0.5){
       popup.style.left = rect.left+px
       popup.style.right = auto
     } else {
       popup.style.left = auto
       popup.style.right = (clientWidth - right)+px
     }
-    if (partH<0.5) {
+    if (partH<0.5){
       popup.style.top = (bottom + scrollTop)+px
       popup.style.bottom = auto
     } else {
@@ -59,7 +59,7 @@ function handleDocumentClick(e){
  * @param {HTMLElement[]} except
  */
 function removeExcept(except){
-	[...popups.values()].forEach(elm=>elm!==except&&elm.remove())
+  [...popups.values()].forEach(elm=>elm!==except&&elm.remove())
 }
 
 /**
@@ -71,9 +71,9 @@ function colorPicker(source){
   const openElm = popups.get(source)
   const initialised = !!openElm
   const inDOM = !!openElm?.parentNode
-  if (initialised&&inDOM) {
+  if (initialised&&inDOM){
     openElm.remove()
-  } else if (initialised&&!inDOM) {
+  } else if (initialised&&!inDOM){
     body.appendChild(openElm)
   } else {
     const popup = document.createElement('div')
@@ -92,7 +92,7 @@ function colorPicker(source){
     const inputRElm = append(popup, 'input')
     const inputGElm = append(popup, 'input')
     const inputBElm = append(popup, 'input')
-    const inputRGB = [inputRElm,inputGElm,inputBElm]
+    const inputRGB = [inputRElm, inputGElm, inputBElm]
     inputRGB.forEach(elm=>{
       elm.type = 'number'
       elm.min = 0
@@ -233,8 +233,8 @@ function colorPicker(source){
      * @param {number} f
      * @return {number}
      */
-    function partRange(f) {
-      return Math.min(Math.max(f,0),1)
+    function partRange(f){
+      return Math.min(Math.max(f, 0), 1)
     }
 
     /**
@@ -301,7 +301,7 @@ function colorPicker(source){
 
     /**
      * Dispatch the input event on the source `input[type=color]`
-     * @param type
+     * @param {string} type
      */
     function dispatch(type='input'){
       const event = document.createEvent('HTMLEvents')
