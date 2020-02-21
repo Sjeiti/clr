@@ -113,6 +113,7 @@ function colorPicker(source){
     const ruleColor = getRule(`${baseRule}>div:first-child:after {}`)
     const ruleHue = getRule(`${baseRule}>div:first-child+div:after {}`)
     const ruleInput = getRule(`${baseRule}>input {}`)
+    const ruleNumber = getRule(`${baseRule}>input[type=number] {}`)
     const ruleInputSelection = getRule(`${baseRule}>input::selection {}`)
 
     colorElm.addEventListener('click', onClickColor)
@@ -270,6 +271,7 @@ function colorPicker(source){
       const isBright = color.getLuminance()>0.5
       rulePicker.style.backgroundColor = color.toString()
       ruleInput.style.color = isBright?'#000':'#FFF'
+      ruleNumber.style.boxShadow = `1px 0 0 rgba(${isBright?'0,0,0,0.3':'255,255,255,0.5'}) inset`
       ruleInputSelection.style.backgroundColor = isBright
         ?color.lightenByAmount(0.6).toString()
         :color.darkenByAmount(0.4).toString()
