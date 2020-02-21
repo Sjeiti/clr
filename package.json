@@ -3,7 +3,8 @@
   "version": "1.1.5",
   "description": "Mc Picker, a minimal color picker",
   "author": "Ron Valstar",
-  "main": "dist.js",
+  "main": "dist/index.js",
+  "files": ["dist/index.js"],
   "scripts": {
     "start": "run-p build serve",
     "build": "run-s clean \"webpack -- --env.development --watch\"",
@@ -12,7 +13,7 @@
     "clean": "del-cli dist -f",
     "serve": "node task/serve docs 5132",
     "version": "next-version package.json",
-    "lint:fix": "eslint src/js/**/*.js --fix"
+    "lint:fix": "eslint src/**/*.js --fix"
   },
   "dependencies": {},
   "devDependencies": {
