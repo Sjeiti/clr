@@ -11,9 +11,19 @@ const popups = new Map()
 
 const px = 'px'
 const auto = 'auto'
+const click = 'click'
+const mousedown = 'mousedown'
+const mouseup = 'mouseup'
+const mousemove = 'mousemove'
+const touchstart = 'touchstart'
+const touchend = 'touchend'
+const touchmove = 'touchmove'
+const change = 'change'
+const div = 'div'
+const input = 'input'
 
 // Add the click event to document to check all the things
-document.addEventListener('click', handleDocumentClick)
+document.addEventListener(click, handleDocumentClick)
 
 /**
  * Handle document click to check if target is an `input[type=color]`
@@ -76,22 +86,22 @@ function colorPicker(source){
   } else if (initialised&&!inDOM){
     body.appendChild(openElm)
   } else {
-    const popup = document.createElement('div')
+    const popup = document.createElement(div)
     popup.classList.add(name)
     popups.set(source, popup)
 
     popup.remove = ()=>{
-      dispatch('change')
+      dispatch(change)
       Element.prototype.remove.apply(popup)
     }
 
-    const colorElm = append(popup, 'div')
-    const hueElm = append(popup, 'div')
-    const inputElm = append(popup, 'input')
+    const colorElm = append(popup, div)
+    const hueElm = append(popup, div)
+    const inputElm = append(popup, input)
     inputElm.value = source.value
-    const inputRElm = append(popup, 'input')
-    const inputGElm = append(popup, 'input')
-    const inputBElm = append(popup, 'input')
+    const inputRElm = append(popup, input)
+    const inputGElm = append(popup, input)
+    const inputBElm = append(popup, input)
     const inputRGB = [inputRElm, inputGElm, inputBElm]
     inputRGB.forEach(elm=>{
       elm.type = 'number'
@@ -116,21 +126,28 @@ function colorPicker(source){
     const ruleNumber = getRule(`${baseRule}>input[type=number] {}`)
     const ruleInputSelection = getRule(`${baseRule}>input::selection {}`)
 
-    colorElm.addEventListener('click', onClickColor)
-    hueElm.addEventListener('click', onClickHue)
+    colorElm.addEventListener(click, onClickColor)
+    hueElm.addEventListener(click, onClickHue)
 
-    colorElm.addEventListener('mousedown', ()=>html.addEventListener('mousemove', onClickColor))
-    html.addEventListener('mouseup', ()=>html.removeEventListener('mousemove', onClickColor))
-    colorElm.addEventListener('touchstart', ()=>html.addEventListener('touchmove', onClickColor))
-    html.addEventListener('touchend', ()=>html.removeEventListener('touchmove', onClickColor))
+    const events = [
+      [mousedown,mouseup,mousemove]
+      ,[touchstart,touchend,touchmove]
+    ]
+    ;[
+      [colorElm,onClickColor]
+      ,[hueElm,onClickHue]
+    ].forEach(([elm,onClick])=>{
+      events.forEach(([start,end,move])=>{
+        elm.addEventListener(start, e=>{
+          html.addEventListener(move, onClick)
+          e.preventDefault()
+        })
+        html.addEventListener(end, ()=>html.removeEventListener(move, onClick))
+      })
+    })
 
-    hueElm.addEventListener('mousedown', ()=>html.addEventListener('mousemove', onClickHue))
-    html.addEventListener('mouseup', ()=>html.removeEventListener('mousemove', onClickHue))
-    hueElm.addEventListener('touchstart', ()=>html.addEventListener('touchmove', onClickHue))
-    html.addEventListener('touchend', ()=>html.removeEventListener('touchmove', onClickHue))
-
-    inputElm.addEventListener('input', onHexInput)
-    inputRGB.forEach(elm=>elm.addEventListener('input', onRGBInput))
+    inputElm.addEventListener(input, onHexInput)
+    inputRGB.forEach(elm=>elm.addEventListener(input, onRGBInput))
 
     setColors()
     setInputHex()
@@ -305,7 +322,7 @@ function colorPicker(source){
      * Dispatch the input event on the source `input[type=color]`
      * @param {string} type
      */
-    function dispatch(type='input'){
+    function dispatch(type=input){
       const event = document.createEvent('HTMLEvents')
       event.initEvent(type, true, false)
       source.dispatchEvent(event)

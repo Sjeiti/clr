@@ -1,6 +1,6 @@
 {
   "name": "mc_picker",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "Mc Picker, a minimal color picker",
   "author": "Ron Valstar",
   "main": "dist/index.js",
@@ -58,7 +58,7 @@
     "not ie <= 10"
   ],
   "gitHooks": {
-    "pre-commit": "npm run version"
+    "pre-commit": "npm run version& \"git add package.json\""
   },
   "repository": {
     "type": "git",

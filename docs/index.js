@@ -1482,6 +1482,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _color_js_abridged__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_color_js_abridged__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _styles_less__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles.less */ "./src/styles.less");
 /* harmony import */ var _styles_less__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_styles_less__WEBPACK_IMPORTED_MODULE_1__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -1501,9 +1509,19 @@ body.appendChild(document.createElement('style'));
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var popups = new Map();
 var px = 'px';
-var auto = 'auto'; // Add the click event to document to check all the things
+var auto = 'auto';
+var click = 'click';
+var mousedown = 'mousedown';
+var mouseup = 'mouseup';
+var mousemove = 'mousemove';
+var touchstart = 'touchstart';
+var touchend = 'touchend';
+var touchmove = 'touchmove';
+var change = 'change';
+var div = 'div';
+var input = 'input'; // Add the click event to document to check all the things
 
-document.addEventListener('click', handleDocumentClick);
+document.addEventListener(click, handleDocumentClick);
 /**
  * Handle document click to check if target is an `input[type=color]`
  * @param {MouseEvent} e
@@ -1761,12 +1779,12 @@ function colorPicker(source) {
     };
     /**
      * Dispatch the input event on the source `input[type=color]`
-     * @param type
+     * @param {string} type
      */
 
 
     var dispatch = function dispatch() {
-      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'input';
+      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : input;
       var event = document.createEvent('HTMLEvents');
       event.initEvent(type, true, false);
       source.dispatchEvent(event);
@@ -1783,22 +1801,22 @@ function colorPicker(source) {
       setBackground();
     };
 
-    var popup = document.createElement('div');
+    var popup = document.createElement(div);
     popup.classList.add(name);
     popups.set(source, popup);
 
     popup.remove = function () {
-      dispatch('change');
+      dispatch(change);
       Element.prototype.remove.apply(popup);
     };
 
-    var colorElm = append(popup, 'div');
-    var hueElm = append(popup, 'div');
-    var inputElm = append(popup, 'input');
+    var colorElm = append(popup, div);
+    var hueElm = append(popup, div);
+    var inputElm = append(popup, input);
     inputElm.value = source.value;
-    var inputRElm = append(popup, 'input');
-    var inputGElm = append(popup, 'input');
-    var inputBElm = append(popup, 'input');
+    var inputRElm = append(popup, input);
+    var inputGElm = append(popup, input);
+    var inputBElm = append(popup, input);
     var inputRGB = [inputRElm, inputGElm, inputBElm];
     inputRGB.forEach(function (elm) {
       elm.type = 'number';
@@ -1818,35 +1836,32 @@ function colorPicker(source) {
     var ruleInput = getRule("".concat(baseRule, ">input {}"));
     var ruleNumber = getRule("".concat(baseRule, ">input[type=number] {}"));
     var ruleInputSelection = getRule("".concat(baseRule, ">input::selection {}"));
-    colorElm.addEventListener('click', onClickColor);
-    hueElm.addEventListener('click', onClickHue);
-    colorElm.addEventListener('mousedown', function () {
-      return html.addEventListener('mousemove', onClickColor);
+    colorElm.addEventListener(click, onClickColor);
+    hueElm.addEventListener(click, onClickHue);
+    var events = [[mousedown, mouseup, mousemove], [touchstart, touchend, touchmove]];
+    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+          elm = _ref2[0],
+          onClick = _ref2[1];
+
+      events.forEach(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 3),
+            start = _ref4[0],
+            end = _ref4[1],
+            move = _ref4[2];
+
+        elm.addEventListener(start, function (e) {
+          html.addEventListener(move, onClick);
+          e.preventDefault();
+        });
+        html.addEventListener(end, function () {
+          return html.removeEventListener(move, onClick);
+        });
+      });
     });
-    html.addEventListener('mouseup', function () {
-      return html.removeEventListener('mousemove', onClickColor);
-    });
-    colorElm.addEventListener('touchstart', function () {
-      return html.addEventListener('touchmove', onClickColor);
-    });
-    html.addEventListener('touchend', function () {
-      return html.removeEventListener('touchmove', onClickColor);
-    });
-    hueElm.addEventListener('mousedown', function () {
-      return html.addEventListener('mousemove', onClickHue);
-    });
-    html.addEventListener('mouseup', function () {
-      return html.removeEventListener('mousemove', onClickHue);
-    });
-    hueElm.addEventListener('touchstart', function () {
-      return html.addEventListener('touchmove', onClickHue);
-    });
-    html.addEventListener('touchend', function () {
-      return html.removeEventListener('touchmove', onClickHue);
-    });
-    inputElm.addEventListener('input', onHexInput);
+    inputElm.addEventListener(input, onHexInput);
     inputRGB.forEach(function (elm) {
-      return elm.addEventListener('input', onRGBInput);
+      return elm.addEventListener(input, onRGBInput);
     });
     setColors();
     setInputHex();
