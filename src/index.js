@@ -1,7 +1,8 @@
 import clr from './color-js-abridged' // 'color-js'
 import './styles.less'
 
-const name = 'mcpicker'
+const version = '_VERSION'
+const name = 'mcpicker'+version
 const {body, documentElement:html} = document
 
 body.appendChild(document.createElement('style'))
