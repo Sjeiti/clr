@@ -1,5 +1,5 @@
-import clr from './color-js-abridged' // 'color-js'
 import './styles.less'
+import {color} from './color'
 
 // const version = '_VERSION'
 const name = 'mcpicker'
@@ -115,8 +115,8 @@ function colorPicker(source){
     const className = getClassName(source)
     popup.classList.add(className)
 
-    let color = clr(inputElm.value)
-    let hueColor = color.setSaturation(1).setLightness(0.5)
+    let colorInst = color(inputElm.value)
+    let hueInst = colorInst.clone().setSL(1, 0.5)
 
     const baseRule = `.${name}.${className}`
     const rulePicker = getRule(`${baseRule} {}`)
@@ -131,14 +131,14 @@ function colorPicker(source){
     hueElm.addEventListener(click, onClickHue)
 
     const events = [
-      [mousedown,mouseup,mousemove]
-      ,[touchstart,touchend,touchmove]
+      [mousedown, mouseup, mousemove]
+      , [touchstart, touchend, touchmove]
     ]
     ;[
-      [colorElm,onClickColor]
-      ,[hueElm,onClickHue]
-    ].forEach(([elm,onClick])=>{
-      events.forEach(([start,end,move])=>{
+      [colorElm, onClickColor]
+      , [hueElm, onClickHue]
+    ].forEach(([elm, onClick])=>{
+      events.forEach(([start, end, move])=>{
         elm.addEventListener(start, e=>{
           html.addEventListener(move, onClick)
           e.preventDefault()
@@ -197,7 +197,7 @@ function colorPicker(source){
       const y = eo.clientY - rect.top
       const xpart = partRange(x/rect.width)
       const ypart = partRange(1-y/rect.height)
-      color = color.setSaturation(xpart).setValue(ypart)
+      colorInst.setSV(xpart, ypart)
       setColorPos()
       setBackground()
       setInputHex()
@@ -214,9 +214,8 @@ function colorPicker(source){
       const eo = e.touches?.[0]||e
       const x = eo.clientX - rect.left
       const xpart = partRange(x/rect.width)
-      const hue = xpart*360
-      color = color.setHue(hue)
-      hueColor = hueColor.setHue(hue)
+      colorInst.setH(xpart)
+      hueInst.setH(xpart)
       setHuePos()
       setColorHue()
       setBackground()
@@ -229,8 +228,8 @@ function colorPicker(source){
      * Input handler for the hex text input
      */
     function onHexInput(){
-      color = clr(inputElm.value)
-      hueColor = color.setSaturation(1).setLightness(0.5)
+      colorInst = color(inputElm.value)
+      hueInst = colorInst.clone().setSL(1, 0.5)
       setColors()
       setInputRGB()
       setSource()
@@ -240,8 +239,9 @@ function colorPicker(source){
      * Input handler for one of the rgb text inputs
      */
     function onRGBInput(){
-      color = clr().fromObject(inputRGB.map(m=>m.value))
-      hueColor = color.setSaturation(1).setLightness(0.5)
+      // colorInst = color(inputRGB.map(m=>m.value))
+      colorInst.setRGB(...inputRGB.map(m=>parseInt(m.value, 10)))
+      hueInst = colorInst.clone().setSL(1, 0.5)
       setColors()
       setInputHex()
       setSource()
@@ -261,15 +261,15 @@ function colorPicker(source){
      */
     function setColorHue(){
       ruleColorcolor.style.background = `linear-gradient(to top, black, rgba(0,0,0,0)),
-      linear-gradient(to left, ${hueColor.toString()}, white)`
+      linear-gradient(to left, ${hueInst.hex}, white)`
     }
 
     /**
      * Set the position of the color gradient
      */
     function setColorPos(){
-      const xpart = color.getSaturation()
-      const ypart = color.getValue()
+      const xpart = colorInst.s
+      const ypart = colorInst.v
       ruleColor.style.left = `${(xpart*100).toFixed(2)}%`
       ruleColor.style.bottom = `${(ypart*100).toFixed(2)}%`
     }
@@ -278,7 +278,7 @@ function colorPicker(source){
      * Set the position of the hue gradient
      */
     function setHuePos(){
-      const xpart = color.getHue()/360
+      const xpart = colorInst.h
       ruleHue.style.left = `${(xpart*100).toFixed(2)}%`
     }
 
@@ -286,36 +286,35 @@ function colorPicker(source){
      * Set the back- and foreground color of the input elements
      */
     function setBackground(){
-      const isBright = color.getLuminance()>0.5
-      rulePicker.style.backgroundColor = color.toString()
+      const isBright = colorInst.luminance>0.5
+      rulePicker.style.backgroundColor = colorInst.hex
       ruleInput.style.color = isBright?'#000':'#FFF'
       ruleNumber.style.boxShadow = `1px 0 0 rgba(${isBright?'0,0,0,0.3':'255,255,255,0.5'}) inset`
-      ruleInputSelection.style.backgroundColor = isBright
-        ?color.lightenByAmount(0.6).toString()
-        :color.darkenByAmount(0.4).toString()
+      const {r, g, b} = colorInst
+      ruleInputSelection.style.backgroundColor = color(255-b, 255-r, 255-g).hex
     }
 
     /**
      * Set the value of the hex input
      */
     function setInputHex(){
-      inputElm.value = color.toCSS()
+      inputElm.value = colorInst.hex
     }
 
     /**
      * Set the value of the rgb inputs
      */
     function setInputRGB(){
-      inputRElm.value = Math.round(color.getRed()*255)
-      inputGElm.value = Math.round(color.getGreen()*255)
-      inputBElm.value = Math.round(color.getBlue()*255)
+      inputRElm.value = Math.round(colorInst.r)
+      inputGElm.value = Math.round(colorInst.g)
+      inputBElm.value = Math.round(colorInst.b)
     }
 
     /**
      * Set the value of the source `input[type=color]`
      */
     function setSource(){
-      source.value = color.toCSS()
+      source.value = colorInst.hex
       dispatch()
     }
 

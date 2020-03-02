@@ -1,10 +1,12 @@
 {
   "name": "mc_picker",
-  "version": "1.1.12",
+  "version": "1.1.13",
   "description": "Mc Picker, a minimal color picker",
   "author": "Ron Valstar",
   "main": "dist/index.js",
-  "files": ["dist/index.js"],
+  "files": [
+    "dist/index.js"
+  ],
   "scripts": {
     "start": "run-p build serve",
     "build": "run-s clean \"webpack -- --env.development --watch\"",
@@ -25,7 +27,6 @@
     "babel-loader": "^8.0.0",
     "body-parser": "^1.18.2",
     "chokidar-cli": "^2.0.0",
-    "color-js": "1.0.5",
     "css-loader": "^1.0.0",
     "css-properties-values": "^1.0.0",
     "del-cli": "^1.1.0",
