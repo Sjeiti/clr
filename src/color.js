@@ -21,8 +21,10 @@ export function color(){
     }
     , setSL(_s, _l){
       const [_r, _g, _b] = hsl2rgb(h, _s, _l)
+      const _v = rgb2hsv(_r, _g, _b)[2]
       s = _s
       l = _l
+      v = _v
       r = _r
       g = _g
       b = _b
@@ -38,8 +40,10 @@ export function color(){
     }
     , setSV(_s, _v){
       const [_r, _g, _b] = hsv2rgb(h, _s, _v)
+      const _l = rgb2hsl(_r, _g, _b)[2]
       s = _s
       v = _v
+      l = _l
       r = _r
       g = _g
       b = _b
