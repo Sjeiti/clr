@@ -100,15 +100,12 @@ function colorPicker(source){
     const hueElm = append(popup, div)
     const inputElm = append(popup, input)
     inputElm.value = source.value
+    inputElm.maxLength = 7
     const inputRElm = append(popup, input)
     const inputGElm = append(popup, input)
     const inputBElm = append(popup, input)
     const inputRGB = [inputRElm, inputGElm, inputBElm]
-    inputRGB.forEach(elm=>{
-      elm.type = 'number'
-      elm.min = 0
-      elm.max = 255
-    })
+    inputRGB.forEach(elm=>elm.type = 'number')
 
     body.appendChild(popup)
 
@@ -238,8 +235,10 @@ function colorPicker(source){
     /**
      * Input handler for one of the rgb text inputs
      */
-    function onRGBInput(){
-      // colorInst = color(inputRGB.map(m=>m.value))
+    function onRGBInput(e){
+      const {target,target:{value}} = e
+      if (value<0) target.value = 0
+      else if (value>255) target.value = 255
       colorInst.setRGB(...inputRGB.map(m=>parseInt(m.value, 10)))
       hueInst = colorInst.clone().setSL(1, 0.5)
       setColors()
