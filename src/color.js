@@ -77,8 +77,10 @@ export function color(){
  * @returns {number[]}
  */
 function hex2rgb(hex){
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result && result.splice(1).map(n=>parseInt(n, 16))
+  const hexThree = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(hex)
+  const hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return hexThree?.splice(1).map(n=>parseInt(n+n, 16))
+      || hexSix?.splice(1).map(n=>parseInt(n, 16))
 }
 
 /**
