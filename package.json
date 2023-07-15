@@ -1,6 +1,6 @@
 {
   "name": "mc_picker",
-  "version": "1.1.18",
+  "version": "1.1.19",
   "description": "Mc Picker, a minimal color picker",
   "author": "Ron Valstar",
   "main": "dist/index.js",
@@ -14,7 +14,6 @@
     "webpack": "npx webpack --config webpack.config.js",
     "clean": "del-cli dist -f",
     "serve": "node task/serve docs 5132",
-    "version": "next-version package.json",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
     "prepare": "husky install"
