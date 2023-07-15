@@ -71,5 +71,6 @@
     "minimal",
     "small"
   ],
-  "homepage": "https://sjeiti.github.io/clr/"
+  "homepage": "https://sjeiti.github.io/clr/",
+  "prepare": "husky install"
 }
