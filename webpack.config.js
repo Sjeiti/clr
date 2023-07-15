@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const FileManagerPlugin = require('filemanager-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 module.exports = env => {
 
   const isProduction = !!env&&env.production
@@ -41,10 +41,12 @@ module.exports = env => {
         _VERSION: JSON.stringify(require('./package.json').version)
       })
       ,new FileManagerPlugin({
-        onEnd: {
-          copy: [
-            { source: './dist/index.js', destination: './docs/index.js' }
-          ]
+        events: {
+          onEnd: {
+            copy: [
+              { source: './dist/index.js', destination: './docs/index.js' }
+            ]
+          }
         }
       })
     ]
