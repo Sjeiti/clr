@@ -16,7 +16,8 @@
     "serve": "node task/serve docs 5132",
     "version": "next-version package.json",
     "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix"
+    "lint:fix": "eslint src/**/*.js --fix",
+    "prepare": "husky install"
   },
   "dependencies": {},
   "devDependencies": {
@@ -36,7 +37,7 @@
     "filemanager-webpack-plugin": "^8.0.0",
     "html-loader": "^0.5.5",
     "html-minifier": "^4.0.0",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "less": "^4.1.3",
     "less-loader": "^5.0.0",
     "less-plugin-glob": "^3.0.0",
@@ -71,6 +72,5 @@
     "minimal",
     "small"
   ],
-  "homepage": "https://sjeiti.github.io/clr/",
-  "prepare": "husky install"
+  "homepage": "https://sjeiti.github.io/clr/"
 }
