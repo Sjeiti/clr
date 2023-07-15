@@ -140,6 +140,7 @@ function colorPicker(source){
     ].forEach(([elm, onClick])=>{
       events.forEach(([start, end, move])=>{
         elm.addEventListener(start, e=>{
+          onClick(e)
           html.addEventListener(move, onClick)
           e.preventDefault()
         })
