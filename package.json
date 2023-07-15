@@ -32,7 +32,7 @@
     "del-cli": "^1.1.0",
     "eslint": "^4.18.2",
     "express": "^4.16.3",
-    "filemanager-webpack-plugin": "^2.0.5",
+    "filemanager-webpack-plugin": "^8.0.0",
     "html-loader": "^0.5.5",
     "html-minifier": "^4.0.0",
     "less": "^3.9.0",
