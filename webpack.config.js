@@ -23,7 +23,9 @@ module.exports = env => {
               ,{
                 loader: 'less-loader'
                 ,options: {
-                  paths: [path.resolve(__dirname, 'src')]
+                  lessOptions: {
+                    paths: [path.resolve(__dirname, 'src')]
+                  }
                 }
               }
           ]
