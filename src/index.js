@@ -26,6 +26,8 @@ const input = 'input'
 // Add the click event to document to check all the things
 document.addEventListener(click, handleDocumentClick)
 
+let lastEvent
+
 /**
  * Handle document click to check if target is an `input[type=color]`
  * @param {MouseEvent} e
@@ -59,10 +61,11 @@ function handleDocumentClick(e){
       popup.style.bottom = (clientHeight - top - scrollTop)+px
     }
 
-  } else {
+  } else if (lastEvent==='click'){
     const clickedPicker = target.closest(`.${name}`)
     !clickedPicker?.contains(target)&&removeExcept()
   }
+  lastEvent = e.type
 }
 
 /**
@@ -200,6 +203,7 @@ function colorPicker(source){
       setInputHex()
       setInputRGB()
       setSource()
+      lastEvent = e.type
     }
 
     /**
@@ -219,6 +223,7 @@ function colorPicker(source){
       setInputHex()
       setInputRGB()
       setSource()
+      lastEvent = e.type
     }
 
     /**
