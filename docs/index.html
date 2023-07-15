@@ -27,6 +27,15 @@
 			text-align: center;
 			color: white;
 		}
+		header .version {
+			margin: 0;
+			font-family: monospace;
+			font-size: 0.75rem;
+			position: absolute;
+			right: 1vw;
+			top: 0;
+			color: #FFF8
+		}
 		header .subtitle {
 			margin: 0;
 			font-family: monospace;
@@ -137,6 +146,7 @@
 
 <body>
 	<header>
+		<p class="version">0.0.0</p>
 		<h1>MC Picker</h1>
 		<p class="subtitle">a minimal color picker</p>
 	</header>
@@ -260,7 +270,12 @@
 			})
 			return foundRule
 		}
-		
+
+		const [,version] = Array.from(document.querySelectorAll('style'))
+				.map(elm=>elm.childNodes?.[0].textContent)
+				.find(text=>/^mcpicker\s\d+\.\d+\.\d+$/.test(text))
+				.split(/\s/)
+		document.querySelector('.version').textContent = 'v'+version
 	</script>
 </body>
 
