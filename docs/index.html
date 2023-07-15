@@ -188,6 +188,20 @@
 
 	<script src="index.js"></script>
 	<script>
+    const {body} = document
+    const createElement = document.createElement.bind(document)
+    const isMobile = window.matchMedia('(max-device-width: 600px)').matches
+    const isLocalhost = window.location.hostname==='localhost'
+
+    if (isMobile&&isLocalhost) {
+      const script = document.createElement('script')
+      script.src = '//cdn.jsdelivr.net/npm/eruda'
+      body.appendChild(script)
+      script.onload = function () {
+        eruda.init()
+      }
+    }
+
 		const h1 = document.querySelector('h1')
 		h1.innerHTML = h1.textContent.split('').map((char, i) => char!==' '&&`<label for="char${i}">${char}</label>`||char).join('')
 		const spans = h1.querySelectorAll('label')
