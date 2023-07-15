@@ -1,11 +1,12 @@
 import './styles.less'
 import {color} from './color'
 
-// const version = '_VERSION'
 const name = 'mcpicker'
 const {body, documentElement:html} = document
 
-body.appendChild(document.createElement('style'))
+const style = document.createElement('style')
+style.appendChild(document.createComment(name+' '+_VERSION))
+body.appendChild(style)
 const sheet = document.styleSheets[document.styleSheets.length - 1]
 
 const popups = new Map()

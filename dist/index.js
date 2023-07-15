@@ -156,10 +156,13 @@ function color() {
  * @returns {number[]}
  */
 function hex2rgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result && result.splice(1).map(function (n) {
+  var hexThree = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(hex);
+  var hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return (hexThree === null || hexThree === void 0 ? void 0 : hexThree.splice(1).map(function (n) {
+    return parseInt(n + n, 16);
+  })) || (hexSix === null || hexSix === void 0 ? void 0 : hexSix.splice(1).map(function (n) {
     return parseInt(n, 16);
-  });
+  }));
 }
 
 /**
@@ -893,13 +896,13 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
 
-
-// const version = '_VERSION'
 var name = 'mcpicker';
 var _document = document,
   body = _document.body,
   html = _document.documentElement;
-body.appendChild(document.createElement('style'));
+var style = document.createElement('style');
+style.appendChild(document.createComment(name + ' ' + "1.1.21"));
+body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var popups = new Map();
 var px = 'px';
