@@ -1,6 +1,6 @@
 /**
  * Simple color object
- * @return {object}
+ * @returns {object}
  */
 export function color(){
   let h, s, l, v, r, g, b
@@ -74,7 +74,7 @@ export function color(){
 /**
  * Convert hex value to rgb
  * @param {string} hex
- * @return {number[]}
+ * @returns {number[]}
  */
 function hex2rgb(hex){
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -86,7 +86,7 @@ function hex2rgb(hex){
  * @param {number} r
  * @param {number} g
  * @param {number} b
- * @return {string}
+ * @returns {string}
  */
 function rgb2hex(r, g, b){
   return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
@@ -100,7 +100,7 @@ function rgb2hex(r, g, b){
  * @param {number} r
  * @param {number} g
  * @param {number} b
- * @return {number[]}
+ * @returns {number[]}
  */
 function rgb2hsl(r, g, b){
     const r1 = r/255
@@ -129,7 +129,7 @@ function rgb2hsl(r, g, b){
  * @param {number} p
  * @param {number} q
  * @param {number} t
- * returns {number}
+ * @returns {number}
  */
 function hue2rgb(p, q, t){
   if (t<0) t += 1
@@ -148,7 +148,7 @@ function hue2rgb(p, q, t){
  * @param {number} h
  * @param {number} s
  * @param {number} l
- * @return {number[]}
+ * @returns {number[]}
  */
 function hsl2rgb(h, s, l){
   let r, g, b
@@ -172,7 +172,7 @@ function hsl2rgb(h, s, l){
  * @param {number} r
  * @param {number} g
  * @param {number} b
- * @return {number[]}
+ * @returns {number[]}
  */
 function rgb2hsv(r, g, b){
   const r1 = r/255
@@ -204,7 +204,7 @@ function rgb2hsv(r, g, b){
  * @param {number} h
  * @param {number} s
  * @param {number} v
- * @return {number[]}
+ * @returns {number[]}
  */
 function hsv2rgb(h, s, v){
   let r, g, b

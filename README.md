@@ -11,11 +11,11 @@ The implementation is minimal, the code is minimal, even the colorpicker itself 
 
 To install just do something like:
 
-npm i -S mc_picker
+`npm i -S mc_picker`
 
 Then just import it somewhere:
 
-import 'mc_picker'
+`import 'mc_picker'`
 
 
 ## License
