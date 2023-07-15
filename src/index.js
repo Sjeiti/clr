@@ -234,9 +234,10 @@ function colorPicker(source){
 
     /**
      * Input handler for one of the rgb text inputs
+     * @param {event} e
      */
     function onRGBInput(e){
-      const {target,target:{value}} = e
+      const {target, target:{value}} = e
       if (value<0) target.value = 0
       else if (value>255) target.value = 255
       colorInst.setRGB(...inputRGB.map(m=>parseInt(m.value, 10)))
