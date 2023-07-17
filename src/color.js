@@ -81,6 +81,7 @@ function hex2rgb(hex){
   const hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return hexThree?.splice(1).map(n=>parseInt(n+n, 16))
       || hexSix?.splice(1).map(n=>parseInt(n, 16))
+      || []
 }
 
 /**
@@ -151,6 +152,7 @@ function hue2rgb(p, q, t){
  * @param {number} s
  * @param {number} l
  * @returns {number[]}
+ * @todo guard hsl params
  */
 function hsl2rgb(h, s, l){
   let r, g, b
@@ -207,6 +209,7 @@ function rgb2hsv(r, g, b){
  * @param {number} s
  * @param {number} v
  * @returns {number[]}
+ * @todo guard hsv params
  */
 function hsv2rgb(h, s, v){
   let r, g, b
