@@ -1,14 +1,15 @@
 import './styles.less'
 import {color} from './color'
 
-// const version = '_VERSION'
 const name = 'mcpicker'
 const {body, documentElement:html} = document
 
-body.appendChild(document.createElement('style'))
+const style = document.createElement('style')
+style.appendChild(document.createComment(name+' '+_VERSION))
+body.appendChild(style)
 const sheet = document.styleSheets[document.styleSheets.length - 1]
 
-const popups = new Map()
+const pickers = new Map()
 
 const px = 'px'
 const auto = 'auto'
@@ -73,7 +74,7 @@ function handleDocumentClick(e){
  * @param {HTMLElement[]} except
  */
 function removeExcept(except){
-  [...popups.values()].forEach(elm=>elm!==except&&elm.remove())
+  [...pickers.values()].forEach(({popup})=>popup!==except&&popup.remove())
 }
 
 /**
@@ -82,17 +83,17 @@ function removeExcept(except){
  * @return {HTMLElement} the color picker element
  */
 function colorPicker(source){
-  const openElm = popups.get(source)
-  const initialised = !!openElm
-  const inDOM = !!openElm?.parentNode
+  const openPicker = pickers.get(source)
+  const {popup:openElm, showPopup} = openPicker||{}
+  const initialised = openPicker!==undefined
+  const inDOM = openElm?.parentNode!==null
   if (initialised&&inDOM){
     openElm.remove()
   } else if (initialised&&!inDOM){
-    body.appendChild(openElm)
+    showPopup()
   } else {
     const popup = document.createElement(div)
     popup.classList.add(name)
-    popups.set(source, popup)
 
     popup.remove = ()=>{
       dispatch(change)
@@ -110,7 +111,9 @@ function colorPicker(source){
     const inputRGB = [inputRElm, inputGElm, inputBElm]
     inputRGB.forEach(elm=>elm.type = 'number')
 
-    body.appendChild(popup)
+    pickers.set(source, {popup, showPopup})
+
+    showPopup()
 
     const className = getClassName(source)
     popup.classList.add(className)
@@ -154,6 +157,14 @@ function colorPicker(source){
     setColors()
     setInputHex()
     setInputRGB()
+
+    /**
+     * Add popup to DOM and set focus
+     */
+    function showPopup(){
+      body.appendChild(popup)
+      inputElm.focus()
+    }
 
     /**
      * Append a new element to an existing element
@@ -344,5 +355,5 @@ function colorPicker(source){
       setBackground()
     }
   }
-  return popups.get(source)
+  return pickers.get(source)?.popup
 }

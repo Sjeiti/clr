@@ -156,10 +156,13 @@ function color() {
  * @returns {number[]}
  */
 function hex2rgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result && result.splice(1).map(function (n) {
+  var hexThree = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(hex);
+  var hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return (hexThree === null || hexThree === void 0 ? void 0 : hexThree.splice(1).map(function (n) {
+    return parseInt(n + n, 16);
+  })) || (hexSix === null || hexSix === void 0 ? void 0 : hexSix.splice(1).map(function (n) {
     return parseInt(n, 16);
-  });
+  })) || [];
 }
 
 /**
@@ -238,6 +241,7 @@ function hue2rgb(p, q, t) {
  * @param {number} s
  * @param {number} l
  * @returns {number[]}
+ * @todo guard hsl params
  */
 function hsl2rgb(h, s, l) {
   var r, g, b;
@@ -304,6 +308,7 @@ function rgb2hsv(r, g, b) {
  * @param {number} s
  * @param {number} v
  * @returns {number[]}
+ * @todo guard hsv params
  */
 function hsv2rgb(h, s, v) {
   var r, g, b;
@@ -893,15 +898,15 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
 
-
-// const version = '_VERSION'
 var name = 'mcpicker';
 var _document = document,
   body = _document.body,
   html = _document.documentElement;
-body.appendChild(document.createElement('style'));
+var style = document.createElement('style');
+style.appendChild(document.createComment(name + ' ' + "1.1.25"));
+body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
-var popups = new Map();
+var pickers = new Map();
 var px = 'px';
 var auto = 'auto';
 var click = 'click';
@@ -968,8 +973,9 @@ function handleDocumentClick(e) {
  * @param {HTMLElement[]} except
  */
 function removeExcept(except) {
-  _toConsumableArray(popups.values()).forEach(function (elm) {
-    return elm !== except && elm.remove();
+  _toConsumableArray(pickers.values()).forEach(function (_ref) {
+    var popup = _ref.popup;
+    return popup !== except && popup.remove();
   });
 }
 
@@ -979,14 +985,25 @@ function removeExcept(except) {
  * @return {HTMLElement} the color picker element
  */
 function colorPicker(source) {
-  var openElm = popups.get(source);
-  var initialised = !!openElm;
-  var inDOM = !!(openElm !== null && openElm !== void 0 && openElm.parentNode);
+  var _pickers$get;
+  var openPicker = pickers.get(source);
+  var _ref2 = openPicker || {},
+    openElm = _ref2.popup,
+    showPopup = _ref2.showPopup;
+  var initialised = openPicker !== undefined;
+  var inDOM = (openElm === null || openElm === void 0 ? void 0 : openElm.parentNode) !== null;
   if (initialised && inDOM) {
     openElm.remove();
   } else if (initialised && !inDOM) {
-    body.appendChild(openElm);
+    showPopup();
   } else {
+    /**
+     * Add popup to DOM and set focus
+     */
+    var _showPopup = function _showPopup() {
+      body.appendChild(popup);
+      inputElm.focus();
+    };
     /**
      * Append a new element to an existing element
      * @param {HTMLElement} to
@@ -1169,7 +1186,6 @@ function colorPicker(source) {
     };
     var popup = document.createElement(div);
     popup.classList.add(name);
-    popups.set(source, popup);
     popup.remove = function () {
       dispatch(change);
       Element.prototype.remove.apply(popup);
@@ -1186,7 +1202,11 @@ function colorPicker(source) {
     inputRGB.forEach(function (elm) {
       return elm.type = 'number';
     });
-    body.appendChild(popup);
+    pickers.set(source, {
+      popup: popup,
+      showPopup: _showPopup
+    });
+    _showPopup();
     var className = getClassName(source);
     popup.classList.add(className);
     var colorInst = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(inputElm.value);
@@ -1202,15 +1222,15 @@ function colorPicker(source) {
     colorElm.addEventListener(click, onClickColor);
     hueElm.addEventListener(click, onClickHue);
     var events = [[mousedown, mouseup, mousemove], [touchstart, touchend, touchmove]];
-    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref) {
-      var _ref2 = _slicedToArray(_ref, 2),
-        elm = _ref2[0],
-        onClick = _ref2[1];
-      events.forEach(function (_ref3) {
-        var _ref4 = _slicedToArray(_ref3, 3),
-          start = _ref4[0],
-          end = _ref4[1],
-          move = _ref4[2];
+    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref3) {
+      var _ref4 = _slicedToArray(_ref3, 2),
+        elm = _ref4[0],
+        onClick = _ref4[1];
+      events.forEach(function (_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 3),
+          start = _ref6[0],
+          end = _ref6[1],
+          move = _ref6[2];
         elm.addEventListener(start, function (e) {
           onClick(e);
           html.addEventListener(move, onClick);
@@ -1229,7 +1249,7 @@ function colorPicker(source) {
     setInputHex();
     setInputRGB();
   }
-  return popups.get(source);
+  return (_pickers$get = pickers.get(source)) === null || _pickers$get === void 0 ? void 0 : _pickers$get.popup;
 }
 }();
 /******/ })()
