@@ -1,10 +1,18 @@
 module.exports = {
   root: true,
   parser: 'babel-eslint',
+  plugins: [
+      'cypress'
+    , 'custom-rules'
+  ],
   parserOptions: {
     sourceType: 'module'
   },
   'rules': {
+
+    'custom-rules/no-todo-remove': 'warn',
+    'custom-rules/no-test-only': 'error',
+
     'no-new': 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
@@ -28,6 +36,6 @@ module.exports = {
     'comma-spacing': ['error', { before: false, after: true }],
 
     'require-jsdoc': 2,
-    'valid-jsdoc': ['error', { requireReturn: false, requireParamDescription: false, requireReturnDescription: false }],
+    'valid-jsdoc': ['error', { requireReturn: false, requireParamDescription: false, requireReturnDescription: false }]
   }
 }
