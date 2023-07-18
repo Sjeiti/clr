@@ -50,7 +50,6 @@
 			text-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4),0 0.125rem 0.25rem rgba(0,0,0,0.2);
 		}
 		.content {
-			/*max-width: 48rem;*/
 			max-width: 34rem;
 			margin: 0 auto;
 			padding: 0.5rem;
@@ -59,7 +58,6 @@
 			font-size: 1.125rem;
 		}
 		p {
-			/*max-width: 34rem;*/
 			margin: 1rem auto;
 		}
 		
@@ -71,16 +69,19 @@
 			padding: 0 0.25rem;
 			box-shadow: 0 0 0 0.25rem #E7ECE9;
 			font-family: monospace;
+			font-size: 1rem;
 		}
 		pre {
 			padding: 0.25rem;
 			box-shadow: 0.0625rem 0.125rem 0.5rem rgba(0,0,0,0.1) inset;
 			border-radius: 0.125rem;
+      overflow-x: auto;
 		}
 		pre code {
 			box-shadow: none;
 			background-color: transparent;
-			font-size: 1.125rem;
+			margin: 0;
+			padding: 0;
 		}
 		
 		fieldset {
@@ -167,26 +168,35 @@
 						<label>Gradient 1 <input type="color" id="g1" value="#ffd89b" /></label>
 						<label>Gradient 2 <input type="color" id="g2" value="#19547b" /></label>
 					</fieldset>
-					<!--<fieldset>
-            <legend>Colors with a label</legend>
-            <label>Color 1 <input type="color" value="#10A1C2" /></label>
-            <label>Color 2 <input type="color" value="#FF0044" /></label>
-            <label>Color 3 <input type="color" value="#F0F044" /></label>
-          </fieldset>
-          <fieldset>
-            <legend>Colors with block labels, names and ids</legend>
-            <label class="block">Color 1 <input type="color" name="one" value="#10A1C2" /></label>
-            <label class="block">Color 2 <input type="color" name="two" value="#FF0044" /></label>
-            <label class="block">Color 3 <input type="color" id="seven" value="#F0F044" /></label>
-          </fieldset>-->
 				</form>
 			</section>
 			<section>
 				<h2>installation</h2>
 				<p>To install just do something like:</p>
-				<pre><code>npm i -S mc_picker</code></pre>
+        <code>npm i -S mc_picker</code> or <code>yarn add mc_picker -S</code>
 				<p>Then just import it somewhere:</p>
-				<pre><code>import 'mc_picker'</code></pre>
+				<p><code>import 'mc_picker'</code></p>
+			</section>
+			<section>
+				<h2>customisation</h2>
+				<p>You can easily adjust dimensions through CSS without affecting functionality:</p>
+				<pre><code>.mcpicker { width: 20rem; height: 20rem; }
+.mcpicker div { height: calc(100% - 5rem); }
+.mcpicker div + div { height: 2rem; }
+.mcpicker input { height: 3rem; }</code></pre>
+				<p>This can also be done for a single instance when you use <code>.mcpicker_[color input id]</code> instead of <code>.mcpicker</code>:</p>
+        <style>
+					.mcpicker_custom-css { width: 20rem; height: 20rem; }
+					.mcpicker_custom-css div { height: calc(100% - 5rem); }
+					.mcpicker_custom-css div + div { height: 2rem; }
+					.mcpicker_custom-css input { height: 3rem; }
+        </style>
+        <form>
+          <fieldset>
+            <legend>Custom styling applied to <code>.mcpicker_custom-css</code></legend>
+            <label><input type="color" id="custom-css" value="#ff0044" /></label>
+          </fieldset>
+        </form>
 			</section>
 		</div>
 	</main>

@@ -8,7 +8,7 @@
       0 0 0 1px white,
       0 2px 4px rgba(0, 0, 0, 0.4),
       0 4px 8px rgba(0, 0, 0, 0.3);
-  >div:first-child {
+  div {
     position: relative;
     width: 100%;
     height: calc(100% - 2rem);
@@ -23,27 +23,19 @@
       position: absolute;
       width: 0.5rem;
       height: 0.5rem;
+      transform: translate(-50%,50%);
       border-radius: 1rem;
       box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;
-      transform: translate(-50%,50%);
       pointer-events: none;
     }
     & + div {
-      position: relative;
       height: 1rem;
-      user-select: none;
       background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);
       &:after {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 0;
         width: 3px;
-        transform: translateX(-2px);
         height: inherit;
+        transform: translateX(-2px);
         box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;
-        pointer-events: none;
       }
     }
   }
