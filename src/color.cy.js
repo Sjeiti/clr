@@ -6,6 +6,10 @@ describe('color', () => {
 
   // initialisation
 
+  it('should have prototype', () => {
+    assert.equal(color('F04').__proto__, color('40F').__proto__)
+  })
+
   it('should initialise with single param hex values', () => {
     assert.equal(color('F04').hex, '#FF0044')
     assert.equal(color('#F04').hex, '#FF0044')

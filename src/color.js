@@ -1,67 +1,84 @@
+const colorPrototype = {
+  setRGB(_r, _g, _b){
+    const [_h, _s, _l] = rgb2hsl(_r, _g, _b)
+    const _v = rgb2hsv(_r, _g, _b)[2]
+    this.h = _h
+    this.s = _s
+    this.l = _l
+    this.v = _v
+    this.r = _r
+    this.g = _g
+    this.b = _b
+    return this
+  }
+  , setSL(_s, _l){
+    const {r, g, b} = this
+    const [h] = rgb2hsl(r, g, b)
+    const [_r, _g, _b] = hsl2rgb(h, _s, _l)
+    const _v = rgb2hsv(_r, _g, _b)[2]
+    this.s = _s
+    this.l = _l
+    this.v = _v
+    this.r = _r
+    this.g = _g
+    this.b = _b
+    return this
+  }
+  , setH(_h){
+    const {r, g, b} = this
+    const [, s, l] = rgb2hsl(r, g, b)
+    const [_r, _g, _b] = hsl2rgb(_h, s, l)
+    this.h = _h
+    this.r = _r
+    this.g = _g
+    this.b = _b
+    return this
+  }
+  , setSV(_s, _v){
+    const {r, g, b} = this
+    const [h] = rgb2hsl(r, g, b)
+    const [_r, _g, _b] = hsv2rgb(h, _s, _v)
+    const _l = rgb2hsl(_r, _g, _b)[2]
+    this.s = _s
+    this.v = _v
+    this.l = _l
+    this.r = _r
+    this.g = _g
+    this.b = _b
+    return this
+  }
+  , clone(){
+    return color(this.r, this.g, this.b)
+  }
+}
+
 /**
  * Simple color object
  * @returns {object}
  */
 export function color(){
-  let h, s, l, v, r, g, b
   const {length} = arguments
   const [_r, _g, _b] = arguments
-  const _color = Object.create({
-    setRGB(_r, _g, _b){
-      const [_h, _s, _l] = rgb2hsl(_r, _g, _b)
-      const _v = rgb2hsv(_r, _g, _b)[2]
-      h = _h
-      s = _s
-      l = _l
-      v = _v
-      r = _r
-      g = _g
-      b = _b
-      return this
-    }
-    , setSL(_s, _l){
-      const [_r, _g, _b] = hsl2rgb(h, _s, _l)
-      const _v = rgb2hsv(_r, _g, _b)[2]
-      s = _s
-      l = _l
-      v = _v
-      r = _r
-      g = _g
-      b = _b
-      return this
-    }
-    , setH(_h){
-      const [_r, _g, _b] = hsl2rgb(_h, s, l)
-      h = _h
-      r = _r
-      g = _g
-      b = _b
-      return this
-    }
-    , setSV(_s, _v){
-      const [_r, _g, _b] = hsv2rgb(h, _s, _v)
-      const _l = rgb2hsl(_r, _g, _b)[2]
-      s = _s
-      v = _v
-      l = _l
-      r = _r
-      g = _g
-      b = _b
-      return this
-    }
-    , clone(){
-      return color(r, g, b)
-    }
-  }, {
-    h: {get: function(){ return h }}
-    , s: {get: function(){ return s }}
-    , l: {get: function(){ return l }}
-    , v: {get: function(){ return v }}
-    , r: {get: function(){ return r }}
-    , g: {get: function(){ return g }}
-    , b: {get: function(){ return b }}
-    , hex: {get: function(){ return rgb2hex(r, g, b) }}
-    , luminance: {get: function(){ return (0.375*r + 0.5*g + 0.125*b)/255 }}
+  const _color = Object.create(colorPrototype, {
+      h: { writable: true }
+    , s: { writable: true }
+    , l: { writable: true }
+    , v: { writable: true }
+    , r: { writable: true }
+    , g: { writable: true }
+    , b: { writable: true }
+    , hex: {get(){
+      const {r, g, b} = this
+      return isValid(r, g, b)
+          ? rgb2hex(r, g, b)
+          : undefined
+    }}
+    , luminance: {get(){
+        const {r, g, b} = this
+        return isValid(r, g, b)
+            ? (0.375*r + 0.5*g + 0.125*b)/255
+            : undefined
+    }}
   })
   if (length===1&&typeof _r === 'string'){
     _color.setRGB(...hex2rgb(_r))
@@ -69,6 +86,18 @@ export function color(){
     _color.setRGB(_r, _g, _b)
   }
   return _color
+}
+
+/**
+ * Test arguments are set and of the same type
+ * @param {object} args
+ * @returns {boolean}
+ */
+function isValid(...args){
+  const isSet = args.filter(n=>n===null||n===undefined||isNaN(n)).length===0
+  const firstType = typeof args[0]
+  const isType = args.filter(n=>typeof n!==firstType).length===0
+  return isSet && isType
 }
 
 /**

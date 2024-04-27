@@ -12,6 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   color: function() { return /* binding */ color; }
 /* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -22,123 +23,135 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var colorPrototype = {
+  setRGB: function setRGB(_r, _g, _b) {
+    var _rgb2hsl = rgb2hsl(_r, _g, _b),
+      _rgb2hsl2 = _slicedToArray(_rgb2hsl, 3),
+      _h = _rgb2hsl2[0],
+      _s = _rgb2hsl2[1],
+      _l = _rgb2hsl2[2];
+    var _v = rgb2hsv(_r, _g, _b)[2];
+    this.h = _h;
+    this.s = _s;
+    this.l = _l;
+    this.v = _v;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  setSL: function setSL(_s, _l) {
+    var r = this.r,
+      g = this.g,
+      b = this.b;
+    var _rgb2hsl3 = rgb2hsl(r, g, b),
+      _rgb2hsl4 = _slicedToArray(_rgb2hsl3, 1),
+      h = _rgb2hsl4[0];
+    var _hsl2rgb = hsl2rgb(h, _s, _l),
+      _hsl2rgb2 = _slicedToArray(_hsl2rgb, 3),
+      _r = _hsl2rgb2[0],
+      _g = _hsl2rgb2[1],
+      _b = _hsl2rgb2[2];
+    var _v = rgb2hsv(_r, _g, _b)[2];
+    this.s = _s;
+    this.l = _l;
+    this.v = _v;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  setH: function setH(_h) {
+    var r = this.r,
+      g = this.g,
+      b = this.b;
+    var _rgb2hsl5 = rgb2hsl(r, g, b),
+      _rgb2hsl6 = _slicedToArray(_rgb2hsl5, 3),
+      s = _rgb2hsl6[1],
+      l = _rgb2hsl6[2];
+    var _hsl2rgb3 = hsl2rgb(_h, s, l),
+      _hsl2rgb4 = _slicedToArray(_hsl2rgb3, 3),
+      _r = _hsl2rgb4[0],
+      _g = _hsl2rgb4[1],
+      _b = _hsl2rgb4[2];
+    this.h = _h;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  setSV: function setSV(_s, _v) {
+    var r = this.r,
+      g = this.g,
+      b = this.b;
+    var _rgb2hsl7 = rgb2hsl(r, g, b),
+      _rgb2hsl8 = _slicedToArray(_rgb2hsl7, 1),
+      h = _rgb2hsl8[0];
+    var _hsv2rgb = hsv2rgb(h, _s, _v),
+      _hsv2rgb2 = _slicedToArray(_hsv2rgb, 3),
+      _r = _hsv2rgb2[0],
+      _g = _hsv2rgb2[1],
+      _b = _hsv2rgb2[2];
+    var _l = rgb2hsl(_r, _g, _b)[2];
+    this.s = _s;
+    this.v = _v;
+    this.l = _l;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  clone: function clone() {
+    return color(this.r, this.g, this.b);
+  }
+};
+
 /**
  * Simple color object
  * @returns {object}
  */
 function color() {
-  var h, s, l, v, r, g, b;
   var length = arguments.length;
   var _arguments = Array.prototype.slice.call(arguments),
     _r = _arguments[0],
     _g = _arguments[1],
     _b = _arguments[2];
-  var _color = Object.create({
-    setRGB: function setRGB(_r, _g, _b) {
-      var _rgb2hsl = rgb2hsl(_r, _g, _b),
-        _rgb2hsl2 = _slicedToArray(_rgb2hsl, 3),
-        _h = _rgb2hsl2[0],
-        _s = _rgb2hsl2[1],
-        _l = _rgb2hsl2[2];
-      var _v = rgb2hsv(_r, _g, _b)[2];
-      h = _h;
-      s = _s;
-      l = _l;
-      v = _v;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    setSL: function setSL(_s, _l) {
-      var _hsl2rgb = hsl2rgb(h, _s, _l),
-        _hsl2rgb2 = _slicedToArray(_hsl2rgb, 3),
-        _r = _hsl2rgb2[0],
-        _g = _hsl2rgb2[1],
-        _b = _hsl2rgb2[2];
-      var _v = rgb2hsv(_r, _g, _b)[2];
-      s = _s;
-      l = _l;
-      v = _v;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    setH: function setH(_h) {
-      var _hsl2rgb3 = hsl2rgb(_h, s, l),
-        _hsl2rgb4 = _slicedToArray(_hsl2rgb3, 3),
-        _r = _hsl2rgb4[0],
-        _g = _hsl2rgb4[1],
-        _b = _hsl2rgb4[2];
-      h = _h;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    setSV: function setSV(_s, _v) {
-      var _hsv2rgb = hsv2rgb(h, _s, _v),
-        _hsv2rgb2 = _slicedToArray(_hsv2rgb, 3),
-        _r = _hsv2rgb2[0],
-        _g = _hsv2rgb2[1],
-        _b = _hsv2rgb2[2];
-      var _l = rgb2hsl(_r, _g, _b)[2];
-      s = _s;
-      v = _v;
-      l = _l;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    clone: function clone() {
-      return color(r, g, b);
-    }
-  }, {
+  var _color = Object.create(colorPrototype, {
     h: {
-      get: function get() {
-        return h;
-      }
+      writable: true
     },
     s: {
-      get: function get() {
-        return s;
-      }
+      writable: true
     },
     l: {
-      get: function get() {
-        return l;
-      }
+      writable: true
     },
     v: {
-      get: function get() {
-        return v;
-      }
+      writable: true
     },
     r: {
-      get: function get() {
-        return r;
-      }
+      writable: true
     },
     g: {
-      get: function get() {
-        return g;
-      }
+      writable: true
     },
     b: {
-      get: function get() {
-        return b;
-      }
+      writable: true
     },
     hex: {
       get: function get() {
-        return rgb2hex(r, g, b);
+        var r = this.r,
+          g = this.g,
+          b = this.b;
+        return isValid(r, g, b) ? rgb2hex(r, g, b) : undefined;
       }
     },
     luminance: {
       get: function get() {
-        return (0.375 * r + 0.5 * g + 0.125 * b) / 255;
+        var r = this.r,
+          g = this.g,
+          b = this.b;
+        return isValid(r, g, b) ? (0.375 * r + 0.5 * g + 0.125 * b) / 255 : undefined;
       }
     }
   });
@@ -148,6 +161,25 @@ function color() {
     _color.setRGB(_r, _g, _b);
   }
   return _color;
+}
+
+/**
+ * Test arguments are set and of the same type
+ * @param {object} args
+ * @returns {boolean}
+ */
+function isValid() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  var isSet = args.filter(function (n) {
+    return n === null || n === undefined || isNaN(n);
+  }).length === 0;
+  var firstType = _typeof(args[0]);
+  var isType = args.filter(function (n) {
+    return _typeof(n) !== firstType;
+  }).length === 0;
+  return isSet && isType;
 }
 
 /**
@@ -903,7 +935,7 @@ var _document = document,
   body = _document.body,
   html = _document.documentElement;
 var style = document.createElement('style');
-style.appendChild(document.createComment(name + ' ' + "1.1.25"));
+style.appendChild(document.createComment(name + ' ' + "1.1.27"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var pickers = new Map();
