@@ -935,7 +935,7 @@ var _document = document,
   body = _document.body,
   html = _document.documentElement;
 var style = document.createElement('style');
-style.appendChild(document.createComment(name + ' ' + "1.1.27"));
+style.appendChild(document.createComment(name + ' ' + "1.1.30"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var pickers = new Map();
