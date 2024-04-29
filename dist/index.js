@@ -12,6 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   color: function() { return /* binding */ color; }
 /* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -22,123 +23,135 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var colorPrototype = {
+  setRGB: function setRGB(_r, _g, _b) {
+    var _rgb2hsl = rgb2hsl(_r, _g, _b),
+      _rgb2hsl2 = _slicedToArray(_rgb2hsl, 3),
+      _h = _rgb2hsl2[0],
+      _s = _rgb2hsl2[1],
+      _l = _rgb2hsl2[2];
+    var _v = rgb2hsv(_r, _g, _b)[2];
+    this.h = _h;
+    this.s = _s;
+    this.l = _l;
+    this.v = _v;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  setSL: function setSL(_s, _l) {
+    var r = this.r,
+      g = this.g,
+      b = this.b;
+    var _rgb2hsl3 = rgb2hsl(r, g, b),
+      _rgb2hsl4 = _slicedToArray(_rgb2hsl3, 1),
+      h = _rgb2hsl4[0];
+    var _hsl2rgb = hsl2rgb(h, _s, _l),
+      _hsl2rgb2 = _slicedToArray(_hsl2rgb, 3),
+      _r = _hsl2rgb2[0],
+      _g = _hsl2rgb2[1],
+      _b = _hsl2rgb2[2];
+    var _v = rgb2hsv(_r, _g, _b)[2];
+    this.s = _s;
+    this.l = _l;
+    this.v = _v;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  setH: function setH(_h) {
+    var r = this.r,
+      g = this.g,
+      b = this.b;
+    var _rgb2hsl5 = rgb2hsl(r, g, b),
+      _rgb2hsl6 = _slicedToArray(_rgb2hsl5, 3),
+      s = _rgb2hsl6[1],
+      l = _rgb2hsl6[2];
+    var _hsl2rgb3 = hsl2rgb(_h, s, l),
+      _hsl2rgb4 = _slicedToArray(_hsl2rgb3, 3),
+      _r = _hsl2rgb4[0],
+      _g = _hsl2rgb4[1],
+      _b = _hsl2rgb4[2];
+    this.h = _h;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  setSV: function setSV(_s, _v) {
+    var r = this.r,
+      g = this.g,
+      b = this.b;
+    var _rgb2hsl7 = rgb2hsl(r, g, b),
+      _rgb2hsl8 = _slicedToArray(_rgb2hsl7, 1),
+      h = _rgb2hsl8[0];
+    var _hsv2rgb = hsv2rgb(h, _s, _v),
+      _hsv2rgb2 = _slicedToArray(_hsv2rgb, 3),
+      _r = _hsv2rgb2[0],
+      _g = _hsv2rgb2[1],
+      _b = _hsv2rgb2[2];
+    var _l = rgb2hsl(_r, _g, _b)[2];
+    this.s = _s;
+    this.v = _v;
+    this.l = _l;
+    this.r = _r;
+    this.g = _g;
+    this.b = _b;
+    return this;
+  },
+  clone: function clone() {
+    return color(this.r, this.g, this.b);
+  }
+};
+
 /**
  * Simple color object
  * @returns {object}
  */
 function color() {
-  var h, s, l, v, r, g, b;
   var length = arguments.length;
   var _arguments = Array.prototype.slice.call(arguments),
     _r = _arguments[0],
     _g = _arguments[1],
     _b = _arguments[2];
-  var _color = Object.create({
-    setRGB: function setRGB(_r, _g, _b) {
-      var _rgb2hsl = rgb2hsl(_r, _g, _b),
-        _rgb2hsl2 = _slicedToArray(_rgb2hsl, 3),
-        _h = _rgb2hsl2[0],
-        _s = _rgb2hsl2[1],
-        _l = _rgb2hsl2[2];
-      var _v = rgb2hsv(_r, _g, _b)[2];
-      h = _h;
-      s = _s;
-      l = _l;
-      v = _v;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    setSL: function setSL(_s, _l) {
-      var _hsl2rgb = hsl2rgb(h, _s, _l),
-        _hsl2rgb2 = _slicedToArray(_hsl2rgb, 3),
-        _r = _hsl2rgb2[0],
-        _g = _hsl2rgb2[1],
-        _b = _hsl2rgb2[2];
-      var _v = rgb2hsv(_r, _g, _b)[2];
-      s = _s;
-      l = _l;
-      v = _v;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    setH: function setH(_h) {
-      var _hsl2rgb3 = hsl2rgb(_h, s, l),
-        _hsl2rgb4 = _slicedToArray(_hsl2rgb3, 3),
-        _r = _hsl2rgb4[0],
-        _g = _hsl2rgb4[1],
-        _b = _hsl2rgb4[2];
-      h = _h;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    setSV: function setSV(_s, _v) {
-      var _hsv2rgb = hsv2rgb(h, _s, _v),
-        _hsv2rgb2 = _slicedToArray(_hsv2rgb, 3),
-        _r = _hsv2rgb2[0],
-        _g = _hsv2rgb2[1],
-        _b = _hsv2rgb2[2];
-      var _l = rgb2hsl(_r, _g, _b)[2];
-      s = _s;
-      v = _v;
-      l = _l;
-      r = _r;
-      g = _g;
-      b = _b;
-      return this;
-    },
-    clone: function clone() {
-      return color(r, g, b);
-    }
-  }, {
+  var _color = Object.create(colorPrototype, {
     h: {
-      get: function get() {
-        return h;
-      }
+      writable: true
     },
     s: {
-      get: function get() {
-        return s;
-      }
+      writable: true
     },
     l: {
-      get: function get() {
-        return l;
-      }
+      writable: true
     },
     v: {
-      get: function get() {
-        return v;
-      }
+      writable: true
     },
     r: {
-      get: function get() {
-        return r;
-      }
+      writable: true
     },
     g: {
-      get: function get() {
-        return g;
-      }
+      writable: true
     },
     b: {
-      get: function get() {
-        return b;
-      }
+      writable: true
     },
     hex: {
       get: function get() {
-        return rgb2hex(r, g, b);
+        var r = this.r,
+          g = this.g,
+          b = this.b;
+        return isValid(r, g, b) ? rgb2hex(r, g, b) : undefined;
       }
     },
     luminance: {
       get: function get() {
-        return (0.375 * r + 0.5 * g + 0.125 * b) / 255;
+        var r = this.r,
+          g = this.g,
+          b = this.b;
+        return isValid(r, g, b) ? (0.375 * r + 0.5 * g + 0.125 * b) / 255 : undefined;
       }
     }
   });
@@ -148,6 +161,25 @@ function color() {
     _color.setRGB(_r, _g, _b);
   }
   return _color;
+}
+
+/**
+ * Test arguments are set and of the same type
+ * @param {object} args
+ * @returns {boolean}
+ */
+function isValid() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  var isSet = args.filter(function (n) {
+    return n === null || n === undefined || isNaN(n);
+  }).length === 0;
+  var firstType = _typeof(args[0]);
+  var isType = args.filter(function (n) {
+    return _typeof(n) !== firstType;
+  }).length === 0;
+  return isSet && isType;
 }
 
 /**
@@ -360,7 +392,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow: 0 0 0 1px white, 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);\n}\n.mcpicker > div:first-child {\n  position: relative;\n  width: 100%;\n  height: calc(100% - 2rem);\n  user-select: none;\n  background: linear-gradient(to top, black, rgba(0, 0, 0, 0)), linear-gradient(to left, red, white);\n}\n.mcpicker > div:first-child:after {\n  content: '';\n  display: block;\n  position: absolute;\n  width: 0.5rem;\n  height: 0.5rem;\n  border-radius: 1rem;\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n  transform: translate(-50%, 50%);\n  pointer-events: none;\n}\n.mcpicker > div:first-child + div {\n  position: relative;\n  height: 1rem;\n  user-select: none;\n  background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n}\n.mcpicker > div:first-child + div:after {\n  content: '';\n  display: block;\n  position: absolute;\n  left: 50%;\n  top: 0;\n  width: 3px;\n  transform: translateX(-2px);\n  height: inherit;\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n  pointer-events: none;\n}\n.mcpicker input {\n  width: 40%;\n  height: 1rem;\n  display: block;\n  float: left;\n  margin: 0;\n  padding: 0.125rem 0.25rem;\n  border: 0;\n  border-radius: 0;\n  box-sizing: border-box;\n  outline: none;\n  box-shadow: none;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1rem;\n  font-family: monospace;\n  font-weight: 600;\n  text-align: center;\n}\n.mcpicker input::-webkit-outer-spin-button,\n.mcpicker input::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n.mcpicker input[type=number] {\n  -moz-appearance: textfield;\n  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.5) inset;\n}\n.mcpicker input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input + input {\n  width: 20%;\n}\n", "",{"version":3,"sources":["webpack://./src/styles.less"],"names":[],"mappings":"AAAA;EACE,kBAAA;EACA,YAAA;EACA,YAAA;EACA,qBAAA;EACA,WAAA;EACA,uFAAA;AACF;AAPA;EAWI,kBAAA;EACA,WAAA;EACA,yBAAA;EACA,iBAAA;EACA,kGAAA;AADJ;AAKI;EACE,WAAA;EACA,cAAA;EACA,kBAAA;EACA,aAAA;EACA,cAAA;EACA,mBAAA;EACA,wDAAA;EACA,+BAAA;EACA,oBAAA;AAHN;AAKI;EACE,kBAAA;EACA,YAAA;EACA,iBAAA;EACA,+EAAA;AAHN;AAIM;EACE,WAAA;EACA,cAAA;EACA,kBAAA;EACA,SAAA;EACA,MAAA;EACA,UAAA;EACA,2BAAA;EACA,eAAA;EACA,wDAAA;EACA,oBAAA;AAFR;AA3CA;EAkDI,UAAA;EACA,YAAA;EACA,cAAA;EACA,WAAA;EACA,SAAA;EACA,yBAAA;EACA,SAAA;EACA,gBAAA;EACA,sBAAA;EACA,aAAA;EACA,gBAAA;EACA,6BAAA;EACA,eAAA;EACA,iBAAA;EACA,sBAAA;EACA,gBAAA;EACA,kBAAA;AAJJ;AAKI;;EAEE,wBAAA;EACA,SAAA;AAHN;AAKI;EACE,0BAAA;EACA,kDAAA;AAHN;AAQQ;;;;EACE,UAAA;AAHV","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  >div:first-child {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      transform: translate(-50%,50%);\n      pointer-events: none;\n    }\n    & + div {\n      position: relative;\n      height: 1rem;\n      user-select: none;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        content: '';\n        display: block;\n        position: absolute;\n        left: 50%;\n        top: 0;\n        width: 3px;\n        transform: translateX(-2px);\n        height: inherit;\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n        pointer-events: none;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    // box-shadow: 0 0 8px black inset; //\n    +input {\n      &,+input {\n        &,+input {\n          width: 20%;\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow: 0 0 0 1px white, 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);\n}\n.mcpicker div {\n  position: relative;\n  width: 100%;\n  height: calc(100% - 2rem);\n  user-select: none;\n  background: linear-gradient(to top, black, rgba(0, 0, 0, 0)), linear-gradient(to left, red, white);\n}\n.mcpicker div:after {\n  content: '';\n  display: block;\n  position: absolute;\n  width: 0.5rem;\n  height: 0.5rem;\n  transform: translate(-50%, 50%);\n  border-radius: 1rem;\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n  pointer-events: none;\n}\n.mcpicker div + div {\n  height: 1rem;\n  background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n}\n.mcpicker div + div:after {\n  width: 3px;\n  height: inherit;\n  transform: translateX(-2px);\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n}\n.mcpicker input {\n  width: 40%;\n  height: 1rem;\n  display: block;\n  float: left;\n  margin: 0;\n  padding: 0.125rem 0.25rem;\n  border: 0;\n  border-radius: 0;\n  box-sizing: border-box;\n  outline: none;\n  box-shadow: none;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1rem;\n  font-family: monospace;\n  font-weight: 600;\n  text-align: center;\n}\n.mcpicker input::-webkit-outer-spin-button,\n.mcpicker input::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n.mcpicker input[type=number] {\n  -moz-appearance: textfield;\n  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.5) inset;\n}\n.mcpicker input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input + input {\n  width: 20%;\n}\n", "",{"version":3,"sources":["webpack://./src/styles.less"],"names":[],"mappings":"AAAA;EACE,kBAAA;EACA,YAAA;EACA,YAAA;EACA,qBAAA;EACA,WAAA;EACA,uFAAA;AACF;AAPA;EAWI,kBAAA;EACA,WAAA;EACA,yBAAA;EACA,iBAAA;EACA,kGAAA;AADJ;AAKI;EACE,WAAA;EACA,cAAA;EACA,kBAAA;EACA,aAAA;EACA,cAAA;EACA,+BAAA;EACA,mBAAA;EACA,wDAAA;EACA,oBAAA;AAHN;AAKI;EACE,YAAA;EACA,+EAAA;AAHN;AAIM;EACE,UAAA;EACA,eAAA;EACA,2BAAA;EACA,wDAAA;AAFR;AAnCA;EA0CI,UAAA;EACA,YAAA;EACA,cAAA;EACA,WAAA;EACA,SAAA;EACA,yBAAA;EACA,SAAA;EACA,gBAAA;EACA,sBAAA;EACA,aAAA;EACA,gBAAA;EACA,6BAAA;EACA,eAAA;EACA,iBAAA;EACA,sBAAA;EACA,gBAAA;EACA,kBAAA;AAJJ;AAKI;;EAEE,wBAAA;EACA,SAAA;AAHN;AAKI;EACE,0BAAA;EACA,kDAAA;AAHN;AAQQ;;;;EACE,UAAA;AAHV","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    // box-shadow: 0 0 8px black inset; //\n    +input {\n      &,+input {\n        &,+input {\n          width: 20%;\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -903,7 +935,7 @@ var _document = document,
   body = _document.body,
   html = _document.documentElement;
 var style = document.createElement('style');
-style.appendChild(document.createComment(name + ' ' + "1.1.25"));
+style.appendChild(document.createComment(name + ' ' + "1.1.30"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var pickers = new Map();
@@ -1213,11 +1245,11 @@ function colorPicker(source) {
     var hueInst = colorInst.clone().setSL(1, 0.5);
     var baseRule = ".".concat(name, ".").concat(className);
     var rulePicker = getRule("".concat(baseRule, " {}"));
-    var ruleColorcolor = getRule("".concat(baseRule, ">div:first-child {}"));
-    var ruleColor = getRule("".concat(baseRule, ">div:first-child:after {}"));
-    var ruleHue = getRule("".concat(baseRule, ">div:first-child+div:after {}"));
-    var ruleInput = getRule("".concat(baseRule, ">input {}"));
-    var ruleNumber = getRule("".concat(baseRule, ">input[type=number] {}"));
+    var ruleColorcolor = getRule("".concat(baseRule, " div:first-child {}"));
+    var ruleColor = getRule("".concat(baseRule, " div:first-child:after {}"));
+    var ruleHue = getRule("".concat(baseRule, " div+div:after {}"));
+    var ruleInput = getRule("".concat(baseRule, " input {}"));
+    var ruleNumber = getRule("".concat(baseRule, " input[type=number] {}"));
     var ruleInputSelection = getRule("".concat(baseRule, ">input::selection {}"));
     colorElm.addEventListener(click, onClickColor);
     hueElm.addEventListener(click, onClickHue);

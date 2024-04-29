@@ -6,12 +6,14 @@ Just add the script and the colorpicker will work on any `input[type=color]`. Ev
 
 The implementation is minimal, the code is minimal, even the colorpicker itself is a mere six elements in a wrapper and some smart CSS.
 
+Checkout https://sjeiti.github.io/clr/ for live examples.
+
 
 ## Installation
 
 To install just do something like:
 
-`npm i -S mc_picker`
+`npm i -S mc_picker` or `yarn add mc_picker -S`
 
 Then just import it somewhere:
 

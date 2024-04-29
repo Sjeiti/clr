@@ -123,11 +123,11 @@ function colorPicker(source){
 
     const baseRule = `.${name}.${className}`
     const rulePicker = getRule(`${baseRule} {}`)
-    const ruleColorcolor = getRule(`${baseRule}>div:first-child {}`)
-    const ruleColor = getRule(`${baseRule}>div:first-child:after {}`)
-    const ruleHue = getRule(`${baseRule}>div:first-child+div:after {}`)
-    const ruleInput = getRule(`${baseRule}>input {}`)
-    const ruleNumber = getRule(`${baseRule}>input[type=number] {}`)
+    const ruleColorcolor = getRule(`${baseRule} div:first-child {}`)
+    const ruleColor = getRule(`${baseRule} div:first-child:after {}`)
+    const ruleHue = getRule(`${baseRule} div+div:after {}`)
+    const ruleInput = getRule(`${baseRule} input {}`)
+    const ruleNumber = getRule(`${baseRule} input[type=number] {}`)
     const ruleInputSelection = getRule(`${baseRule}>input::selection {}`)
 
     colorElm.addEventListener(click, onClickColor)
