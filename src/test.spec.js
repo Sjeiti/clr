@@ -150,35 +150,20 @@ test.describe('MC Picker', () => {
     await expect(mcpicker1).toHaveCSS('background-color', 'rgb(255, 0, 68)')
   })
 
+  test('should work with custom css', async({ page, page: {keyboard} }) => {
 
-  // todo fix test
-  test.skip('should work with custom css', async({ page, page: {keyboard} }) => {
-    //
-    await page.addInitScript(async(window)=>{
-      window.console.log('addInitScript', window) // todo: remove log
-      const {document} = window
-      const style = document.createElement('style')
-      style.appendChild(document.createTextNode(`
-          .mcpicker { width: 20rem; height: 20rem; }
-          .mcpicker > div:first-child { height: calc(100% - 5rem); }
+    await page.locator('body').evaluate(body => {
+      const {ownerDocument} = body
+      const style = ownerDocument.createElement('style')
+      style.appendChild(ownerDocument.createTextNode(`
+          .mcpicker { width: 10rem; height: 10rem; }
+          .mcpicker > div:first-child { height: calc(100% - 4rem); }
           .mcpicker > div:first-child + div { height: 2rem; }
-          .mcpicker input { height: 3rem; }
+          .mcpicker input { height: 2rem; font-size: 0.75rem; }
       `))
-      // style.textContent = `
-      //     .mcpicker { width: 20rem; height: 20rem; }
-      //     .mcpicker > div:first-child { height: calc(100% - 5rem); }
-      //     .mcpicker > div:first-child + div { height: 2rem; }
-      //     .mcpicker input { height: 3rem; }
-      // `
-      // style.styleSheet.cssText = `
-      //     .mcpicker { width: 20rem; height: 20rem; }
-      //     .mcpicker > div:first-child { height: calc(100% - 5rem); }
-      //     .mcpicker > div:first-child + div { height: 2rem; }
-      //     .mcpicker input { height: 3rem; }
-      // `
-      document.body.appendChild(style)
+      body.appendChild(style)
     })
-    //
+
     await color2.click()
     await keyboard.press(selectAll)
     await keyboard.type('F04')
