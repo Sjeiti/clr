@@ -1,5 +1,5 @@
 const colorPrototype = {
-  setRGB(_r, _g, _b){
+  setRGB(_r, _g, _b, _a){
     const [_h, _s, _l] = rgb2hsl(_r, _g, _b)
     const _v = rgb2hsv(_r, _g, _b)[2]
     this.h = _h
@@ -9,6 +9,7 @@ const colorPrototype = {
     this.r = _r
     this.g = _g
     this.b = _b
+    this.a = _a===undefined?255:_a
     return this
   }
   , setSL(_s, _l){
@@ -48,7 +49,7 @@ const colorPrototype = {
     return this
   }
   , clone(){
-    return color(this.r, this.g, this.b)
+    return color(this.r, this.g, this.b, this.a)
   }
 }
 
@@ -58,7 +59,7 @@ const colorPrototype = {
  */
 export function color(){
   const {length} = arguments
-  const [_r, _g, _b] = arguments
+  const [_r, _g, _b, _a] = arguments
   const _color = Object.create(colorPrototype, {
       h: { writable: true }
     , s: { writable: true }
@@ -67,10 +68,11 @@ export function color(){
     , r: { writable: true }
     , g: { writable: true }
     , b: { writable: true }
+    , a: { writable: true }
     , hex: {get(){
-      const {r, g, b} = this
-      return isValid(r, g, b)
-          ? rgb2hex(r, g, b)
+      const {r, g, b, a} = this
+      return isValid(r, g, b, a)
+          ? rgb2hex(r, g, b, a)
           : undefined
     }}
     , luminance: {get(){
@@ -80,10 +82,13 @@ export function color(){
             : undefined
     }}
   })
-  if (length===1&&typeof _r === 'string'){
+  const firstType = typeof _r
+  if (length===1&&firstType==='string'){
     _color.setRGB(...hex2rgb(_r))
-  } else if (length===3&&typeof _r === 'number'){
-    _color.setRGB(_r, _g, _b)
+  } else if (firstType==='number'){
+    if (length===3&&isValid(_r, _g, _b)||length===4&&isValid(_r, _g, _b, _a)){
+      _color.setRGB(_r, _g, _b, _a)
+    }
   }
   return _color
 }
@@ -106,10 +111,10 @@ function isValid(...args){
  * @returns {number[]}
  */
 function hex2rgb(hex){
-  const hexThree = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(hex)
-  const hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return hexThree?.splice(1).map(n=>parseInt(n+n, 16))
-      || hexSix?.splice(1).map(n=>parseInt(n, 16))
+  const hex34 = /^#?([a-f\d])([a-f\d])([a-f\d])([a-f\d])?$/i.exec(hex)
+  const hex68 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex)
+  return hex34?.slice(1).filter(n=>n!==undefined).map(n=>parseInt(n+n, 16))
+      || hex68?.slice(1).filter(n=>n!==undefined).map(n=>parseInt(n, 16))
       || []
 }
 
@@ -120,8 +125,15 @@ function hex2rgb(hex){
  * @param {number} b
  * @returns {string}
  */
-function rgb2hex(r, g, b){
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+function rgb2hex(r, g, b, a){
+  //return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+  const rgb = ((1 << 24) + (r << 16) + (g << 8) + b)
+    .toString(16)
+    .slice(1)
+    .toUpperCase()
+  return a===undefined || a===255
+    ? '#' + rgb
+    : '#' + rgb + a.toString(16).padStart(2, '0').toUpperCase()
 }
 
 /**
