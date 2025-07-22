@@ -1,4 +1,4 @@
-import './styles.less'
+import './styles.css'
 import {color} from './color'
 
 const name = 'mcpicker'
@@ -17,6 +17,7 @@ const click = 'click'
 const mousedown = 'mousedown'
 const mouseup = 'mouseup'
 const mousemove = 'mousemove'
+const resize = 'resize'
 const touchstart = 'touchstart'
 const touchend = 'touchend'
 const touchmove = 'touchmove'
@@ -26,6 +27,8 @@ const input = 'input'
 
 // Add the click event to document to check all the things
 document.addEventListener(click, handleDocumentClick)
+
+window.addEventListener(resize, handleDocumentResize)
 
 let lastEvent
 
@@ -39,34 +42,51 @@ function handleDocumentClick(e){
     e.preventDefault()
     const popup = colorPicker(target)
     removeExcept(popup)
-    const rect = target.getBoundingClientRect()
-
-    const {right, bottom, top} = rect
     const {clientX, clientY} = e
-    const {documentElement:{scrollTop, clientWidth, clientHeight}} = document
-    const partW = clientX/clientWidth
-    const partH = clientY/clientHeight
-
-    if (partW<0.5){
-      popup.style.left = rect.left+px
-      popup.style.right = auto
-    } else {
-      popup.style.left = auto
-      popup.style.right = (clientWidth - right)+px
-    }
-    if (partH<0.5){
-      popup.style.top = (bottom + scrollTop)+px
-      popup.style.bottom = auto
-    } else {
-      popup.style.top = auto
-      popup.style.bottom = (clientHeight - top - scrollTop)+px
-    }
-
+    alignPopupToSource(popup, target, clientX, clientY)
   } else if (lastEvent==='click'){
     const clickedPicker = target.closest(`.${name}`)
     !clickedPicker?.contains(target)&&removeExcept()
   }
   lastEvent = e.type
+}
+
+function alignPopupToSource(popup, source, clientX=0, clientY=0){
+
+  if (!source) {
+    const obj = Array.from(pickers.values()).find(o=>o.popup===popup)
+    console.log('obj',obj)
+    source = obj.source
+  }
+
+  const rect = source.getBoundingClientRect()
+
+  const {right, bottom, top} = rect
+  const {documentElement:{scrollTop, clientWidth, clientHeight}} = document
+  const partW = clientX/clientWidth
+  const partH = clientY/clientHeight
+
+  if (partW<0.5){
+    popup.style.left = rect.left+px
+    popup.style.right = auto
+  } else {
+    popup.style.left = auto
+    popup.style.right = (clientWidth - right)+px
+  }
+  if (partH<0.5){
+    popup.style.top = (bottom + scrollTop)+px
+    popup.style.bottom = auto
+  } else {
+    popup.style.top = auto
+    popup.style.bottom = (clientHeight - top - scrollTop)+px
+  }
+}
+
+/**
+ * Check position on resize (mobile keyboard may cause)
+ */
+function handleDocumentResize(){
+  colorPicker()
 }
 
 /**
@@ -78,17 +98,27 @@ function removeExcept(except){
 }
 
 /**
+ */
+function getOpenPicker(){
+  return [...pickers.values()].find(({popup})=>popup?.parentNode!==null)
+}
+
+/**
  * Initialise the color picker for an `input[type=color]`
  * @param {HTMLInputElement} source
  * @return {HTMLElement} the color picker element
  */
 function colorPicker(source){
-  const openPicker = pickers.get(source)
+  const openPicker = source
+    ?pickers.get(source)
+    :getOpenPicker()
   const {popup:openElm, showPopup} = openPicker||{}
   const initialised = openPicker!==undefined
   const inDOM = openElm?.parentNode!==null
   if (initialised&&inDOM){
-    openElm.remove()
+    source
+      ?openElm.remove()
+      :alignPopupToSource(openElm)
   } else if (initialised&&!inDOM){
     showPopup()
   } else {
@@ -108,10 +138,11 @@ function colorPicker(source){
     const inputRElm = append(popup, input)
     const inputGElm = append(popup, input)
     const inputBElm = append(popup, input)
-    const inputRGB = [inputRElm, inputGElm, inputBElm]
-    inputRGB.forEach(elm=>elm.type = 'number')
+    const inputAElm = append(popup, input)
+    const inputRGBA = [inputRElm, inputGElm, inputBElm, inputAElm]
+    inputRGBA.forEach(elm=>elm.type = 'number')
 
-    pickers.set(source, {popup, showPopup})
+    pickers.set(source, {popup, showPopup, source})
 
     showPopup()
 
@@ -152,7 +183,7 @@ function colorPicker(source){
     })
 
     inputElm.addEventListener(input, onHexInput)
-    inputRGB.forEach(elm=>elm.addEventListener(input, onRGBInput))
+    inputRGBA.forEach(elm=>elm.addEventListener(input, onRGBInput))
 
     setColors()
     setInputHex()
@@ -254,10 +285,11 @@ function colorPicker(source){
      * @param {event} e
      */
     function onRGBInput(e){
+      console.log('add A')
       const {target, target:{value}} = e
       if (value<0) target.value = 0
       else if (value>255) target.value = 255
-      colorInst.setRGB(...inputRGB.map(m=>parseInt(m.value, 10)))
+      colorInst.setRGB(...inputRGBA.map(m=>parseInt(m.value, 10)))
       hueInst = colorInst.clone().setSL(1, 0.5)
       setColors()
       setInputHex()

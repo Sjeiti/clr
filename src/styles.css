@@ -66,13 +66,23 @@
       -moz-appearance:textfield;
       box-shadow: 1px 0 0 rgba(white,0.5) inset;
     }
-    // box-shadow: 0 0 8px black inset; //
+    /* box-shadow: 0 0 8px black inset; */
     +input {
       &,+input {
         &,+input {
-          width: 20%;
+          width: calc(60% / 3);
         }
       }
     }
+    /* alpha 
+    +input {
+      &,+input {
+        &,+input {
+          &,+input {
+            width: calc(60% / 4);
+          }
+        }
+      }
+    } */
   }
 }

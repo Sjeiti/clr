@@ -16,18 +16,10 @@ module.exports = env => {
     ,devtool: 'source-map'
     ,module: {
       rules: [{
-          test: /\.less$/
+          test: /\.css$/
           ,use: [
               'style-loader'
               ,'css-loader'
-              ,{
-                loader: 'less-loader'
-                ,options: {
-                  lessOptions: {
-                    paths: [path.resolve(__dirname, 'src')]
-                  }
-                }
-              }
           ]
       },{
         test: /\.js$/

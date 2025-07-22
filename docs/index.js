@@ -12,11 +12,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   color: function() { return /* binding */ color; }
 /* harmony export */ });
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -24,7 +24,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var colorPrototype = {
-  setRGB: function setRGB(_r, _g, _b) {
+  setRGB: function setRGB(_r, _g, _b, _a) {
     var _rgb2hsl = rgb2hsl(_r, _g, _b),
       _rgb2hsl2 = _slicedToArray(_rgb2hsl, 3),
       _h = _rgb2hsl2[0],
@@ -38,6 +38,7 @@ var colorPrototype = {
     this.r = _r;
     this.g = _g;
     this.b = _b;
+    this.a = _a === undefined ? 255 : _a;
     return this;
   },
   setSL: function setSL(_s, _l) {
@@ -102,7 +103,7 @@ var colorPrototype = {
     return this;
   },
   clone: function clone() {
-    return color(this.r, this.g, this.b);
+    return color(this.r, this.g, this.b, this.a);
   }
 };
 
@@ -115,7 +116,8 @@ function color() {
   var _arguments = Array.prototype.slice.call(arguments),
     _r = _arguments[0],
     _g = _arguments[1],
-    _b = _arguments[2];
+    _b = _arguments[2],
+    _a = _arguments[3];
   var _color = Object.create(colorPrototype, {
     h: {
       writable: true
@@ -138,12 +140,16 @@ function color() {
     b: {
       writable: true
     },
+    a: {
+      writable: true
+    },
     hex: {
       get: function get() {
         var r = this.r,
           g = this.g,
-          b = this.b;
-        return isValid(r, g, b) ? rgb2hex(r, g, b) : undefined;
+          b = this.b,
+          a = this.a;
+        return isValid(r, g, b, a) ? rgb2hex(r, g, b, a) : undefined;
       }
     },
     luminance: {
@@ -155,10 +161,13 @@ function color() {
       }
     }
   });
-  if (length === 1 && typeof _r === 'string') {
+  var firstType = _typeof(_r);
+  if (length === 1 && firstType === 'string') {
     _color.setRGB.apply(_color, _toConsumableArray(hex2rgb(_r)));
-  } else if (length === 3 && typeof _r === 'number') {
-    _color.setRGB(_r, _g, _b);
+  } else if (firstType === 'number') {
+    if (length === 3 && isValid(_r, _g, _b) || length === 4 && isValid(_r, _g, _b, _a)) {
+      _color.setRGB(_r, _g, _b, _a);
+    }
   }
   return _color;
 }
@@ -188,11 +197,15 @@ function isValid() {
  * @returns {number[]}
  */
 function hex2rgb(hex) {
-  var hexThree = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(hex);
-  var hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return (hexThree === null || hexThree === void 0 ? void 0 : hexThree.splice(1).map(function (n) {
+  var hex34 = /^#?([a-f\d])([a-f\d])([a-f\d])([a-f\d])?$/i.exec(hex);
+  var hex68 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
+  return (hex34 === null || hex34 === void 0 ? void 0 : hex34.slice(1).filter(function (n) {
+    return n !== undefined;
+  }).map(function (n) {
     return parseInt(n + n, 16);
-  })) || (hexSix === null || hexSix === void 0 ? void 0 : hexSix.splice(1).map(function (n) {
+  })) || (hex68 === null || hex68 === void 0 ? void 0 : hex68.slice(1).filter(function (n) {
+    return n !== undefined;
+  }).map(function (n) {
     return parseInt(n, 16);
   })) || [];
 }
@@ -204,8 +217,10 @@ function hex2rgb(hex) {
  * @param {number} b
  * @returns {string}
  */
-function rgb2hex(r, g, b) {
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+function rgb2hex(r, g, b, a) {
+  //return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+  var rgb = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  return a === undefined || a === 255 ? '#' + rgb : '#' + rgb + a.toString(16).padStart(2, '0').toUpperCase();
 }
 
 /**
@@ -376,10 +391,10 @@ function hsv2rgb(h, s, v) {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./src/styles.less":
-/*!**********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./src/styles.less ***!
-  \**********************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles.css":
+/*!**************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles.css ***!
+  \**************************************************************/
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -392,7 +407,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow: 0 0 0 1px white, 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);\n}\n.mcpicker div {\n  position: relative;\n  width: 100%;\n  height: calc(100% - 2rem);\n  user-select: none;\n  background: linear-gradient(to top, black, rgba(0, 0, 0, 0)), linear-gradient(to left, red, white);\n}\n.mcpicker div:after {\n  content: '';\n  display: block;\n  position: absolute;\n  width: 0.5rem;\n  height: 0.5rem;\n  transform: translate(-50%, 50%);\n  border-radius: 1rem;\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n  pointer-events: none;\n}\n.mcpicker div + div {\n  height: 1rem;\n  background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n}\n.mcpicker div + div:after {\n  width: 3px;\n  height: inherit;\n  transform: translateX(-2px);\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n}\n.mcpicker input {\n  width: 40%;\n  height: 1rem;\n  display: block;\n  float: left;\n  margin: 0;\n  padding: 0.125rem 0.25rem;\n  border: 0;\n  border-radius: 0;\n  box-sizing: border-box;\n  outline: none;\n  box-shadow: none;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1rem;\n  font-family: monospace;\n  font-weight: 600;\n  text-align: center;\n}\n.mcpicker input::-webkit-outer-spin-button,\n.mcpicker input::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n.mcpicker input[type=number] {\n  -moz-appearance: textfield;\n  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.5) inset;\n}\n.mcpicker input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input + input {\n  width: 20%;\n}\n", "",{"version":3,"sources":["webpack://./src/styles.less"],"names":[],"mappings":"AAAA;EACE,kBAAA;EACA,YAAA;EACA,YAAA;EACA,qBAAA;EACA,WAAA;EACA,uFAAA;AACF;AAPA;EAWI,kBAAA;EACA,WAAA;EACA,yBAAA;EACA,iBAAA;EACA,kGAAA;AADJ;AAKI;EACE,WAAA;EACA,cAAA;EACA,kBAAA;EACA,aAAA;EACA,cAAA;EACA,+BAAA;EACA,mBAAA;EACA,wDAAA;EACA,oBAAA;AAHN;AAKI;EACE,YAAA;EACA,+EAAA;AAHN;AAIM;EACE,UAAA;EACA,eAAA;EACA,2BAAA;EACA,wDAAA;AAFR;AAnCA;EA0CI,UAAA;EACA,YAAA;EACA,cAAA;EACA,WAAA;EACA,SAAA;EACA,yBAAA;EACA,SAAA;EACA,gBAAA;EACA,sBAAA;EACA,aAAA;EACA,gBAAA;EACA,6BAAA;EACA,eAAA;EACA,iBAAA;EACA,sBAAA;EACA,gBAAA;EACA,kBAAA;AAJJ;AAKI;;EAEE,wBAAA;EACA,SAAA;AAHN;AAKI;EACE,0BAAA;EACA,kDAAA;AAHN;AAQQ;;;;EACE,UAAA;AAHV","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    // box-shadow: 0 0 8px black inset; //\n    +input {\n      &,+input {\n        &,+input {\n          width: 20%;\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            width: calc(60% / 4);\n          }\n        }\n      }\n    } */\n  }\n}\n", "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;EACE,kBAAkB;EAClB,YAAY;EACZ,YAAY;EACZ,qBAAqB;EACrB,WAAW;EACX;;;kCAGgC;EAChC;IACE,kBAAkB;IAClB,WAAW;IACX,yBAAyB;IACzB,iBAAiB;IACjB;;;IAGA;IACA;MACE,WAAW;MACX,cAAc;MACd,kBAAkB;MAClB,aAAa;MACb,cAAc;MACd,8BAA8B;MAC9B,mBAAmB;MACnB,wDAAwD;MACxD,oBAAoB;IACtB;IACA;MACE,YAAY;MACZ,+EAA+E;MAC/E;QACE,UAAU;QACV,eAAe;QACf,2BAA2B;QAC3B,wDAAwD;MAC1D;IACF;EACF;EACA;IACE,UAAU;IACV,YAAY;IACZ,cAAc;IACd,WAAW;IACX,SAAS;IACT,yBAAyB;IACzB,SAAS;IACT,gBAAgB;IAChB,sBAAsB;IACtB,aAAa;IACb,gBAAgB;IAChB,6BAA6B;IAC7B,eAAe;IACf,iBAAiB;IACjB,sBAAsB;IACtB,gBAAgB;IAChB,kBAAkB;IAClB;;MAEE,wBAAwB;MACxB,SAAS;IACX;IACA;MACE,yBAAyB;MACzB,yCAAyC;IAC3C;IACA,qCAAqC;IACrC;MACE;QACE;UACE,oBAAoB;QACtB;MACF;IACF;IACA;;;;;;;;;OASG;EACL;AACF","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            width: calc(60% / 4);\n          }\n        }\n      }\n    } */\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -518,10 +533,10 @@ module.exports = function (item) {
 
 /***/ }),
 
-/***/ "./src/styles.less":
-/*!*************************!*\
-  !*** ./src/styles.less ***!
-  \*************************/
+/***/ "./src/styles.css":
+/*!************************!*\
+  !*** ./src/styles.css ***!
+  \************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -537,7 +552,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../node_modules/css-loader/dist/cjs.js!../node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./styles.less */ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./src/styles.less");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../node_modules/css-loader/dist/cjs.js!./styles.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles.css");
 
       
       
@@ -559,12 +574,12 @@ options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWi
 options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
 options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
 
 
 
 
-       /* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+       /* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -916,7 +931,7 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _styles_less__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles.less */ "./src/styles.less");
+/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles.css */ "./src/styles.css");
 /* harmony import */ var _color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./color */ "./src/color.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -935,7 +950,7 @@ var _document = document,
   body = _document.body,
   html = _document.documentElement;
 var style = document.createElement('style');
-style.appendChild(document.createComment(name + ' ' + "1.1.30"));
+style.appendChild(document.createComment(name + ' ' + "1.1.31"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var pickers = new Map();
@@ -945,6 +960,7 @@ var click = 'click';
 var mousedown = 'mousedown';
 var mouseup = 'mouseup';
 var mousemove = 'mousemove';
+var resize = 'resize';
 var touchstart = 'touchstart';
 var touchend = 'touchend';
 var touchmove = 'touchmove';
@@ -954,6 +970,7 @@ var input = 'input';
 
 // Add the click event to document to check all the things
 document.addEventListener(click, handleDocumentClick);
+window.addEventListener(resize, handleDocumentResize);
 var lastEvent;
 
 /**
@@ -966,38 +983,57 @@ function handleDocumentClick(e) {
     e.preventDefault();
     var popup = colorPicker(target);
     removeExcept(popup);
-    var rect = target.getBoundingClientRect();
-    var right = rect.right,
-      bottom = rect.bottom,
-      top = rect.top;
     var clientX = e.clientX,
       clientY = e.clientY;
-    var _document2 = document,
-      _document2$documentEl = _document2.documentElement,
-      scrollTop = _document2$documentEl.scrollTop,
-      clientWidth = _document2$documentEl.clientWidth,
-      clientHeight = _document2$documentEl.clientHeight;
-    var partW = clientX / clientWidth;
-    var partH = clientY / clientHeight;
-    if (partW < 0.5) {
-      popup.style.left = rect.left + px;
-      popup.style.right = auto;
-    } else {
-      popup.style.left = auto;
-      popup.style.right = clientWidth - right + px;
-    }
-    if (partH < 0.5) {
-      popup.style.top = bottom + scrollTop + px;
-      popup.style.bottom = auto;
-    } else {
-      popup.style.top = auto;
-      popup.style.bottom = clientHeight - top - scrollTop + px;
-    }
+    alignPopupToSource(popup, target, clientX, clientY);
   } else if (lastEvent === 'click') {
     var clickedPicker = target.closest(".".concat(name));
     !(clickedPicker !== null && clickedPicker !== void 0 && clickedPicker.contains(target)) && removeExcept();
   }
   lastEvent = e.type;
+}
+function alignPopupToSource(popup, source) {
+  var clientX = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var clientY = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  if (!source) {
+    var obj = Array.from(pickers.values()).find(function (o) {
+      return o.popup === popup;
+    });
+    console.log('obj', obj);
+    source = obj.source;
+  }
+  var rect = source.getBoundingClientRect();
+  var right = rect.right,
+    bottom = rect.bottom,
+    top = rect.top;
+  var _document2 = document,
+    _document2$documentEl = _document2.documentElement,
+    scrollTop = _document2$documentEl.scrollTop,
+    clientWidth = _document2$documentEl.clientWidth,
+    clientHeight = _document2$documentEl.clientHeight;
+  var partW = clientX / clientWidth;
+  var partH = clientY / clientHeight;
+  if (partW < 0.5) {
+    popup.style.left = rect.left + px;
+    popup.style.right = auto;
+  } else {
+    popup.style.left = auto;
+    popup.style.right = clientWidth - right + px;
+  }
+  if (partH < 0.5) {
+    popup.style.top = bottom + scrollTop + px;
+    popup.style.bottom = auto;
+  } else {
+    popup.style.top = auto;
+    popup.style.bottom = clientHeight - top - scrollTop + px;
+  }
+}
+
+/**
+ * Check position on resize (mobile keyboard may cause)
+ */
+function handleDocumentResize() {
+  colorPicker();
 }
 
 /**
@@ -1012,20 +1048,29 @@ function removeExcept(except) {
 }
 
 /**
+ */
+function getOpenPicker() {
+  return _toConsumableArray(pickers.values()).find(function (_ref2) {
+    var popup = _ref2.popup;
+    return (popup === null || popup === void 0 ? void 0 : popup.parentNode) !== null;
+  });
+}
+
+/**
  * Initialise the color picker for an `input[type=color]`
  * @param {HTMLInputElement} source
  * @return {HTMLElement} the color picker element
  */
 function colorPicker(source) {
   var _pickers$get;
-  var openPicker = pickers.get(source);
-  var _ref2 = openPicker || {},
-    openElm = _ref2.popup,
-    showPopup = _ref2.showPopup;
+  var openPicker = source ? pickers.get(source) : getOpenPicker();
+  var _ref3 = openPicker || {},
+    openElm = _ref3.popup,
+    showPopup = _ref3.showPopup;
   var initialised = openPicker !== undefined;
   var inDOM = (openElm === null || openElm === void 0 ? void 0 : openElm.parentNode) !== null;
   if (initialised && inDOM) {
-    openElm.remove();
+    source ? openElm.remove() : alignPopupToSource(openElm);
   } else if (initialised && !inDOM) {
     showPopup();
   } else {
@@ -1121,10 +1166,11 @@ function colorPicker(source) {
      */
     var onRGBInput = function onRGBInput(e) {
       var _colorInst;
+      console.log('add A');
       var target = e.target,
         value = e.target.value;
       if (value < 0) target.value = 0;else if (value > 255) target.value = 255;
-      (_colorInst = colorInst).setRGB.apply(_colorInst, _toConsumableArray(inputRGB.map(function (m) {
+      (_colorInst = colorInst).setRGB.apply(_colorInst, _toConsumableArray(inputRGBA.map(function (m) {
         return parseInt(m.value, 10);
       })));
       hueInst = colorInst.clone().setSL(1, 0.5);
@@ -1230,13 +1276,15 @@ function colorPicker(source) {
     var inputRElm = append(popup, input);
     var inputGElm = append(popup, input);
     var inputBElm = append(popup, input);
-    var inputRGB = [inputRElm, inputGElm, inputBElm];
-    inputRGB.forEach(function (elm) {
+    var inputAElm = append(popup, input);
+    var inputRGBA = [inputRElm, inputGElm, inputBElm, inputAElm];
+    inputRGBA.forEach(function (elm) {
       return elm.type = 'number';
     });
     pickers.set(source, {
       popup: popup,
-      showPopup: _showPopup
+      showPopup: _showPopup,
+      source: source
     });
     _showPopup();
     var className = getClassName(source);
@@ -1254,15 +1302,15 @@ function colorPicker(source) {
     colorElm.addEventListener(click, onClickColor);
     hueElm.addEventListener(click, onClickHue);
     var events = [[mousedown, mouseup, mousemove], [touchstart, touchend, touchmove]];
-    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref3) {
-      var _ref4 = _slicedToArray(_ref3, 2),
-        elm = _ref4[0],
-        onClick = _ref4[1];
-      events.forEach(function (_ref5) {
-        var _ref6 = _slicedToArray(_ref5, 3),
-          start = _ref6[0],
-          end = _ref6[1],
-          move = _ref6[2];
+    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref4) {
+      var _ref5 = _slicedToArray(_ref4, 2),
+        elm = _ref5[0],
+        onClick = _ref5[1];
+      events.forEach(function (_ref6) {
+        var _ref7 = _slicedToArray(_ref6, 3),
+          start = _ref7[0],
+          end = _ref7[1],
+          move = _ref7[2];
         elm.addEventListener(start, function (e) {
           onClick(e);
           html.addEventListener(move, onClick);
@@ -1274,7 +1322,7 @@ function colorPicker(source) {
       });
     });
     inputElm.addEventListener(input, onHexInput);
-    inputRGB.forEach(function (elm) {
+    inputRGBA.forEach(function (elm) {
       return elm.addEventListener(input, onRGBInput);
     });
     setColors();
