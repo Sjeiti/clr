@@ -232,9 +232,12 @@
 			input.setAttribute('id', label.getAttribute('for'))
 			input.setAttribute('type', 'color')
 			input.setAttribute('value', mixColorsHex(colorStart, colorEnd, i/a.length))
-			// input.setAttribute('value', randomColorHex())
+			input.setAttribute('data-alpha', '255')
 			label.style.color = input.value
-			input.addEventListener('input', e=>label.style.color = e.target.value)
+      input.addEventListener('input', e=>{
+        const {target} = e
+        label.style.color = target.color?.hex||target.value
+      })
 			headerColors.appendChild(input)
 		})
 		

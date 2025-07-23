@@ -48,6 +48,9 @@ const colorPrototype = {
     this.b = _b
     return this
   }
+  , setHex(hex){
+    this.setRGB(...hex2rgb(hex))
+  }
   , clone(){
     return color(this.r, this.g, this.b, this.a)
   }
@@ -75,6 +78,12 @@ export function color(){
           ? rgb2hex(r, g, b, a)
           : undefined
     }}
+    , hexflat: {get(){
+      const {r, g, b} = this
+      return isValid(r, g, b)
+          ? rgb2hex(r, g, b)
+          : undefined
+    }}
     , luminance: {get(){
         const {r, g, b} = this
         return isValid(r, g, b)
@@ -84,7 +93,7 @@ export function color(){
   })
   const firstType = typeof _r
   if (length===1&&firstType==='string'){
-    _color.setRGB(...hex2rgb(_r))
+    _color.setHex(_r)
   } else if (firstType==='number'){
     if (length===3&&isValid(_r, _g, _b)||length===4&&isValid(_r, _g, _b, _a)){
       _color.setRGB(_r, _g, _b, _a)
@@ -126,7 +135,6 @@ function hex2rgb(hex){
  * @returns {string}
  */
 function rgb2hex(r, g, b, a){
-  //return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
   const rgb = ((1 << 24) + (r << 16) + (g << 8) + b)
     .toString(16)
     .slice(1)

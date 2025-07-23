@@ -12,11 +12,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   color: function() { return /* binding */ color; }
 /* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -102,6 +102,9 @@ var colorPrototype = {
     this.b = _b;
     return this;
   },
+  setHex: function setHex(hex) {
+    this.setRGB.apply(this, _toConsumableArray(hex2rgb(hex)));
+  },
   clone: function clone() {
     return color(this.r, this.g, this.b, this.a);
   }
@@ -152,6 +155,14 @@ function color() {
         return isValid(r, g, b, a) ? rgb2hex(r, g, b, a) : undefined;
       }
     },
+    hexflat: {
+      get: function get() {
+        var r = this.r,
+          g = this.g,
+          b = this.b;
+        return isValid(r, g, b) ? rgb2hex(r, g, b) : undefined;
+      }
+    },
     luminance: {
       get: function get() {
         var r = this.r,
@@ -163,7 +174,7 @@ function color() {
   });
   var firstType = _typeof(_r);
   if (length === 1 && firstType === 'string') {
-    _color.setRGB.apply(_color, _toConsumableArray(hex2rgb(_r)));
+    _color.setHex(_r);
   } else if (firstType === 'number') {
     if (length === 3 && isValid(_r, _g, _b) || length === 4 && isValid(_r, _g, _b, _a)) {
       _color.setRGB(_r, _g, _b, _a);
@@ -218,7 +229,6 @@ function hex2rgb(hex) {
  * @returns {string}
  */
 function rgb2hex(r, g, b, a) {
-  //return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
   var rgb = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
   return a === undefined || a === 255 ? '#' + rgb : '#' + rgb + a.toString(16).padStart(2, '0').toUpperCase();
 }
@@ -407,7 +417,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            width: calc(60% / 4);\n          }\n        }\n      }\n    } */\n  }\n}\n", "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;EACE,kBAAkB;EAClB,YAAY;EACZ,YAAY;EACZ,qBAAqB;EACrB,WAAW;EACX;;;kCAGgC;EAChC;IACE,kBAAkB;IAClB,WAAW;IACX,yBAAyB;IACzB,iBAAiB;IACjB;;;IAGA;IACA;MACE,WAAW;MACX,cAAc;MACd,kBAAkB;MAClB,aAAa;MACb,cAAc;MACd,8BAA8B;MAC9B,mBAAmB;MACnB,wDAAwD;MACxD,oBAAoB;IACtB;IACA;MACE,YAAY;MACZ,+EAA+E;MAC/E;QACE,UAAU;QACV,eAAe;QACf,2BAA2B;QAC3B,wDAAwD;MAC1D;IACF;EACF;EACA;IACE,UAAU;IACV,YAAY;IACZ,cAAc;IACd,WAAW;IACX,SAAS;IACT,yBAAyB;IACzB,SAAS;IACT,gBAAgB;IAChB,sBAAsB;IACtB,aAAa;IACb,gBAAgB;IAChB,6BAA6B;IAC7B,eAAe;IACf,iBAAiB;IACjB,sBAAsB;IACtB,gBAAgB;IAChB,kBAAkB;IAClB;;MAEE,wBAAwB;MACxB,SAAS;IACX;IACA;MACE,yBAAyB;MACzB,yCAAyC;IAC3C;IACA,qCAAqC;IACrC;MACE;QACE;UACE,oBAAoB;QACtB;MACF;IACF;IACA;;;;;;;;;OASG;EACL;AACF","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            width: calc(60% / 4);\n          }\n        }\n      }\n    } */\n  }\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n", "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;EACE,kBAAkB;EAClB,YAAY;EACZ,YAAY;EACZ,qBAAqB;EACrB,WAAW;EACX;;;kCAGgC;EAChC;IACE,kBAAkB;IAClB,WAAW;IACX,yBAAyB;IACzB,iBAAiB;IACjB;;;IAGA;IACA;MACE,WAAW;MACX,cAAc;MACd,kBAAkB;MAClB,aAAa;MACb,cAAc;MACd,8BAA8B;MAC9B,mBAAmB;MACnB,wDAAwD;MACxD,oBAAoB;IACtB;IACA;MACE,YAAY;MACZ,+EAA+E;MAC/E;QACE,UAAU;QACV,eAAe;QACf,2BAA2B;QAC3B,wDAAwD;MAC1D;IACF;EACF;EACA;IACE,UAAU;IACV,YAAY;IACZ,cAAc;IACd,WAAW;IACX,SAAS;IACT,yBAAyB;IACzB,SAAS;IACT,gBAAgB;IAChB,sBAAsB;IACtB,aAAa;IACb,gBAAgB;IAChB,6BAA6B;IAC7B,eAAe;IACf,iBAAiB;IACjB,sBAAsB;IACtB,gBAAgB;IAChB,kBAAkB;IAClB;;MAEE,wBAAwB;MACxB,SAAS;IACX;IACA;MACE,yBAAyB;MACzB,yCAAyC;IAC3C;IACA,qCAAqC;IACrC;MACE;QACE;UACE,oBAAoB;QACtB;MACF;IACF;IACA,UAAU;IACV;MACE;QACE;UACE;YACE;cACE,oBAAoB;YACtB;UACF;QACF;MACF;IACF;EACF;AACF","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -937,6 +947,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -953,7 +964,7 @@ var style = document.createElement('style');
 style.appendChild(document.createComment(name + ' ' + "1.1.31"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
-var pickers = new Map();
+var pickers = globalThis.pickers = new Map();
 var px = 'px';
 var auto = 'auto';
 var click = 'click';
@@ -999,7 +1010,6 @@ function alignPopupToSource(popup, source) {
     var obj = Array.from(pickers.values()).find(function (o) {
       return o.popup === popup;
     });
-    console.log('obj', obj);
     source = obj.source;
   }
   var rect = source.getBoundingClientRect();
@@ -1073,7 +1083,7 @@ function colorPicker(source) {
     source ? openElm.remove() : alignPopupToSource(openElm);
   } else if (initialised && !inDOM) {
     showPopup();
-  } else {
+  } else if (source) {
     /**
      * Add popup to DOM and set focus
      */
@@ -1154,8 +1164,12 @@ function colorPicker(source) {
      * Input handler for the hex text input
      */
     var onHexInput = function onHexInput() {
-      colorInst = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(inputElm.value);
-      hueInst = colorInst.clone().setSL(1, 0.5);
+      colorInst.setHex(inputElm.value);
+      var r = colorInst.r,
+        g = colorInst.g,
+        b = colorInst.b,
+        a = colorInst.a;
+      hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
       setColors();
       setInputRGB();
       setSource();
@@ -1165,15 +1179,13 @@ function colorPicker(source) {
      * @param {event} e
      */
     var onRGBInput = function onRGBInput(e) {
-      var _colorInst;
-      console.log('add A');
       var target = e.target,
         value = e.target.value;
       if (value < 0) target.value = 0;else if (value > 255) target.value = 255;
-      (_colorInst = colorInst).setRGB.apply(_colorInst, _toConsumableArray(inputRGBA.map(function (m) {
+      colorInst.setRGB.apply(colorInst, _toConsumableArray(inputRGBA.map(function (m) {
         return parseInt(m.value, 10);
       })));
-      hueInst = colorInst.clone().setSL(1, 0.5);
+      colorInst.clone().setSL(1, 0.5), _readOnlyError("hueInst");
       setColors();
       setInputHex();
       setSource();
@@ -1213,14 +1225,13 @@ function colorPicker(source) {
      */
     var setBackground = function setBackground() {
       var isBright = colorInst.luminance > 0.5;
-      rulePicker.style.backgroundColor = colorInst.hex;
+      rulePicker.style.backgroundColor = colorInst.hexflat;
       ruleInput.style.color = isBright ? '#000' : '#FFF';
       ruleNumber.style.boxShadow = "1px 0 0 rgba(".concat(isBright ? '0,0,0,0.3' : '255,255,255,0.5', ") inset");
-      var _colorInst2 = colorInst,
-        r = _colorInst2.r,
-        g = _colorInst2.g,
-        b = _colorInst2.b;
-      ruleInputSelection.style.backgroundColor = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(255 - b, 255 - r, 255 - g).hex;
+      var r = colorInst.r,
+        g = colorInst.g,
+        b = colorInst.b;
+      ruleInputSelection.style.backgroundColor = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(255 - b, 255 - r, 255 - g).hexflat;
     };
     /**
      * Set the value of the hex input
@@ -1232,15 +1243,16 @@ function colorPicker(source) {
      * Set the value of the rgb inputs
      */
     var setInputRGB = function setInputRGB() {
-      inputRElm.value = Math.round(colorInst.r);
-      inputGElm.value = Math.round(colorInst.g);
-      inputBElm.value = Math.round(colorInst.b);
+      inputRGBA.forEach(function (input, i) {
+        return input.value = Math.round(colorInst[['r', 'g', 'b', 'a'][i]]);
+      });
     };
     /**
      * Set the value of the source `input[type=color]`
      */
     var setSource = function setSource() {
-      source.value = colorInst.hex;
+      source.value = colorInst.hexflat;
+      hasAlpha && (source.dataset.alpha = colorInst.a);
       dispatch();
     };
     /**
@@ -1262,8 +1274,10 @@ function colorPicker(source) {
       setColorPos();
       setBackground();
     };
+    var hasAlpha = !!(source !== null && source !== void 0 && source.dataset.hasOwnProperty('alpha'));
     var popup = document.createElement(div);
     popup.classList.add(name);
+    hasAlpha && popup.classList.add(name + '--alpha');
     popup.remove = function () {
       dispatch(change);
       Element.prototype.remove.apply(popup);
@@ -1272,25 +1286,24 @@ function colorPicker(source) {
     var hueElm = append(popup, div);
     var inputElm = append(popup, input);
     inputElm.value = source.value;
-    inputElm.maxLength = 7;
-    var inputRElm = append(popup, input);
-    var inputGElm = append(popup, input);
-    var inputBElm = append(popup, input);
-    var inputAElm = append(popup, input);
-    var inputRGBA = [inputRElm, inputGElm, inputBElm, inputAElm];
+    inputElm.maxLength = hasAlpha ? 9 : 7;
+    var inputRGBA = [append(popup, input), append(popup, input), append(popup, input)].concat(_toConsumableArray(hasAlpha ? [append(popup, input)] : []));
     inputRGBA.forEach(function (elm) {
       return elm.type = 'number';
-    });
-    pickers.set(source, {
-      popup: popup,
-      showPopup: _showPopup,
-      source: source
     });
     _showPopup();
     var className = getClassName(source);
     popup.classList.add(className);
     var colorInst = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(inputElm.value);
+    hasAlpha && (colorInst.a = parseInt(source.dataset.alpha, 10));
     var hueInst = colorInst.clone().setSL(1, 0.5);
+    pickers.set(source, {
+      popup: popup,
+      showPopup: _showPopup,
+      source: source,
+      color: colorInst
+    });
+    source.color = colorInst;
     var baseRule = ".".concat(name, ".").concat(className);
     var rulePicker = getRule("".concat(baseRule, " {}"));
     var ruleColorcolor = getRule("".concat(baseRule, " div:first-child {}"));

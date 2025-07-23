@@ -9,7 +9,7 @@ style.appendChild(document.createComment(name+' '+_VERSION))
 body.appendChild(style)
 const sheet = document.styleSheets[document.styleSheets.length - 1]
 
-const pickers = new Map()
+const pickers = globalThis.pickers = new Map()
 
 const px = 'px'
 const auto = 'auto'
@@ -55,7 +55,6 @@ function alignPopupToSource(popup, source, clientX=0, clientY=0){
 
   if (!source) {
     const obj = Array.from(pickers.values()).find(o=>o.popup===popup)
-    console.log('obj',obj)
     source = obj.source
   }
 
@@ -121,9 +120,11 @@ function colorPicker(source){
       :alignPopupToSource(openElm)
   } else if (initialised&&!inDOM){
     showPopup()
-  } else {
+  } else if (source) {
+    const hasAlpha = !!source?.dataset.hasOwnProperty('alpha')
     const popup = document.createElement(div)
     popup.classList.add(name)
+    hasAlpha&&popup.classList.add(name+'--alpha')
 
     popup.remove = ()=>{
       dispatch(change)
@@ -134,23 +135,26 @@ function colorPicker(source){
     const hueElm = append(popup, div)
     const inputElm = append(popup, input)
     inputElm.value = source.value
-    inputElm.maxLength = 7
-    const inputRElm = append(popup, input)
-    const inputGElm = append(popup, input)
-    const inputBElm = append(popup, input)
-    const inputAElm = append(popup, input)
-    const inputRGBA = [inputRElm, inputGElm, inputBElm, inputAElm]
+    inputElm.maxLength = hasAlpha?9:7
+    const inputRGBA = [
+      append(popup, input), 
+      append(popup, input), 
+      append(popup, input),
+      ...hasAlpha?[append(popup, input)]:[]
+    ]
     inputRGBA.forEach(elm=>elm.type = 'number')
-
-    pickers.set(source, {popup, showPopup, source})
 
     showPopup()
 
     const className = getClassName(source)
     popup.classList.add(className)
 
-    let colorInst = color(inputElm.value)
-    let hueInst = colorInst.clone().setSL(1, 0.5)
+    const colorInst = color(inputElm.value)
+    hasAlpha&&(colorInst.a = parseInt(source.dataset.alpha, 10))
+    const hueInst = colorInst.clone().setSL(1, 0.5)
+
+    pickers.set(source, {popup, showPopup, source, color: colorInst})
+    source.color = colorInst
 
     const baseRule = `.${name}.${className}`
     const rulePicker = getRule(`${baseRule} {}`)
@@ -273,8 +277,9 @@ function colorPicker(source){
      * Input handler for the hex text input
      */
     function onHexInput(){
-      colorInst = color(inputElm.value)
-      hueInst = colorInst.clone().setSL(1, 0.5)
+      colorInst.setHex(inputElm.value)
+      const {r,g,b,a} = colorInst
+      hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
       setColors()
       setInputRGB()
       setSource()
@@ -285,7 +290,6 @@ function colorPicker(source){
      * @param {event} e
      */
     function onRGBInput(e){
-      console.log('add A')
       const {target, target:{value}} = e
       if (value<0) target.value = 0
       else if (value>255) target.value = 255
@@ -336,11 +340,11 @@ function colorPicker(source){
      */
     function setBackground(){
       const isBright = colorInst.luminance>0.5
-      rulePicker.style.backgroundColor = colorInst.hex
+      rulePicker.style.backgroundColor = colorInst.hexflat
       ruleInput.style.color = isBright?'#000':'#FFF'
       ruleNumber.style.boxShadow = `1px 0 0 rgba(${isBright?'0,0,0,0.3':'255,255,255,0.5'}) inset`
       const {r, g, b} = colorInst
-      ruleInputSelection.style.backgroundColor = color(255-b, 255-r, 255-g).hex
+      ruleInputSelection.style.backgroundColor = color(255-b, 255-r, 255-g).hexflat
     }
 
     /**
@@ -354,16 +358,17 @@ function colorPicker(source){
      * Set the value of the rgb inputs
      */
     function setInputRGB(){
-      inputRElm.value = Math.round(colorInst.r)
-      inputGElm.value = Math.round(colorInst.g)
-      inputBElm.value = Math.round(colorInst.b)
+      inputRGBA.forEach(
+        (input, i) => input.value = Math.round(colorInst[['r','g','b','a'][i]])
+      )
     }
 
     /**
      * Set the value of the source `input[type=color]`
      */
     function setSource(){
-      source.value = colorInst.hex
+      source.value = colorInst.hexflat
+      hasAlpha&&(source.dataset.alpha = colorInst.a)
       dispatch()
     }
 
