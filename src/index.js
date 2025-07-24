@@ -133,6 +133,7 @@ function colorPicker(source){
 
     const colorElm = append(popup, div)
     const hueElm = append(popup, div)
+    const alphaElm = hasAlpha&&append(popup, div)||document.createElement(div)
     const inputElm = append(popup, input)
     inputElm.value = source.value
     inputElm.maxLength = hasAlpha?9:7
@@ -161,6 +162,7 @@ function colorPicker(source){
     const ruleColorcolor = getRule(`${baseRule} div:first-child {}`)
     const ruleColor = getRule(`${baseRule} div:first-child:after {}`)
     const ruleHue = getRule(`${baseRule} div+div:after {}`)
+    const ruleAlpha = getRule(`${baseRule} div+div+div:after {}`)
     const ruleInput = getRule(`${baseRule} input {}`)
     const ruleNumber = getRule(`${baseRule} input[type=number] {}`)
     const ruleInputSelection = getRule(`${baseRule}>input::selection {}`)
@@ -175,14 +177,19 @@ function colorPicker(source){
     ;[
       [colorElm, onClickColor]
       , [hueElm, onClickHue]
+      , [alphaElm, onClickAlpha]
     ].forEach(([elm, onClick])=>{
       events.forEach(([start, end, move])=>{
+        const onClickBound = onClickRange.bind(this, elm)
         elm.addEventListener(start, e=>{
-          onClick(e)
-          html.addEventListener(move, onClick)
+          onClickBound(e)
+          html.addEventListener(move, onClickBound)
+          //onClick(e)
+          //html.addEventListener(move, onClick)
           e.preventDefault()
         })
-        html.addEventListener(end, ()=>html.removeEventListener(move, onClick))
+        html.addEventListener(end, ()=>html.removeEventListener(move, onClickBound))
+        //html.addEventListener(end, ()=>html.removeEventListener(move, onClick))
       })
     })
 
@@ -192,6 +199,7 @@ function colorPicker(source){
     setColors()
     setInputHex()
     setInputRGB()
+    setAlphaPos()
 
     /**
      * Add popup to DOM and set focus
@@ -231,6 +239,39 @@ function colorPicker(source){
     function getClassName(source){
       const unique = source.name||source.id||Math.round(Date.now()+Math.random()*1E3).toString(16)
       return `${name}_${unique}`
+    }
+
+    /**
+     * Click handler for the three ranges: color, huey and alpha.
+     * @param {HTMLElement} elm
+     * @param {MouseEvent} e
+     */
+    function onClickRange(elm, e){
+      console.log('onClickRange')
+      const rect = elm.getBoundingClientRect()
+      const eo = e.touches?.[0]||e
+      const x = eo.clientX - rect.left
+      const y = eo.clientY - rect.top
+      const xpart = partRange(x/rect.width)
+      const ypart = partRange(1-y/rect.height)
+      if (elm===colorElm){
+        colorInst.setSV(xpart, ypart)
+        setColorPos()
+        setBackground()
+      } else if (elm===hueElm){
+        colorInst.setH(xpart)
+        hueInst.setH(xpart)
+        setHuePos()
+        setColorHue()
+        setBackground()
+      } else if (elm===alphaElm){
+        colorInst.a = ypart*255<<0 
+        setAlphaPos()
+      }
+      setInputHex()
+      setInputRGB()
+      setSource()
+      lastEvent = e.type
     }
 
     /**
@@ -274,6 +315,23 @@ function colorPicker(source){
     }
 
     /**
+     * Click handler for the alpha range
+     * @param {MouseEvent} e
+     */
+    function onClickAlpha(e){
+      const rect = alphaElm.getBoundingClientRect()
+      const eo = e.touches?.[0]||e
+      const y = eo.clientY - rect.top
+      const ypart = partRange(1-y/rect.height)
+      colorInst.a = ypart*255<<0 
+      setAlphaPos()
+      setInputHex()
+      setInputRGB()
+      setSource()
+      lastEvent = e.type
+    }
+
+    /**
      * Input handler for the hex text input
      */
     function onHexInput(){
@@ -282,6 +340,7 @@ function colorPicker(source){
       hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
       setColors()
       setInputRGB()
+      setAlphaPos()
       setSource()
     }
 
@@ -336,11 +395,20 @@ function colorPicker(source){
     }
 
     /**
+     * Set the position of the alpha range
+     */
+    function setAlphaPos(){
+      const ypart = 1 - colorInst.a/255
+      ruleAlpha.style.left = 'initial'
+      ruleAlpha.style.top = `${(ypart*100).toFixed(2)}%`
+    }
+
+    /**
      * Set the back- and foreground color of the input elements
      */
     function setBackground(){
       const isBright = colorInst.luminance>0.5
-      rulePicker.style.backgroundColor = colorInst.hexflat
+      rulePicker.style.setProperty('--mcp-color', colorInst.hexflat)//'#f04'//color(255-b, 255-r, 255-g).hexflat
       ruleInput.style.color = isBright?'#000':'#FFF'
       ruleNumber.style.boxShadow = `1px 0 0 rgba(${isBright?'0,0,0,0.3':'255,255,255,0.5'}) inset`
       const {r, g, b} = colorInst

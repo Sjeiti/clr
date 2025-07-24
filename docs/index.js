@@ -417,7 +417,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n", "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;EACE,kBAAkB;EAClB,YAAY;EACZ,YAAY;EACZ,qBAAqB;EACrB,WAAW;EACX;;;kCAGgC;EAChC;IACE,kBAAkB;IAClB,WAAW;IACX,yBAAyB;IACzB,iBAAiB;IACjB;;;IAGA;IACA;MACE,WAAW;MACX,cAAc;MACd,kBAAkB;MAClB,aAAa;MACb,cAAc;MACd,8BAA8B;MAC9B,mBAAmB;MACnB,wDAAwD;MACxD,oBAAoB;IACtB;IACA;MACE,YAAY;MACZ,+EAA+E;MAC/E;QACE,UAAU;QACV,eAAe;QACf,2BAA2B;QAC3B,wDAAwD;MAC1D;IACF;EACF;EACA;IACE,UAAU;IACV,YAAY;IACZ,cAAc;IACd,WAAW;IACX,SAAS;IACT,yBAAyB;IACzB,SAAS;IACT,gBAAgB;IAChB,sBAAsB;IACtB,aAAa;IACb,gBAAgB;IAChB,6BAA6B;IAC7B,eAAe;IACf,iBAAiB;IACjB,sBAAsB;IACtB,gBAAgB;IAChB,kBAAkB;IAClB;;MAEE,wBAAwB;MACxB,SAAS;IACX;IACA;MACE,yBAAyB;MACzB,yCAAyC;IAC3C;IACA,qCAAqC;IACrC;MACE;QACE;UACE,oBAAoB;QACtB;MACF;IACF;IACA,UAAU;IACV;MACE;QACE;UACE;YACE;cACE,oBAAoB;YACtB;UACF;QACF;MACF;IACF;EACF;AACF","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    /* box-shadow: 0 0 8px black inset; */\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n\n  --mcp-color: #f04;\n  --mcp-w: 14rem;\n  --mcp-h: 8rem;\n  --mcp-gutter: 1rem;\n  --mcp-font-size: 0.8rem;\n\n  position: absolute;\n  width: var(--mcp-w);\n  height: var(--mcp-h);\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  background-color: var(--mcp-color);\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  /* color */\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2*var(--mcp-gutter));\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    .mcpicker--alpha & {\n      width: calc(100% - var(--mcp-gutter));\n    }\n    /* color marker */\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      z-index: 1;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    /* huey */\n    & + div {\n      height: var(--mcp-gutter);\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      /* huey marker */\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n      /* optional alpha */\n      & + div {\n        position: absolute;\n        right: 0;\n        top: 0;\n        width: var(--mcp-gutter)!important;\n        height: calc(100% - var(--mcp-gutter));\n        --mcp-checker-c1: #444;\n        --mcp-checker-c2: #bbb;\n        --mcp-checker: calc(var(--mcp-gutter)/1.5);\n        --mcp-checker-2: calc(var(--mcp-checker)/2);\n        --mcp-checker-2m: calc(var(--mcp-checker)/-2);\n        background: \n          linear-gradient(var(--mcp-color), transparent),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, transparent 25%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, var(--mcp-checker-c2) 25%)\n        ;\n        background-size:\n          100% 100%,\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker)\n        ;       \n        background-position: \n          0 0, \n          0 0, \n          0 0, \n          var(--mcp-checker-2m) var(--mcp-checker-2m), \n          var(--mcp-checker-2) var(--mcp-checker-2)\n        ;\n        /* alpha marker */\n        &:after {\n          width: inherit;\n          height: 3px;\n          transform: translateY(-2px);\n          box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n        }\n      }\n    }\n  }\n  /* inputs */\n  input {\n    width: 40%;\n    height: var(--mcp-gutter);\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: var(--mcp-font-size);\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    /* rgb inputs */ \n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n", "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;;EAEE,iBAAiB;EACjB,cAAc;EACd,aAAa;EACb,kBAAkB;EAClB,uBAAuB;;EAEvB,kBAAkB;EAClB,mBAAmB;EACnB,oBAAoB;EACpB,qBAAqB;EACrB,WAAW;EACX,kCAAkC;EAClC;;;kCAGgC;EAChC,UAAU;EACV;IACE,kBAAkB;IAClB,WAAW;IACX,wCAAwC;IACxC,iBAAiB;IACjB;;;IAGA;IACA;MACE,qCAAqC;IACvC;IACA,iBAAiB;IACjB;MACE,WAAW;MACX,cAAc;MACd,kBAAkB;MAClB,UAAU;MACV,aAAa;MACb,cAAc;MACd,8BAA8B;MAC9B,mBAAmB;MACnB,wDAAwD;MACxD,oBAAoB;IACtB;IACA,SAAS;IACT;MACE,yBAAyB;MACzB,+EAA+E;MAC/E,gBAAgB;MAChB;QACE,UAAU;QACV,eAAe;QACf,2BAA2B;QAC3B,wDAAwD;MAC1D;MACA,mBAAmB;MACnB;QACE,kBAAkB;QAClB,QAAQ;QACR,MAAM;QACN,kCAAkC;QAClC,sCAAsC;QACtC,sBAAsB;QACtB,sBAAsB;QACtB,0CAA0C;QAC1C,2CAA2C;QAC3C,6CAA6C;QAC7C;;;;;;QAMA;QACA;;;;;;QAMA;QACA;;;;;;QAMA;QACA,iBAAiB;QACjB;UACE,cAAc;UACd,WAAW;UACX,2BAA2B;UAC3B,wDAAwD;QAC1D;MACF;IACF;EACF;EACA,WAAW;EACX;IACE,UAAU;IACV,yBAAyB;IACzB,cAAc;IACd,WAAW;IACX,SAAS;IACT,yBAAyB;IACzB,SAAS;IACT,gBAAgB;IAChB,sBAAsB;IACtB,aAAa;IACb,gBAAgB;IAChB,6BAA6B;IAC7B,+BAA+B;IAC/B,iBAAiB;IACjB,sBAAsB;IACtB,gBAAgB;IAChB,kBAAkB;IAClB;;MAEE,wBAAwB;MACxB,SAAS;IACX;IACA,eAAe;IACf;MACE,yBAAyB;MACzB,yCAAyC;IAC3C;IACA;MACE;QACE;UACE,oBAAoB;QACtB;MACF;IACF;IACA,UAAU;IACV;MACE;QACE;UACE;YACE;cACE,oBAAoB;YACtB;UACF;QACF;MACF;IACF;EACF;AACF","sourcesContent":[".mcpicker {\n\n  --mcp-color: #f04;\n  --mcp-w: 14rem;\n  --mcp-h: 8rem;\n  --mcp-gutter: 1rem;\n  --mcp-font-size: 0.8rem;\n\n  position: absolute;\n  width: var(--mcp-w);\n  height: var(--mcp-h);\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  background-color: var(--mcp-color);\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  /* color */\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2*var(--mcp-gutter));\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    .mcpicker--alpha & {\n      width: calc(100% - var(--mcp-gutter));\n    }\n    /* color marker */\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      z-index: 1;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    /* huey */\n    & + div {\n      height: var(--mcp-gutter);\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      /* huey marker */\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n      /* optional alpha */\n      & + div {\n        position: absolute;\n        right: 0;\n        top: 0;\n        width: var(--mcp-gutter)!important;\n        height: calc(100% - var(--mcp-gutter));\n        --mcp-checker-c1: #444;\n        --mcp-checker-c2: #bbb;\n        --mcp-checker: calc(var(--mcp-gutter)/1.5);\n        --mcp-checker-2: calc(var(--mcp-checker)/2);\n        --mcp-checker-2m: calc(var(--mcp-checker)/-2);\n        background: \n          linear-gradient(var(--mcp-color), transparent),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, transparent 25%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, var(--mcp-checker-c2) 25%)\n        ;\n        background-size:\n          100% 100%,\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker)\n        ;       \n        background-position: \n          0 0, \n          0 0, \n          0 0, \n          var(--mcp-checker-2m) var(--mcp-checker-2m), \n          var(--mcp-checker-2) var(--mcp-checker-2)\n        ;\n        /* alpha marker */\n        &:after {\n          width: inherit;\n          height: 3px;\n          transform: translateY(-2px);\n          box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n        }\n      }\n    }\n  }\n  /* inputs */\n  input {\n    width: 40%;\n    height: var(--mcp-gutter);\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: var(--mcp-font-size);\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    /* rgb inputs */ \n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -1072,7 +1072,8 @@ function getOpenPicker() {
  * @return {HTMLElement} the color picker element
  */
 function colorPicker(source) {
-  var _pickers$get;
+  var _this = this,
+    _pickers$get;
   var openPicker = source ? pickers.get(source) : getOpenPicker();
   var _ref3 = openPicker || {},
     openElm = _ref3.popup,
@@ -1121,13 +1122,46 @@ function colorPicker(source) {
       return "".concat(name, "_").concat(unique);
     };
     /**
+     * Click handler for the three ranges: color, huey and alpha.
+     * @param {HTMLElement} elm
+     * @param {MouseEvent} e
+     */
+    var onClickRange = function onClickRange(elm, e) {
+      var _e$touches;
+      console.log('onClickRange');
+      var rect = elm.getBoundingClientRect();
+      var eo = ((_e$touches = e.touches) === null || _e$touches === void 0 ? void 0 : _e$touches[0]) || e;
+      var x = eo.clientX - rect.left;
+      var y = eo.clientY - rect.top;
+      var xpart = partRange(x / rect.width);
+      var ypart = partRange(1 - y / rect.height);
+      if (elm === colorElm) {
+        colorInst.setSV(xpart, ypart);
+        setColorPos();
+        setBackground();
+      } else if (elm === hueElm) {
+        colorInst.setH(xpart);
+        hueInst.setH(xpart);
+        setHuePos();
+        setColorHue();
+        setBackground();
+      } else if (elm === alphaElm) {
+        colorInst.a = ypart * 255 << 0;
+        setAlphaPos();
+      }
+      setInputHex();
+      setInputRGB();
+      setSource();
+      lastEvent = e.type;
+    };
+    /**
      * Click handler for the color gradient
      * @param {MouseEvent} e
      */
     var onClickColor = function onClickColor(e) {
-      var _e$touches;
+      var _e$touches2;
       var rect = colorElm.getBoundingClientRect();
-      var eo = ((_e$touches = e.touches) === null || _e$touches === void 0 ? void 0 : _e$touches[0]) || e;
+      var eo = ((_e$touches2 = e.touches) === null || _e$touches2 === void 0 ? void 0 : _e$touches2[0]) || e;
       var x = eo.clientX - rect.left;
       var y = eo.clientY - rect.top;
       var xpart = partRange(x / rect.width);
@@ -1145,9 +1179,9 @@ function colorPicker(source) {
      * @param {MouseEvent} e
      */
     var onClickHue = function onClickHue(e) {
-      var _e$touches2;
+      var _e$touches3;
       var rect = hueElm.getBoundingClientRect();
-      var eo = ((_e$touches2 = e.touches) === null || _e$touches2 === void 0 ? void 0 : _e$touches2[0]) || e;
+      var eo = ((_e$touches3 = e.touches) === null || _e$touches3 === void 0 ? void 0 : _e$touches3[0]) || e;
       var x = eo.clientX - rect.left;
       var xpart = partRange(x / rect.width);
       colorInst.setH(xpart);
@@ -1155,6 +1189,23 @@ function colorPicker(source) {
       setHuePos();
       setColorHue();
       setBackground();
+      setInputHex();
+      setInputRGB();
+      setSource();
+      lastEvent = e.type;
+    };
+    /**
+     * Click handler for the alpha range
+     * @param {MouseEvent} e
+     */
+    var onClickAlpha = function onClickAlpha(e) {
+      var _e$touches4;
+      var rect = alphaElm.getBoundingClientRect();
+      var eo = ((_e$touches4 = e.touches) === null || _e$touches4 === void 0 ? void 0 : _e$touches4[0]) || e;
+      var y = eo.clientY - rect.top;
+      var ypart = partRange(1 - y / rect.height);
+      colorInst.a = ypart * 255 << 0;
+      setAlphaPos();
       setInputHex();
       setInputRGB();
       setSource();
@@ -1172,6 +1223,7 @@ function colorPicker(source) {
       hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
       setColors();
       setInputRGB();
+      setAlphaPos();
       setSource();
     };
     /**
@@ -1221,11 +1273,19 @@ function colorPicker(source) {
       ruleHue.style.left = "".concat((xpart * 100).toFixed(2), "%");
     };
     /**
+     * Set the position of the alpha range
+     */
+    var setAlphaPos = function setAlphaPos() {
+      var ypart = 1 - colorInst.a / 255;
+      ruleAlpha.style.left = 'initial';
+      ruleAlpha.style.top = "".concat((ypart * 100).toFixed(2), "%");
+    };
+    /**
      * Set the back- and foreground color of the input elements
      */
     var setBackground = function setBackground() {
       var isBright = colorInst.luminance > 0.5;
-      rulePicker.style.backgroundColor = colorInst.hexflat;
+      rulePicker.style.setProperty('--mcp-color', colorInst.hexflat); //'#f04'//color(255-b, 255-r, 255-g).hexflat
       ruleInput.style.color = isBright ? '#000' : '#FFF';
       ruleNumber.style.boxShadow = "1px 0 0 rgba(".concat(isBright ? '0,0,0,0.3' : '255,255,255,0.5', ") inset");
       var r = colorInst.r,
@@ -1284,6 +1344,7 @@ function colorPicker(source) {
     };
     var colorElm = append(popup, div);
     var hueElm = append(popup, div);
+    var alphaElm = hasAlpha && append(popup, div) || document.createElement(div);
     var inputElm = append(popup, input);
     inputElm.value = source.value;
     inputElm.maxLength = hasAlpha ? 9 : 7;
@@ -1309,13 +1370,14 @@ function colorPicker(source) {
     var ruleColorcolor = getRule("".concat(baseRule, " div:first-child {}"));
     var ruleColor = getRule("".concat(baseRule, " div:first-child:after {}"));
     var ruleHue = getRule("".concat(baseRule, " div+div:after {}"));
+    var ruleAlpha = getRule("".concat(baseRule, " div+div+div:after {}"));
     var ruleInput = getRule("".concat(baseRule, " input {}"));
     var ruleNumber = getRule("".concat(baseRule, " input[type=number] {}"));
     var ruleInputSelection = getRule("".concat(baseRule, ">input::selection {}"));
     colorElm.addEventListener(click, onClickColor);
     hueElm.addEventListener(click, onClickHue);
     var events = [[mousedown, mouseup, mousemove], [touchstart, touchend, touchmove]];
-    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref4) {
+    [[colorElm, onClickColor], [hueElm, onClickHue], [alphaElm, onClickAlpha]].forEach(function (_ref4) {
       var _ref5 = _slicedToArray(_ref4, 2),
         elm = _ref5[0],
         onClick = _ref5[1];
@@ -1324,16 +1386,21 @@ function colorPicker(source) {
           start = _ref7[0],
           end = _ref7[1],
           move = _ref7[2];
+        var onClickBound = onClickRange.bind(_this, elm);
         elm.addEventListener(start, function (e) {
-          onClick(e);
-          html.addEventListener(move, onClick);
+          onClickBound(e);
+          html.addEventListener(move, onClickBound);
+          //onClick(e)
+          //html.addEventListener(move, onClick)
           e.preventDefault();
         });
         html.addEventListener(end, function () {
-          return html.removeEventListener(move, onClick);
+          return html.removeEventListener(move, onClickBound);
         });
+        //html.addEventListener(end, ()=>html.removeEventListener(move, onClick))
       });
     });
+
     inputElm.addEventListener(input, onHexInput);
     inputRGBA.forEach(function (elm) {
       return elm.addEventListener(input, onRGBInput);
@@ -1341,6 +1408,7 @@ function colorPicker(source) {
     setColors();
     setInputHex();
     setInputRGB();
+    setAlphaPos();
   }
   return (_pickers$get = pickers.get(source)) === null || _pickers$get === void 0 ? void 0 : _pickers$get.popup;
 }
