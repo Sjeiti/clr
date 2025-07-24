@@ -247,7 +247,6 @@ function colorPicker(source){
      * @param {MouseEvent} e
      */
     function onClickRange(elm, e){
-      console.log('onClickRange')
       const rect = elm.getBoundingClientRect()
       const eo = e.touches?.[0]||e
       const x = eo.clientX - rect.left
