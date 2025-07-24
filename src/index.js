@@ -352,8 +352,9 @@ function colorPicker(source){
       const {target, target:{value}} = e
       if (value<0) target.value = 0
       else if (value>255) target.value = 255
-      colorInst.setRGB(...inputRGBA.map(m=>parseInt(m.value, 10)))
-      hueInst = colorInst.clone().setSL(1, 0.5)
+      const {r,g,b,a} = colorInst.setRGB(...inputRGBA.map(m=>parseInt(m.value, 10)))
+      hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
+      //hueInst = colorInst.clone().setSL(1, 0.5)
       setColors()
       setInputHex()
       setSource()

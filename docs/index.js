@@ -947,7 +947,6 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1234,10 +1233,15 @@ function colorPicker(source) {
       var target = e.target,
         value = e.target.value;
       if (value < 0) target.value = 0;else if (value > 255) target.value = 255;
-      colorInst.setRGB.apply(colorInst, _toConsumableArray(inputRGBA.map(function (m) {
-        return parseInt(m.value, 10);
-      })));
-      colorInst.clone().setSL(1, 0.5), _readOnlyError("hueInst");
+      var _colorInst$setRGB = colorInst.setRGB.apply(colorInst, _toConsumableArray(inputRGBA.map(function (m) {
+          return parseInt(m.value, 10);
+        }))),
+        r = _colorInst$setRGB.r,
+        g = _colorInst$setRGB.g,
+        b = _colorInst$setRGB.b,
+        a = _colorInst$setRGB.a;
+      hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
+      //hueInst = colorInst.clone().setSL(1, 0.5)
       setColors();
       setInputHex();
       setSource();
