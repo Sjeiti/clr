@@ -158,7 +158,7 @@
 				<p>The implementation is minimal, the code is minimal, even the colorpicker itself is a mere six elements in a wrapper.</p>
 			</section>
 			<section>
-				<h2>for example</h2>
+				<h2>For example</h2>
 				<form>
 					<fieldset data-header-colors>
 						<legend>here are some color inputs</legend>
@@ -171,25 +171,37 @@
 				</form>
 			</section>
 			<section>
-				<h2>installation</h2>
+				<h2>Installation</h2>
 				<p>To install just do something like:</p>
         <code>npm i -S mc_picker</code> or <code>yarn add mc_picker -S</code>
 				<p>Then just import it somewhere:</p>
 				<p><code>import 'mc_picker'</code></p>
 			</section>
 			<section>
-				<h2>customisation</h2>
+				<h2>Alpha channel</h2>
+        <p>Although <code>input[type=color]</code> does not support alpha channels, you can add this by setting <code>[data-alpha=255]</code>. The value ranges from 0 to 255 and updates when changed.</p>
+			</section>
+			<section>
+				<h2>API</h2>
+        <p>When activated, each input element exposes a color object: <code>document.querySelector('input').color</code>. All instances are also exposed on <code>globalThis.pickers</code>; a map with the <code>HTMLInputElement</code> as key.</p>
+			</section>
+			<section>
+				<h2>Customisation</h2>
 				<p>You can easily adjust dimensions through CSS without affecting functionality:</p>
-				<pre><code>.mcpicker { width: 20rem; height: 20rem; }
-.mcpicker div { height: calc(100% - 5rem); }
-.mcpicker div + div { height: 2rem; }
-.mcpicker input { height: 3rem; }</code></pre>
+				<pre><code>.mcpicker {
+  --mcp-w: 20rem;
+  --mcp-h: 20rem;
+  --mcp-gutter: 2rem;
+  --mcp-font-size: 1.2rem;
+}</code></pre>
 				<p>This can also be done for a single instance when you use <code>.mcpicker_[color input id]</code> instead of <code>.mcpicker</code>:</p>
         <style>
-					.mcpicker_custom-css { width: 20rem; height: 20rem; }
-					.mcpicker_custom-css div { height: calc(100% - 5rem); }
-					.mcpicker_custom-css div + div { height: 2rem; }
-					.mcpicker_custom-css input { height: 3rem; }
+					.mcpicker_custom-css {
+            --mcp-w: 20rem;
+            --mcp-h: 20rem;
+            --mcp-gutter: 2rem;
+            --mcp-font-size: 1.2rem;
+          }
         </style>
         <form>
           <fieldset>
@@ -232,9 +244,14 @@
 			input.setAttribute('id', label.getAttribute('for'))
 			input.setAttribute('type', 'color')
 			input.setAttribute('value', mixColorsHex(colorStart, colorEnd, i/a.length))
-			// input.setAttribute('value', randomColorHex())
+			input.setAttribute('data-alpha', '255')
 			label.style.color = input.value
-			input.addEventListener('input', e=>label.style.color = e.target.value)
+      input.addEventListener('input', e=>{
+        const {targer,target:{color}} = e
+        const a = color?color?.a/255:1
+        label.style.color = color?.hex||target.value
+        label.style.textShadow = `0 0.5rem 1rem rgba(0,0,0,${0.4*a}),0 0.125rem 0.25rem rgba(0,0,0,${0.2*a})`
+      })
 			headerColors.appendChild(input)
 		})
 		

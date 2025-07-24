@@ -24,7 +24,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var colorPrototype = {
-  setRGB: function setRGB(_r, _g, _b) {
+  setRGB: function setRGB(_r, _g, _b, _a) {
     var _rgb2hsl = rgb2hsl(_r, _g, _b),
       _rgb2hsl2 = _slicedToArray(_rgb2hsl, 3),
       _h = _rgb2hsl2[0],
@@ -38,6 +38,7 @@ var colorPrototype = {
     this.r = _r;
     this.g = _g;
     this.b = _b;
+    this.a = _a === undefined ? 255 : _a;
     return this;
   },
   setSL: function setSL(_s, _l) {
@@ -101,8 +102,14 @@ var colorPrototype = {
     this.b = _b;
     return this;
   },
+  setHex: function setHex(hex) {
+    this.setRGB.apply(this, _toConsumableArray(hex2rgb(hex)));
+  },
   clone: function clone() {
-    return color(this.r, this.g, this.b);
+    return color(this.r, this.g, this.b, this.a);
+  },
+  get isValid() {
+    return isValid(this.r, this.g, this.b, this.a);
   }
 };
 
@@ -115,7 +122,8 @@ function color() {
   var _arguments = Array.prototype.slice.call(arguments),
     _r = _arguments[0],
     _g = _arguments[1],
-    _b = _arguments[2];
+    _b = _arguments[2],
+    _a = _arguments[3];
   var _color = Object.create(colorPrototype, {
     h: {
       writable: true
@@ -138,7 +146,19 @@ function color() {
     b: {
       writable: true
     },
+    a: {
+      writable: true
+    },
     hex: {
+      get: function get() {
+        var r = this.r,
+          g = this.g,
+          b = this.b,
+          a = this.a;
+        return isValid(r, g, b, a) ? rgb2hex(r, g, b, a) : undefined;
+      }
+    },
+    hexflat: {
       get: function get() {
         var r = this.r,
           g = this.g,
@@ -155,10 +175,13 @@ function color() {
       }
     }
   });
-  if (length === 1 && typeof _r === 'string') {
-    _color.setRGB.apply(_color, _toConsumableArray(hex2rgb(_r)));
-  } else if (length === 3 && typeof _r === 'number') {
-    _color.setRGB(_r, _g, _b);
+  var firstType = _typeof(_r);
+  if (length === 1 && firstType === 'string') {
+    _color.setHex(_r);
+  } else if (firstType === 'number') {
+    if (length === 3 && isValid(_r, _g, _b) || length === 4 && isValid(_r, _g, _b, _a)) {
+      _color.setRGB(_r, _g, _b, _a);
+    }
   }
   return _color;
 }
@@ -188,11 +211,15 @@ function isValid() {
  * @returns {number[]}
  */
 function hex2rgb(hex) {
-  var hexThree = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(hex);
-  var hexSix = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return (hexThree === null || hexThree === void 0 ? void 0 : hexThree.splice(1).map(function (n) {
+  var hex34 = /^#?([a-f\d])([a-f\d])([a-f\d])([a-f\d])?$/i.exec(hex);
+  var hex68 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
+  return (hex34 === null || hex34 === void 0 ? void 0 : hex34.slice(1).filter(function (n) {
+    return n !== undefined;
+  }).map(function (n) {
     return parseInt(n + n, 16);
-  })) || (hexSix === null || hexSix === void 0 ? void 0 : hexSix.splice(1).map(function (n) {
+  })) || (hex68 === null || hex68 === void 0 ? void 0 : hex68.slice(1).filter(function (n) {
+    return n !== undefined;
+  }).map(function (n) {
     return parseInt(n, 16);
   })) || [];
 }
@@ -204,8 +231,9 @@ function hex2rgb(hex) {
  * @param {number} b
  * @returns {string}
  */
-function rgb2hex(r, g, b) {
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+function rgb2hex(r, g, b, a) {
+  var rgb = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  return a === undefined || a === 255 ? '#' + rgb : '#' + rgb + a.toString(16).padStart(2, '0').toUpperCase();
 }
 
 /**
@@ -376,10 +404,10 @@ function hsv2rgb(h, s, v) {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./src/styles.less":
-/*!**********************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./src/styles.less ***!
-  \**********************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles.css":
+/*!**************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles.css ***!
+  \**************************************************************/
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -392,7 +420,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow: 0 0 0 1px white, 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);\n}\n.mcpicker div {\n  position: relative;\n  width: 100%;\n  height: calc(100% - 2rem);\n  user-select: none;\n  background: linear-gradient(to top, black, rgba(0, 0, 0, 0)), linear-gradient(to left, red, white);\n}\n.mcpicker div:after {\n  content: '';\n  display: block;\n  position: absolute;\n  width: 0.5rem;\n  height: 0.5rem;\n  transform: translate(-50%, 50%);\n  border-radius: 1rem;\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n  pointer-events: none;\n}\n.mcpicker div + div {\n  height: 1rem;\n  background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n}\n.mcpicker div + div:after {\n  width: 3px;\n  height: inherit;\n  transform: translateX(-2px);\n  box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n}\n.mcpicker input {\n  width: 40%;\n  height: 1rem;\n  display: block;\n  float: left;\n  margin: 0;\n  padding: 0.125rem 0.25rem;\n  border: 0;\n  border-radius: 0;\n  box-sizing: border-box;\n  outline: none;\n  box-shadow: none;\n  background-color: transparent;\n  font-size: 1rem;\n  line-height: 1rem;\n  font-family: monospace;\n  font-weight: 600;\n  text-align: center;\n}\n.mcpicker input::-webkit-outer-spin-button,\n.mcpicker input::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n.mcpicker input[type=number] {\n  -moz-appearance: textfield;\n  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.5) inset;\n}\n.mcpicker input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input,\n.mcpicker input + input + input + input {\n  width: 20%;\n}\n", "",{"version":3,"sources":["webpack://./src/styles.less"],"names":[],"mappings":"AAAA;EACE,kBAAA;EACA,YAAA;EACA,YAAA;EACA,qBAAA;EACA,WAAA;EACA,uFAAA;AACF;AAPA;EAWI,kBAAA;EACA,WAAA;EACA,yBAAA;EACA,iBAAA;EACA,kGAAA;AADJ;AAKI;EACE,WAAA;EACA,cAAA;EACA,kBAAA;EACA,aAAA;EACA,cAAA;EACA,+BAAA;EACA,mBAAA;EACA,wDAAA;EACA,oBAAA;AAHN;AAKI;EACE,YAAA;EACA,+EAAA;AAHN;AAIM;EACE,UAAA;EACA,eAAA;EACA,2BAAA;EACA,wDAAA;AAFR;AAnCA;EA0CI,UAAA;EACA,YAAA;EACA,cAAA;EACA,WAAA;EACA,SAAA;EACA,yBAAA;EACA,SAAA;EACA,gBAAA;EACA,sBAAA;EACA,aAAA;EACA,gBAAA;EACA,6BAAA;EACA,eAAA;EACA,iBAAA;EACA,sBAAA;EACA,gBAAA;EACA,kBAAA;AAJJ;AAKI;;EAEE,wBAAA;EACA,SAAA;AAHN;AAKI;EACE,0BAAA;EACA,kDAAA;AAHN;AAQQ;;;;EACE,UAAA;AAHV","sourcesContent":[".mcpicker {\n  position: absolute;\n  width: 14rem;\n  height: 8rem;\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2rem);\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    & + div {\n      height: 1rem;\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n    }\n  }\n  input {\n    width: 40%;\n    height: 1rem;\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: 1rem;\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    // box-shadow: 0 0 8px black inset; //\n    +input {\n      &,+input {\n        &,+input {\n          width: 20%;\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".mcpicker {\n\n  --mcp-color: #f04;\n  --mcp-w: 14rem;\n  --mcp-h: 8rem;\n  --mcp-gutter: 1rem;\n  --mcp-font-size: 0.8rem;\n\n  position: absolute;\n  width: var(--mcp-w);\n  height: var(--mcp-h);\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  background-color: var(--mcp-color);\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  /* color */\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2*var(--mcp-gutter));\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    .mcpicker--alpha & {\n      width: calc(100% - var(--mcp-gutter));\n    }\n    /* color marker */\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      z-index: 1;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    /* huey */\n    & + div {\n      height: var(--mcp-gutter);\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      /* huey marker */\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n      /* optional alpha */\n      & + div {\n        position: absolute;\n        right: 0;\n        top: 0;\n        width: var(--mcp-gutter)!important;\n        height: calc(100% - var(--mcp-gutter));\n        --mcp-checker-c1: #444;\n        --mcp-checker-c2: #bbb;\n        --mcp-checker: calc(var(--mcp-gutter)/1.5);\n        --mcp-checker-2: calc(var(--mcp-checker)/2);\n        --mcp-checker-2m: calc(var(--mcp-checker)/-2);\n        background: \n          linear-gradient(var(--mcp-color), transparent),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, transparent 25%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, var(--mcp-checker-c2) 25%)\n        ;\n        background-size:\n          100% 100%,\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker)\n        ;       \n        background-position: \n          0 0, \n          0 0, \n          0 0, \n          var(--mcp-checker-2m) var(--mcp-checker-2m), \n          var(--mcp-checker-2) var(--mcp-checker-2)\n        ;\n        /* alpha marker */\n        &:after {\n          width: inherit;\n          height: 3px;\n          transform: translateY(-2px);\n          box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n        }\n      }\n    }\n  }\n  /* inputs */\n  input {\n    width: 40%;\n    height: var(--mcp-gutter);\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: var(--mcp-font-size);\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    /* rgb inputs */ \n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n", "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;;EAEE,iBAAiB;EACjB,cAAc;EACd,aAAa;EACb,kBAAkB;EAClB,uBAAuB;;EAEvB,kBAAkB;EAClB,mBAAmB;EACnB,oBAAoB;EACpB,qBAAqB;EACrB,WAAW;EACX,kCAAkC;EAClC;;;kCAGgC;EAChC,UAAU;EACV;IACE,kBAAkB;IAClB,WAAW;IACX,wCAAwC;IACxC,iBAAiB;IACjB;;;IAGA;IACA;MACE,qCAAqC;IACvC;IACA,iBAAiB;IACjB;MACE,WAAW;MACX,cAAc;MACd,kBAAkB;MAClB,UAAU;MACV,aAAa;MACb,cAAc;MACd,8BAA8B;MAC9B,mBAAmB;MACnB,wDAAwD;MACxD,oBAAoB;IACtB;IACA,SAAS;IACT;MACE,yBAAyB;MACzB,+EAA+E;MAC/E,gBAAgB;MAChB;QACE,UAAU;QACV,eAAe;QACf,2BAA2B;QAC3B,wDAAwD;MAC1D;MACA,mBAAmB;MACnB;QACE,kBAAkB;QAClB,QAAQ;QACR,MAAM;QACN,kCAAkC;QAClC,sCAAsC;QACtC,sBAAsB;QACtB,sBAAsB;QACtB,0CAA0C;QAC1C,2CAA2C;QAC3C,6CAA6C;QAC7C;;;;;;QAMA;QACA;;;;;;QAMA;QACA;;;;;;QAMA;QACA,iBAAiB;QACjB;UACE,cAAc;UACd,WAAW;UACX,2BAA2B;UAC3B,wDAAwD;QAC1D;MACF;IACF;EACF;EACA,WAAW;EACX;IACE,UAAU;IACV,yBAAyB;IACzB,cAAc;IACd,WAAW;IACX,SAAS;IACT,yBAAyB;IACzB,SAAS;IACT,gBAAgB;IAChB,sBAAsB;IACtB,aAAa;IACb,gBAAgB;IAChB,6BAA6B;IAC7B,+BAA+B;IAC/B,iBAAiB;IACjB,sBAAsB;IACtB,gBAAgB;IAChB,kBAAkB;IAClB;;MAEE,wBAAwB;MACxB,SAAS;IACX;IACA,eAAe;IACf;MACE,yBAAyB;MACzB,yCAAyC;IAC3C;IACA;MACE;QACE;UACE,oBAAoB;QACtB;MACF;IACF;IACA,UAAU;IACV;MACE;QACE;UACE;YACE;cACE,oBAAoB;YACtB;UACF;QACF;MACF;IACF;EACF;AACF","sourcesContent":[".mcpicker {\n\n  --mcp-color: #f04;\n  --mcp-w: 14rem;\n  --mcp-h: 8rem;\n  --mcp-gutter: 1rem;\n  --mcp-font-size: 0.8rem;\n\n  position: absolute;\n  width: var(--mcp-w);\n  height: var(--mcp-h);\n  margin-bottom: 0.5rem;\n  z-index: 99;\n  background-color: var(--mcp-color);\n  box-shadow:\n      0 0 0 1px white,\n      0 2px 4px rgba(0, 0, 0, 0.4),\n      0 4px 8px rgba(0, 0, 0, 0.3);\n  /* color */\n  div {\n    position: relative;\n    width: 100%;\n    height: calc(100% - 2*var(--mcp-gutter));\n    user-select: none;\n    background:\n      linear-gradient(to top, black, rgba(0,0,0,0)),\n      linear-gradient(to left, red, white)\n    ;\n    .mcpicker--alpha & {\n      width: calc(100% - var(--mcp-gutter));\n    }\n    /* color marker */\n    &:after {\n      content: '';\n      display: block;\n      position: absolute;\n      z-index: 1;\n      width: 0.5rem;\n      height: 0.5rem;\n      transform: translate(-50%,50%);\n      border-radius: 1rem;\n      box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      pointer-events: none;\n    }\n    /* huey */\n    & + div {\n      height: var(--mcp-gutter);\n      background: linear-gradient(to right, #F00, #FF0, #0F0, #0FF, #00F, #F0F, #F00);\n      /* huey marker */\n      &:after {\n        width: 3px;\n        height: inherit;\n        transform: translateX(-2px);\n        box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n      }\n      /* optional alpha */\n      & + div {\n        position: absolute;\n        right: 0;\n        top: 0;\n        width: var(--mcp-gutter)!important;\n        height: calc(100% - var(--mcp-gutter));\n        --mcp-checker-c1: #444;\n        --mcp-checker-c2: #bbb;\n        --mcp-checker: calc(var(--mcp-gutter)/1.5);\n        --mcp-checker-2: calc(var(--mcp-checker)/2);\n        --mcp-checker-2m: calc(var(--mcp-checker)/-2);\n        background: \n          linear-gradient(var(--mcp-color), transparent),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, transparent 25%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, transparent 75%, var(--mcp-checker-c1) 75%),\n          linear-gradient(45deg, var(--mcp-checker-c1) 25%, var(--mcp-checker-c2) 25%)\n        ;\n        background-size:\n          100% 100%,\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker),\n          var(--mcp-checker) var(--mcp-checker)\n        ;       \n        background-position: \n          0 0, \n          0 0, \n          0 0, \n          var(--mcp-checker-2m) var(--mcp-checker-2m), \n          var(--mcp-checker-2) var(--mcp-checker-2)\n        ;\n        /* alpha marker */\n        &:after {\n          width: inherit;\n          height: 3px;\n          transform: translateY(-2px);\n          box-shadow: 0 0 0 1px black inset, 0 0 0 2px white inset;\n        }\n      }\n    }\n  }\n  /* inputs */\n  input {\n    width: 40%;\n    height: var(--mcp-gutter);\n    display: block;\n    float: left;\n    margin: 0;\n    padding: 0.125rem 0.25rem;\n    border: 0;\n    border-radius: 0;\n    box-sizing: border-box;\n    outline: none;\n    box-shadow: none;\n    background-color: transparent;\n    font-size: var(--mcp-font-size);\n    line-height: 1rem;\n    font-family: monospace;\n    font-weight: 600;\n    text-align: center;\n    &::-webkit-outer-spin-button,\n    &::-webkit-inner-spin-button {\n      -webkit-appearance: none;\n      margin: 0;\n    }\n    /* rgb inputs */ \n    &[type=number] {\n      -moz-appearance:textfield;\n      box-shadow: 1px 0 0 rgba(white,0.5) inset;\n    }\n    +input {\n      &,+input {\n        &,+input {\n          width: calc(60% / 3);\n        }\n      }\n    }\n    /* alpha */ \n    +input {\n      &,+input {\n        &,+input {\n          &,+input {\n            .mcpicker--alpha & {\n              width: calc(60% / 4);\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -518,10 +546,10 @@ module.exports = function (item) {
 
 /***/ }),
 
-/***/ "./src/styles.less":
-/*!*************************!*\
-  !*** ./src/styles.less ***!
-  \*************************/
+/***/ "./src/styles.css":
+/*!************************!*\
+  !*** ./src/styles.css ***!
+  \************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -537,7 +565,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../node_modules/css-loader/dist/cjs.js!../node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./styles.less */ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./src/styles.less");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../node_modules/css-loader/dist/cjs.js!./styles.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles.css");
 
       
       
@@ -559,12 +587,12 @@ options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWi
 options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
 options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
 
 
 
 
-       /* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ruleSet_1_rules_0_use_2_styles_less__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+       /* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -916,7 +944,7 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _styles_less__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles.less */ "./src/styles.less");
+/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles.css */ "./src/styles.css");
 /* harmony import */ var _color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./color */ "./src/color.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -935,16 +963,17 @@ var _document = document,
   body = _document.body,
   html = _document.documentElement;
 var style = document.createElement('style');
-style.appendChild(document.createComment(name + ' ' + "1.1.30"));
+style.appendChild(document.createComment(name + ' ' + "1.2.0"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
-var pickers = new Map();
+var pickers = globalThis.pickers = new Map();
 var px = 'px';
 var auto = 'auto';
 var click = 'click';
 var mousedown = 'mousedown';
 var mouseup = 'mouseup';
 var mousemove = 'mousemove';
+var resize = 'resize';
 var touchstart = 'touchstart';
 var touchend = 'touchend';
 var touchmove = 'touchmove';
@@ -954,6 +983,7 @@ var input = 'input';
 
 // Add the click event to document to check all the things
 document.addEventListener(click, handleDocumentClick);
+window.addEventListener(resize, handleDocumentResize);
 var lastEvent;
 
 /**
@@ -966,38 +996,56 @@ function handleDocumentClick(e) {
     e.preventDefault();
     var popup = colorPicker(target);
     removeExcept(popup);
-    var rect = target.getBoundingClientRect();
-    var right = rect.right,
-      bottom = rect.bottom,
-      top = rect.top;
     var clientX = e.clientX,
       clientY = e.clientY;
-    var _document2 = document,
-      _document2$documentEl = _document2.documentElement,
-      scrollTop = _document2$documentEl.scrollTop,
-      clientWidth = _document2$documentEl.clientWidth,
-      clientHeight = _document2$documentEl.clientHeight;
-    var partW = clientX / clientWidth;
-    var partH = clientY / clientHeight;
-    if (partW < 0.5) {
-      popup.style.left = rect.left + px;
-      popup.style.right = auto;
-    } else {
-      popup.style.left = auto;
-      popup.style.right = clientWidth - right + px;
-    }
-    if (partH < 0.5) {
-      popup.style.top = bottom + scrollTop + px;
-      popup.style.bottom = auto;
-    } else {
-      popup.style.top = auto;
-      popup.style.bottom = clientHeight - top - scrollTop + px;
-    }
+    alignPopupToSource(popup, target, clientX, clientY);
   } else if (lastEvent === 'click') {
     var clickedPicker = target.closest(".".concat(name));
     !(clickedPicker !== null && clickedPicker !== void 0 && clickedPicker.contains(target)) && removeExcept();
   }
   lastEvent = e.type;
+}
+function alignPopupToSource(popup, source) {
+  var clientX = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var clientY = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  if (!source) {
+    var obj = Array.from(pickers.values()).find(function (o) {
+      return o.popup === popup;
+    });
+    source = obj.source;
+  }
+  var rect = source.getBoundingClientRect();
+  var right = rect.right,
+    bottom = rect.bottom,
+    top = rect.top;
+  var _document2 = document,
+    _document2$documentEl = _document2.documentElement,
+    scrollTop = _document2$documentEl.scrollTop,
+    clientWidth = _document2$documentEl.clientWidth,
+    clientHeight = _document2$documentEl.clientHeight;
+  var partW = clientX / clientWidth;
+  var partH = clientY / clientHeight;
+  if (partW < 0.5) {
+    popup.style.left = rect.left + px;
+    popup.style.right = auto;
+  } else {
+    popup.style.left = auto;
+    popup.style.right = clientWidth - right + px;
+  }
+  if (partH < 0.5) {
+    popup.style.top = bottom + scrollTop + px;
+    popup.style.bottom = auto;
+  } else {
+    popup.style.top = auto;
+    popup.style.bottom = clientHeight - top - scrollTop + px;
+  }
+}
+
+/**
+ * Check position on resize (mobile keyboard may cause)
+ */
+function handleDocumentResize() {
+  colorPicker();
 }
 
 /**
@@ -1012,23 +1060,33 @@ function removeExcept(except) {
 }
 
 /**
+ */
+function getOpenPicker() {
+  return _toConsumableArray(pickers.values()).find(function (_ref2) {
+    var popup = _ref2.popup;
+    return (popup === null || popup === void 0 ? void 0 : popup.parentNode) !== null;
+  });
+}
+
+/**
  * Initialise the color picker for an `input[type=color]`
  * @param {HTMLInputElement} source
  * @return {HTMLElement} the color picker element
  */
 function colorPicker(source) {
-  var _pickers$get;
-  var openPicker = pickers.get(source);
-  var _ref2 = openPicker || {},
-    openElm = _ref2.popup,
-    showPopup = _ref2.showPopup;
+  var _this = this,
+    _pickers$get;
+  var openPicker = source ? pickers.get(source) : getOpenPicker();
+  var _ref3 = openPicker || {},
+    openElm = _ref3.popup,
+    showPopup = _ref3.showPopup;
   var initialised = openPicker !== undefined;
   var inDOM = (openElm === null || openElm === void 0 ? void 0 : openElm.parentNode) !== null;
   if (initialised && inDOM) {
-    openElm.remove();
+    source ? openElm.remove() : alignPopupToSource(openElm);
   } else if (initialised && !inDOM) {
     showPopup();
-  } else {
+  } else if (source) {
     /**
      * Add popup to DOM and set focus
      */
@@ -1066,40 +1124,32 @@ function colorPicker(source) {
       return "".concat(name, "_").concat(unique);
     };
     /**
-     * Click handler for the color gradient
+     * Click handler for the three ranges: color, huey and alpha.
+     * @param {HTMLElement} elm
      * @param {MouseEvent} e
      */
-    var onClickColor = function onClickColor(e) {
+    var onClickRange = function onClickRange(elm, e) {
       var _e$touches;
-      var rect = colorElm.getBoundingClientRect();
+      var rect = elm.getBoundingClientRect();
       var eo = ((_e$touches = e.touches) === null || _e$touches === void 0 ? void 0 : _e$touches[0]) || e;
       var x = eo.clientX - rect.left;
       var y = eo.clientY - rect.top;
       var xpart = partRange(x / rect.width);
       var ypart = partRange(1 - y / rect.height);
-      colorInst.setSV(xpart, ypart);
-      setColorPos();
-      setBackground();
-      setInputHex();
-      setInputRGB();
-      setSource();
-      lastEvent = e.type;
-    };
-    /**
-     * Click handler for the hue gradient
-     * @param {MouseEvent} e
-     */
-    var onClickHue = function onClickHue(e) {
-      var _e$touches2;
-      var rect = hueElm.getBoundingClientRect();
-      var eo = ((_e$touches2 = e.touches) === null || _e$touches2 === void 0 ? void 0 : _e$touches2[0]) || e;
-      var x = eo.clientX - rect.left;
-      var xpart = partRange(x / rect.width);
-      colorInst.setH(xpart);
-      hueInst.setH(xpart);
-      setHuePos();
-      setColorHue();
-      setBackground();
+      if (elm === colorElm) {
+        colorInst.setSV(xpart, ypart);
+        setColorPos();
+        setBackground();
+      } else if (elm === hueElm) {
+        colorInst.setH(xpart);
+        hueInst.setH(xpart);
+        setHuePos();
+        setColorHue();
+        setBackground();
+      } else if (elm === alphaElm) {
+        colorInst.a = ypart * 255 << 0;
+        setAlphaPos();
+      }
       setInputHex();
       setInputRGB();
       setSource();
@@ -1109,28 +1159,40 @@ function colorPicker(source) {
      * Input handler for the hex text input
      */
     var onHexInput = function onHexInput() {
-      colorInst = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(inputElm.value);
-      hueInst = colorInst.clone().setSL(1, 0.5);
-      setColors();
-      setInputRGB();
-      setSource();
+      colorInst.setHex(inputElm.value);
+      var r = colorInst.r,
+        g = colorInst.g,
+        b = colorInst.b,
+        a = colorInst.a;
+      if (colorInst.isValid) {
+        hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
+        setColors();
+        setInputRGB();
+        setAlphaPos();
+        setSource();
+      }
     };
     /**
      * Input handler for one of the rgb text inputs
      * @param {event} e
      */
     var onRGBInput = function onRGBInput(e) {
-      var _colorInst;
       var target = e.target,
         value = e.target.value;
       if (value < 0) target.value = 0;else if (value > 255) target.value = 255;
-      (_colorInst = colorInst).setRGB.apply(_colorInst, _toConsumableArray(inputRGB.map(function (m) {
-        return parseInt(m.value, 10);
-      })));
-      hueInst = colorInst.clone().setSL(1, 0.5);
-      setColors();
-      setInputHex();
-      setSource();
+      var _colorInst$setRGB = colorInst.setRGB.apply(colorInst, _toConsumableArray(inputRGBA.map(function (m) {
+          return parseInt(m.value, 10);
+        }))),
+        r = _colorInst$setRGB.r,
+        g = _colorInst$setRGB.g,
+        b = _colorInst$setRGB.b,
+        a = _colorInst$setRGB.a;
+      if (colorInst.isValid) {
+        hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
+        setColors();
+        setInputHex();
+        setSource();
+      }
     };
     /**
      * Clamp value between 0 and 1
@@ -1163,18 +1225,25 @@ function colorPicker(source) {
       ruleHue.style.left = "".concat((xpart * 100).toFixed(2), "%");
     };
     /**
+     * Set the position of the alpha range
+     */
+    var setAlphaPos = function setAlphaPos() {
+      var ypart = 1 - colorInst.a / 255;
+      ruleAlpha.style.left = 'initial';
+      ruleAlpha.style.top = "".concat((ypart * 100).toFixed(2), "%");
+    };
+    /**
      * Set the back- and foreground color of the input elements
      */
     var setBackground = function setBackground() {
       var isBright = colorInst.luminance > 0.5;
-      rulePicker.style.backgroundColor = colorInst.hex;
+      rulePicker.style.setProperty('--mcp-color', colorInst.hexflat); //'#f04'//color(255-b, 255-r, 255-g).hexflat
       ruleInput.style.color = isBright ? '#000' : '#FFF';
       ruleNumber.style.boxShadow = "1px 0 0 rgba(".concat(isBright ? '0,0,0,0.3' : '255,255,255,0.5', ") inset");
-      var _colorInst2 = colorInst,
-        r = _colorInst2.r,
-        g = _colorInst2.g,
-        b = _colorInst2.b;
-      ruleInputSelection.style.backgroundColor = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(255 - b, 255 - r, 255 - g).hex;
+      var r = colorInst.r,
+        g = colorInst.g,
+        b = colorInst.b;
+      ruleInputSelection.style.backgroundColor = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(255 - b, 255 - r, 255 - g).hexflat;
     };
     /**
      * Set the value of the hex input
@@ -1186,15 +1255,16 @@ function colorPicker(source) {
      * Set the value of the rgb inputs
      */
     var setInputRGB = function setInputRGB() {
-      inputRElm.value = Math.round(colorInst.r);
-      inputGElm.value = Math.round(colorInst.g);
-      inputBElm.value = Math.round(colorInst.b);
+      inputRGBA.forEach(function (input, i) {
+        return input.value = Math.round(colorInst[['r', 'g', 'b', 'a'][i]]);
+      });
     };
     /**
      * Set the value of the source `input[type=color]`
      */
     var setSource = function setSource() {
-      source.value = colorInst.hex;
+      source.value = colorInst.hexflat;
+      hasAlpha && (source.dataset.alpha = colorInst.a);
       dispatch();
     };
     /**
@@ -1216,70 +1286,74 @@ function colorPicker(source) {
       setColorPos();
       setBackground();
     };
+    var hasAlpha = !!(source !== null && source !== void 0 && source.dataset.hasOwnProperty('alpha'));
     var popup = document.createElement(div);
     popup.classList.add(name);
+    hasAlpha && popup.classList.add(name + '--alpha');
     popup.remove = function () {
       dispatch(change);
       Element.prototype.remove.apply(popup);
     };
     var colorElm = append(popup, div);
     var hueElm = append(popup, div);
+    var alphaElm = hasAlpha && append(popup, div) || document.createElement(div);
     var inputElm = append(popup, input);
     inputElm.value = source.value;
-    inputElm.maxLength = 7;
-    var inputRElm = append(popup, input);
-    var inputGElm = append(popup, input);
-    var inputBElm = append(popup, input);
-    var inputRGB = [inputRElm, inputGElm, inputBElm];
-    inputRGB.forEach(function (elm) {
+    inputElm.maxLength = hasAlpha ? 9 : 7;
+    var inputRGBA = [append(popup, input), append(popup, input), append(popup, input)].concat(_toConsumableArray(hasAlpha ? [append(popup, input)] : []));
+    inputRGBA.forEach(function (elm) {
       return elm.type = 'number';
-    });
-    pickers.set(source, {
-      popup: popup,
-      showPopup: _showPopup
     });
     _showPopup();
     var className = getClassName(source);
     popup.classList.add(className);
     var colorInst = (0,_color__WEBPACK_IMPORTED_MODULE_1__.color)(inputElm.value);
+    hasAlpha && (colorInst.a = parseInt(source.dataset.alpha, 10));
     var hueInst = colorInst.clone().setSL(1, 0.5);
+    pickers.set(source, {
+      popup: popup,
+      showPopup: _showPopup,
+      source: source,
+      color: colorInst
+    });
+    source.color = colorInst;
     var baseRule = ".".concat(name, ".").concat(className);
     var rulePicker = getRule("".concat(baseRule, " {}"));
     var ruleColorcolor = getRule("".concat(baseRule, " div:first-child {}"));
     var ruleColor = getRule("".concat(baseRule, " div:first-child:after {}"));
     var ruleHue = getRule("".concat(baseRule, " div+div:after {}"));
+    var ruleAlpha = getRule("".concat(baseRule, " div+div+div:after {}"));
     var ruleInput = getRule("".concat(baseRule, " input {}"));
     var ruleNumber = getRule("".concat(baseRule, " input[type=number] {}"));
     var ruleInputSelection = getRule("".concat(baseRule, ">input::selection {}"));
-    colorElm.addEventListener(click, onClickColor);
-    hueElm.addEventListener(click, onClickHue);
+    colorElm.addEventListener(click, onClickRange.bind(this, colorElm));
+    hueElm.addEventListener(click, onClickRange.bind(this, hueElm));
     var events = [[mousedown, mouseup, mousemove], [touchstart, touchend, touchmove]];
-    [[colorElm, onClickColor], [hueElm, onClickHue]].forEach(function (_ref3) {
-      var _ref4 = _slicedToArray(_ref3, 2),
-        elm = _ref4[0],
-        onClick = _ref4[1];
-      events.forEach(function (_ref5) {
-        var _ref6 = _slicedToArray(_ref5, 3),
-          start = _ref6[0],
-          end = _ref6[1],
-          move = _ref6[2];
+    [colorElm, hueElm, alphaElm].forEach(function (elm) {
+      events.forEach(function (_ref4) {
+        var _ref5 = _slicedToArray(_ref4, 3),
+          start = _ref5[0],
+          end = _ref5[1],
+          move = _ref5[2];
+        var onClickBound = onClickRange.bind(_this, elm);
         elm.addEventListener(start, function (e) {
-          onClick(e);
-          html.addEventListener(move, onClick);
+          onClickBound(e);
+          html.addEventListener(move, onClickBound);
           e.preventDefault();
         });
         html.addEventListener(end, function () {
-          return html.removeEventListener(move, onClick);
+          return html.removeEventListener(move, onClickBound);
         });
       });
     });
     inputElm.addEventListener(input, onHexInput);
-    inputRGB.forEach(function (elm) {
+    inputRGBA.forEach(function (elm) {
       return elm.addEventListener(input, onRGBInput);
     });
     setColors();
     setInputHex();
     setInputRGB();
+    setAlphaPos();
   }
   return (_pickers$get = pickers.get(source)) === null || _pickers$get === void 0 ? void 0 : _pickers$get.popup;
 }
