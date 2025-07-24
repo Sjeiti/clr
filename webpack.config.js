@@ -6,6 +6,8 @@ module.exports = env => {
   const isProduction = !!env&&env.production
   const mode = isProduction?'production':'development'
 
+  console.info(mode)
+
   return {
     mode
     ,entry: './src/index.js'
@@ -13,7 +15,8 @@ module.exports = env => {
       filename: 'index.js'
       ,path: path.resolve(__dirname, 'dist')
     }
-    ,devtool: 'source-map'
+    //,devtool: 'source-map'
+    ,devtool: 'cheap-module-source-map' // or 'inline-source-map'
     ,module: {
       rules: [{
           test: /\.css$/
