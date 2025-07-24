@@ -54,6 +54,9 @@ const colorPrototype = {
   , clone(){
     return color(this.r, this.g, this.b, this.a)
   }
+  , get isValid(){
+    return isValid(this.r, this.g, this.b, this.a)
+  }
 }
 
 /**

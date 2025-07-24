@@ -107,6 +107,9 @@ var colorPrototype = {
   },
   clone: function clone() {
     return color(this.r, this.g, this.b, this.a);
+  },
+  get isValid() {
+    return isValid(this.r, this.g, this.b, this.a);
   }
 };
 
@@ -1161,11 +1164,13 @@ function colorPicker(source) {
         g = colorInst.g,
         b = colorInst.b,
         a = colorInst.a;
-      hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
-      setColors();
-      setInputRGB();
-      setAlphaPos();
-      setSource();
+      if (colorInst.isValid) {
+        hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
+        setColors();
+        setInputRGB();
+        setAlphaPos();
+        setSource();
+      }
     };
     /**
      * Input handler for one of the rgb text inputs
@@ -1182,10 +1187,12 @@ function colorPicker(source) {
         g = _colorInst$setRGB.g,
         b = _colorInst$setRGB.b,
         a = _colorInst$setRGB.a;
-      hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
-      setColors();
-      setInputHex();
-      setSource();
+      if (colorInst.isValid) {
+        hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
+        setColors();
+        setInputHex();
+        setSource();
+      }
     };
     /**
      * Clamp value between 0 and 1

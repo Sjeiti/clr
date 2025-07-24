@@ -273,11 +273,13 @@ function colorPicker(source){
     function onHexInput(){
       colorInst.setHex(inputElm.value)
       const {r,g,b,a} = colorInst
-      hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
-      setColors()
-      setInputRGB()
-      setAlphaPos()
-      setSource()
+      if (colorInst.isValid){
+        hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
+        setColors()
+        setInputRGB()
+        setAlphaPos()
+        setSource()
+      }
     }
 
     /**
@@ -289,10 +291,12 @@ function colorPicker(source){
       if (value<0) target.value = 0
       else if (value>255) target.value = 255
       const {r,g,b,a} = colorInst.setRGB(...inputRGBA.map(m=>parseInt(m.value, 10)))
-      hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
-      setColors()
-      setInputHex()
-      setSource()
+      if (colorInst.isValid){
+        hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
+        setColors()
+        setInputHex()
+        setSource()
+      }
     }
 
     /**
