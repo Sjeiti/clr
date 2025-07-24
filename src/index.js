@@ -167,31 +167,25 @@ function colorPicker(source){
     const ruleNumber = getRule(`${baseRule} input[type=number] {}`)
     const ruleInputSelection = getRule(`${baseRule}>input::selection {}`)
 
-    colorElm.addEventListener(click, onClickColor)
-    hueElm.addEventListener(click, onClickHue)
+    colorElm.addEventListener(click, onClickRange.bind(this,colorElm))
+    hueElm.addEventListener(click, onClickRange.bind(this,hueElm))
 
     const events = [
       [mousedown, mouseup, mousemove]
       , [touchstart, touchend, touchmove]
     ]
-    ;[
-      [colorElm, onClickColor]
-      , [hueElm, onClickHue]
-      , [alphaElm, onClickAlpha]
-    ].forEach(([elm, onClick])=>{
-      events.forEach(([start, end, move])=>{
-        const onClickBound = onClickRange.bind(this, elm)
-        elm.addEventListener(start, e=>{
-          onClickBound(e)
-          html.addEventListener(move, onClickBound)
-          //onClick(e)
-          //html.addEventListener(move, onClick)
-          e.preventDefault()
+    ;[colorElm, hueElm, alphaElm]
+      .forEach((elm)=>{
+        events.forEach(([start, end, move])=>{
+          const onClickBound = onClickRange.bind(this, elm)
+          elm.addEventListener(start, e=>{
+            onClickBound(e)
+            html.addEventListener(move, onClickBound)
+            e.preventDefault()
+          })
+          html.addEventListener(end, ()=>html.removeEventListener(move, onClickBound))
         })
-        html.addEventListener(end, ()=>html.removeEventListener(move, onClickBound))
-        //html.addEventListener(end, ()=>html.removeEventListener(move, onClick))
       })
-    })
 
     inputElm.addEventListener(input, onHexInput)
     inputRGBA.forEach(elm=>elm.addEventListener(input, onRGBInput))
@@ -274,63 +268,6 @@ function colorPicker(source){
     }
 
     /**
-     * Click handler for the color gradient
-     * @param {MouseEvent} e
-     */
-    function onClickColor(e){
-      const rect = colorElm.getBoundingClientRect()
-      const eo = e.touches?.[0]||e
-      const x = eo.clientX - rect.left
-      const y = eo.clientY - rect.top
-      const xpart = partRange(x/rect.width)
-      const ypart = partRange(1-y/rect.height)
-      colorInst.setSV(xpart, ypart)
-      setColorPos()
-      setBackground()
-      setInputHex()
-      setInputRGB()
-      setSource()
-      lastEvent = e.type
-    }
-
-    /**
-     * Click handler for the hue gradient
-     * @param {MouseEvent} e
-     */
-    function onClickHue(e){
-      const rect = hueElm.getBoundingClientRect()
-      const eo = e.touches?.[0]||e
-      const x = eo.clientX - rect.left
-      const xpart = partRange(x/rect.width)
-      colorInst.setH(xpart)
-      hueInst.setH(xpart)
-      setHuePos()
-      setColorHue()
-      setBackground()
-      setInputHex()
-      setInputRGB()
-      setSource()
-      lastEvent = e.type
-    }
-
-    /**
-     * Click handler for the alpha range
-     * @param {MouseEvent} e
-     */
-    function onClickAlpha(e){
-      const rect = alphaElm.getBoundingClientRect()
-      const eo = e.touches?.[0]||e
-      const y = eo.clientY - rect.top
-      const ypart = partRange(1-y/rect.height)
-      colorInst.a = ypart*255<<0 
-      setAlphaPos()
-      setInputHex()
-      setInputRGB()
-      setSource()
-      lastEvent = e.type
-    }
-
-    /**
      * Input handler for the hex text input
      */
     function onHexInput(){
@@ -353,7 +290,6 @@ function colorPicker(source){
       else if (value>255) target.value = 255
       const {r,g,b,a} = colorInst.setRGB(...inputRGBA.map(m=>parseInt(m.value, 10)))
       hueInst.setRGB(r,g,b,a).setSL(1, 0.5)
-      //hueInst = colorInst.clone().setSL(1, 0.5)
       setColors()
       setInputHex()
       setSource()

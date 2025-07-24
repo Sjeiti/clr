@@ -960,7 +960,7 @@ var _document = document,
   body = _document.body,
   html = _document.documentElement;
 var style = document.createElement('style');
-style.appendChild(document.createComment(name + ' ' + "1.1.31"));
+style.appendChild(document.createComment(name + ' ' + "1.2.0"));
 body.appendChild(style);
 var sheet = document.styleSheets[document.styleSheets.length - 1];
 var pickers = globalThis.pickers = new Map();
@@ -1153,63 +1153,6 @@ function colorPicker(source) {
       lastEvent = e.type;
     };
     /**
-     * Click handler for the color gradient
-     * @param {MouseEvent} e
-     */
-    var onClickColor = function onClickColor(e) {
-      var _e$touches2;
-      var rect = colorElm.getBoundingClientRect();
-      var eo = ((_e$touches2 = e.touches) === null || _e$touches2 === void 0 ? void 0 : _e$touches2[0]) || e;
-      var x = eo.clientX - rect.left;
-      var y = eo.clientY - rect.top;
-      var xpart = partRange(x / rect.width);
-      var ypart = partRange(1 - y / rect.height);
-      colorInst.setSV(xpart, ypart);
-      setColorPos();
-      setBackground();
-      setInputHex();
-      setInputRGB();
-      setSource();
-      lastEvent = e.type;
-    };
-    /**
-     * Click handler for the hue gradient
-     * @param {MouseEvent} e
-     */
-    var onClickHue = function onClickHue(e) {
-      var _e$touches3;
-      var rect = hueElm.getBoundingClientRect();
-      var eo = ((_e$touches3 = e.touches) === null || _e$touches3 === void 0 ? void 0 : _e$touches3[0]) || e;
-      var x = eo.clientX - rect.left;
-      var xpart = partRange(x / rect.width);
-      colorInst.setH(xpart);
-      hueInst.setH(xpart);
-      setHuePos();
-      setColorHue();
-      setBackground();
-      setInputHex();
-      setInputRGB();
-      setSource();
-      lastEvent = e.type;
-    };
-    /**
-     * Click handler for the alpha range
-     * @param {MouseEvent} e
-     */
-    var onClickAlpha = function onClickAlpha(e) {
-      var _e$touches4;
-      var rect = alphaElm.getBoundingClientRect();
-      var eo = ((_e$touches4 = e.touches) === null || _e$touches4 === void 0 ? void 0 : _e$touches4[0]) || e;
-      var y = eo.clientY - rect.top;
-      var ypart = partRange(1 - y / rect.height);
-      colorInst.a = ypart * 255 << 0;
-      setAlphaPos();
-      setInputHex();
-      setInputRGB();
-      setSource();
-      lastEvent = e.type;
-    };
-    /**
      * Input handler for the hex text input
      */
     var onHexInput = function onHexInput() {
@@ -1240,7 +1183,6 @@ function colorPicker(source) {
         b = _colorInst$setRGB.b,
         a = _colorInst$setRGB.a;
       hueInst.setRGB(r, g, b, a).setSL(1, 0.5);
-      //hueInst = colorInst.clone().setSL(1, 0.5)
       setColors();
       setInputHex();
       setSource();
@@ -1377,33 +1319,26 @@ function colorPicker(source) {
     var ruleInput = getRule("".concat(baseRule, " input {}"));
     var ruleNumber = getRule("".concat(baseRule, " input[type=number] {}"));
     var ruleInputSelection = getRule("".concat(baseRule, ">input::selection {}"));
-    colorElm.addEventListener(click, onClickColor);
-    hueElm.addEventListener(click, onClickHue);
+    colorElm.addEventListener(click, onClickRange.bind(this, colorElm));
+    hueElm.addEventListener(click, onClickRange.bind(this, hueElm));
     var events = [[mousedown, mouseup, mousemove], [touchstart, touchend, touchmove]];
-    [[colorElm, onClickColor], [hueElm, onClickHue], [alphaElm, onClickAlpha]].forEach(function (_ref4) {
-      var _ref5 = _slicedToArray(_ref4, 2),
-        elm = _ref5[0],
-        onClick = _ref5[1];
-      events.forEach(function (_ref6) {
-        var _ref7 = _slicedToArray(_ref6, 3),
-          start = _ref7[0],
-          end = _ref7[1],
-          move = _ref7[2];
+    [colorElm, hueElm, alphaElm].forEach(function (elm) {
+      events.forEach(function (_ref4) {
+        var _ref5 = _slicedToArray(_ref4, 3),
+          start = _ref5[0],
+          end = _ref5[1],
+          move = _ref5[2];
         var onClickBound = onClickRange.bind(_this, elm);
         elm.addEventListener(start, function (e) {
           onClickBound(e);
           html.addEventListener(move, onClickBound);
-          //onClick(e)
-          //html.addEventListener(move, onClick)
           e.preventDefault();
         });
         html.addEventListener(end, function () {
           return html.removeEventListener(move, onClickBound);
         });
-        //html.addEventListener(end, ()=>html.removeEventListener(move, onClick))
       });
     });
-
     inputElm.addEventListener(input, onHexInput);
     inputRGBA.forEach(function (elm) {
       return elm.addEventListener(input, onRGBInput);

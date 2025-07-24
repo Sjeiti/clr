@@ -235,7 +235,7 @@
 			input.setAttribute('data-alpha', '255')
 			label.style.color = input.value
       input.addEventListener('input', e=>{
-        const {target:{color}} = e
+        const {targer,target:{color}} = e
         const a = color?color?.a/255:1
         label.style.color = color?.hex||target.value
         label.style.textShadow = `0 0.5rem 1rem rgba(0,0,0,${0.4*a}),0 0.125rem 0.25rem rgba(0,0,0,${0.2*a})`
