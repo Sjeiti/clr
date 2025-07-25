@@ -13,8 +13,7 @@ const colorPrototype = {
     return this
   }
   , setSL(_s, _l){
-    const {r, g, b} = this
-    const [h] = rgb2hsl(r, g, b)
+    const {r, g, b, h} = this
     const [_r, _g, _b] = hsl2rgb(h, _s, _l)
     const _v = rgb2hsv(_r, _g, _b)[2]
     this.s = _s
@@ -26,8 +25,7 @@ const colorPrototype = {
     return this
   }
   , setH(_h){
-    const {r, g, b} = this
-    const [, s, l] = rgb2hsl(r, g, b)
+    const {r, g, b, s, l} = this
     const [_r, _g, _b] = hsl2rgb(_h, s, l)
     this.h = _h
     this.r = _r
@@ -36,8 +34,7 @@ const colorPrototype = {
     return this
   }
   , setSV(_s, _v){
-    const {r, g, b} = this
-    const [h] = rgb2hsl(r, g, b)
+    const {r, g, b, h} = this
     const [_r, _g, _b] = hsv2rgb(h, _s, _v)
     const _l = rgb2hsl(_r, _g, _b)[2]
     this.s = _s
