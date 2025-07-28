@@ -68,9 +68,7 @@
 			text-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4),0 0.125rem 0.25rem rgba(0,0,0,0.2);
 		}
     .anchor-link {
-      color: #AAF;
-      font-size: 0.85rem;
-      text-decoration: none;
+      opacity: 0.3;
     }
 		.content {
 			max-width: 34rem;
@@ -193,15 +191,9 @@
 					</fieldset>
 				</form>
 			</section>
-			<section id="installation">
-<h2>Installation<a href="#installation" class="anchor-link">#</a></h2>
-<p>To install do <code>npm i -S mc_picker</code> or <code>yarn add mc_picker -S</code> and import it somewhere: <code>import 'mc_picker'</code>.</p>
-<p>Or load into HTML directly from CDN with <code>&lt;script src="https://unpkg.com/mc_picker"&gt;&lt;/script&gt;</code>.</p>
-</section>
+			<section id="installation"></section>
 			<section id="datalist">
-<h2>Datalist<a href="#datalist" class="anchor-link">#</a></h2>
-<p>The <code>input[type=color]</code> can have <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist#color_type">a related dataList</a>. These are shown as swatch options at the top of the color picker. The options are not validated against so the regular interface is still functional.</p>
-<div class="example">
+        <div class="example">
           <!--<input id="d1" type="color" list="colorList" value="#FF0044" data-alpha="23">-->
           <input id="d2" type="color" list="colorList" value="#FFEE00">
           <datalist id="colorList">
@@ -214,30 +206,16 @@
             </option><option value="#FFFFFF">
             </option><option value="#000000">
           </option></datalist>
-        </div></section>
+        </div>
+			</section>
 			<section id="alpha-channel">
-<h2>Alpha channel<a href="#alpha-channel" class="anchor-link">#</a></h2>
-<p>Although <code>input[type=color]</code> does not support alpha channels, you can add this by setting <code>[data-alpha=255]</code>. The value ranges from 0 to 255 and updates when changed.
-The input value itself is still the regular rgb format so you'll have to concat it from the data-attribute yourself, or use the API.</p>
-<div class="example">
+        <div class="example">
           <input id="a1" type="color" value="#FF0044" data-alpha="23">
-        </div></section>
-			<section id="api">
-<h2>API<a href="#api" class="anchor-link">#</a></h2>
-<p>When activated, each input element exposes a color object: <code>document.querySelector('input').color</code>. All instances are also exposed on <code>globalThis.pickers</code>; a map with the <code>HTMLInputElement</code> as key.</p>
-</section>
+        </div>
+      </section>
+			<section id="api"></section>
 			<section id="customisation">
-<h2>Customisation<a href="#customisation" class="anchor-link">#</a></h2>
-<p>You can easily adjust dimensions through CSS without affecting functionality:</p>
-<pre><code>.mcpicker {
-  --mcp-w: 20rem;
-  --mcp-h: 20rem;
-  --mcp-gutter: 2rem;
-  --mcp-font-size: 1.2rem;
-}
-</code></pre>
-<p>This can also be done for a single instance when you use <code>.mcpicker_[color input id]</code> instead of <code>.mcpicker</code>.</p>
-<div class="example">
+        <div class="example">
           <style>
             .mcpicker_custom-css {
               --mcp-w: 20rem;
@@ -247,7 +225,8 @@ The input value itself is still the regular rgb format so you'll have to concat 
             }
           </style>
           <input type="color" id="custom-css" value="#ff0044">
-        </div></section>
+        </div>
+			</section>
 		</div>
 	</main>
 	<footer>
@@ -295,7 +274,7 @@ The input value itself is still the regular rgb format so you'll have to concat 
 		
 		const g1 = document.getElementById('g1')
 		const g2 = document.getElementById('g2')
-		g1.value = randomColorHex()
+		g1.value = colorStart
 		g2.value = colorEnd
 		const headerRule = getRule('header, footer')
 		const setHeaderGradient = ()=>
@@ -349,7 +328,6 @@ The input value itself is still the regular rgb format so you'll have to concat 
 				.split(/\s/)
 		document.querySelector('.version').textContent = 'v'+version
 	</script>
-
 
 
 

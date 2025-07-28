@@ -24,6 +24,7 @@ const touchmove = 'touchmove'
 const change = 'change'
 const div = 'div'
 const input = 'input'
+const current = 'current'
 
 // Add the click event to document to check all the things
 document.addEventListener(click, handleDocumentClick)
@@ -122,14 +123,25 @@ function colorPicker(source){
     showPopup()
   } else if (source) {
     const hasAlpha = !!source?.dataset.hasOwnProperty('alpha')
+    const hasDatalist = !!source?.hasAttribute('list')
     const popup = document.createElement(div)
     popup.classList.add(name)
     hasAlpha&&popup.classList.add(name+'--alpha')
+    hasDatalist&&popup.classList.add(name+'--list')
 
     popup.remove = ()=>{
       dispatch(change)
       Element.prototype.remove.apply(popup)
     }
+
+    const list = hasDatalist&&append(popup, 'ul')
+    hasDatalist&&Array.from(source.list.options).forEach(option=>{
+      const li = append(list, 'li')
+      const button = append(li, 'button')
+      button.value = option.value
+      button.style.backgroundColor = option.value
+      button.addEventListener('click', onClickButton)
+    })
 
     const colorElm = append(popup, div)
     const hueElm = append(popup, div)
@@ -151,7 +163,7 @@ function colorPicker(source){
     popup.classList.add(className)
 
     const colorInst = color(inputElm.value)
-    hasAlpha&&(colorInst.a = parseInt(source.dataset.alpha, 10))
+    hasAlpha&&(colorInst.a = parseInt(source.dataset.alpha, 10)||0)
     const hueInst = colorInst.clone().setSL(1, 0.5)
 
     pickers.set(source, {popup, showPopup, source, color: colorInst})
@@ -159,8 +171,8 @@ function colorPicker(source){
 
     const baseRule = `.${name}.${className}`
     const rulePicker = getRule(`${baseRule} {}`)
-    const ruleColorcolor = getRule(`${baseRule} div:first-child {}`)
-    const ruleColor = getRule(`${baseRule} div:first-child:after {}`)
+    const ruleColorcolor = getRule(`${baseRule} div:first-of-type {}`)
+    const ruleColor = getRule(`${baseRule} div:first-of-type:after {}`)
     const ruleHue = getRule(`${baseRule} div+div:after {}`)
     const ruleAlpha = getRule(`${baseRule} div+div+div:after {}`)
     const ruleInput = getRule(`${baseRule} input {}`)
@@ -265,6 +277,12 @@ function colorPicker(source){
       setInputRGB()
       setSource()
       lastEvent = e.type
+    }
+
+    function onClickButton(e){
+      const {target, target:{value}} = e
+      inputElm.value = value
+      onHexInput()
     }
 
     /**
@@ -377,7 +395,16 @@ function colorPicker(source){
     function setSource(){
       source.value = colorInst.hexflat
       hasAlpha&&(source.dataset.alpha = colorInst.a)
+      hasDatalist&&setCurrent()
       dispatch()
+    }
+
+    /**
+     * Remove 'current' state from buttons, then try to reset it.
+     */
+    function setCurrent(){
+      Array.from(popup.querySelectorAll('.'+current)).forEach(elm=>elm.classList.remove(current))
+      popup.querySelector(`button[value="${colorInst.hex}"]`)?.classList.add(current)
     }
 
     /**

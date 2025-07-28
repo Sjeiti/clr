@@ -11,18 +11,20 @@ Checkout https://sjeiti.github.io/clr/ for live examples.
 
 ## Installation
 
-To install just do something like:
+To install do `npm i -S mc_picker` or `yarn add mc_picker -S` and import it somewhere: `import 'mc_picker'`.
 
-`npm i -S mc_picker` or `yarn add mc_picker -S`
+Or load into HTML directly from CDN with `<script src="https://unpkg.com/mc_picker"></script>`.
 
-Then just import it somewhere:
 
-`import 'mc_picker'`
+## Datalist
+
+The `input[type=color]` can have [a related dataList](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist#color_type). These are shown as swatch options at the top of the color picker. The options are not validated against so the regular interface is still functional.
 
 
 ## Alpha channel
 
 Although `input[type=color]` does not support alpha channels, you can add this by setting `[data-alpha=255]`. The value ranges from 0 to 255 and updates when changed.
+The input value itself is still the regular rgb format so you'll have to concat it from the data-attribute yourself, or use the API.
 
 
 ## API

@@ -29,6 +29,11 @@
     .mcpicker--alpha & {
       width: calc(100% - var(--mcp-gutter));
     }
+    &:first-of-type {
+      .mcpicker--list & {
+        height: calc(100% - 3*var(--mcp-gutter));
+      }
+    }
     /* color marker */
     &:after {
       content: '';
@@ -143,6 +148,39 @@
           }
         }
       }
+    }
+  }
+  /* list */
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    .mcpicker--alpha & {
+      width: calc(100% - var(--mcp-gutter));
+    }
+    li {
+      flex: 1 1 auto;
+      height: var(--mcp-swatch);
+      height: var(--mcp-gutter);
+      &:has(.current) {
+        z-index: 1;
+      }
+    }
+    button {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      overflow: hidden;
+      &.current {
+        box-shadow: 0 0 0 1px white inset,0 0 0 1px black;
+      }
+      /*
+      &:before {
+        content: attr(data-value);
+      }
+      */
     }
   }
 }
